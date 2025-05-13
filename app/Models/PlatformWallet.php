@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Casts\MoneyCast;
 class PlatformWallet extends Model
 {
     use HasFactory;
@@ -17,7 +17,6 @@ class PlatformWallet extends Model
     protected $fillable = [
         'currency_code_id',
         'amount',
-        'is_active',
     ];
 
     /**
@@ -26,8 +25,7 @@ class PlatformWallet extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'amount',
-        'is_active' => 'boolean',
+        'amount' => MoneyCast::class,
     ];
 
     /**

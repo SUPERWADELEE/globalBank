@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone')->nullable();
             $table->string('otp_secret')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->boolean('status')->default(true);
             
             // 加上這行建立外鍵關聯
             $table->foreignId('user_level_id')

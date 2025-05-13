@@ -23,8 +23,8 @@ class User extends Authenticatable
         'password',
         'phone',
         'otp_secret',
-        'is_active',
-        'member_level_id'
+        'member_level_id',
+        'status'
     ];
 
     /**

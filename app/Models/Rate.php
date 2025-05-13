@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Casts\MoneyCast;
 class Rate extends Model
 {
     use HasFactory;
@@ -27,8 +27,7 @@ class Rate extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'rate',
-        'is_active' => 'boolean',
+        'rate' => MoneyCast::class,
     ];
 
     /**

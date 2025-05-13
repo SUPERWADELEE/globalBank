@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Casts\MoneyCast;
 class Deposit extends Model
 {
     use HasFactory;
@@ -37,7 +37,7 @@ class Deposit extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'amount' => 'decimal:8',
+        'amount' => MoneyCast::class,
     ];
 
     /**

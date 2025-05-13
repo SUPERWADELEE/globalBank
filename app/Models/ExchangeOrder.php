@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Casts\MoneyCast;
 class ExchangeOrder extends Model
 {
     use HasFactory;
@@ -32,9 +32,9 @@ class ExchangeOrder extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'amount_from',   
-        'amount_to',
-        'rate' 
+        'amount_from' => MoneyCast::class,
+        'amount_to' => MoneyCast::class,
+        'rate' => MoneyCast::class,
     ];
 
     /**
