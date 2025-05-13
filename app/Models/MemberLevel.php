@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class MemberLevel extends Model
+{
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'level',
+    ];
+
+    /**
+     * Get the users with this member level.
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+}

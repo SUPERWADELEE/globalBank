@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class AdminUser extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -18,13 +16,8 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'username',
         'password',
-        'phone',
-        'otp_secret',
-        'is_active',
-        'member_level_id'
     ];
 
     /**
@@ -34,7 +27,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'otp_secret',
     ];
 
     /**
@@ -45,32 +37,39 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'is_active' => 'boolean',
             'password' => 'hashed',
         ];
     }
-    
+
     /**
-     * Get the member level associated with the user.
+     * Get the deposits approved by this admin user.
      */
-    public function memberLevel()
+    public function deposits()
     {
-        return $this->belongsTo(MemberLevel::class);
+        return $this->hasMany(Deposit::class, 'admin_user_id');
     }
-    
+
     /**
-     * Get the wallets for the user.
+     * Get the withdraws approved by this admin user.
      */
-    public function wallets()
+    public function withdraws()
     {
-        return $this->hasMany(Wallet::class);
+        return $this->hasMany(Withdraw::class, 'admin_user_id');
     }
-    
+
     /**
-     * Get the deposit addresses for the user.
+     * Get the transactions approved by this admin user.
      */
-    public function depositAddresses()
+    public function transactions()
     {
-        return $this->hasMany(DepositAddress::class);
+        return $this->hasMany(Transaction::class, 'admin_user_id');
+    }
+
+    /**
+     * Get the admin IP whitelist entries created by this admin user.
+     */
+    public function ipWhitelists()
+    {
+        return $this->hasMany(AdminIpWhitelist::class, 'admin_user_id');
     }
 }

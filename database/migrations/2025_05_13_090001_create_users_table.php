@@ -15,9 +15,17 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            $table->string('phone')->nullable();
+            $table->string('otp_secret')->nullable();
+            $table->boolean('is_active')->default(true);
+            
+            // 加上這行建立外鍵關聯
+            $table->foreignId('user_level_id')
+                  ->nullable()
+                  ->constrained('user_levels')
+                  ->nullOnDelete(); // 刪掉 user_levels 時，這裡會設為 null
+            
             $table->timestamps();
         });
 
