@@ -26,16 +26,19 @@ class AdminUserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
+                    ->label(__('admin_user.name'))
                     ->required()
                     ->maxLength(255)
                     ->rules(['regex:/^[\pL\pN\s]+$/u']), // 只允許字母（含中英文）、數字與空白
 
                 TextInput::make('email')
+                    ->label(__('admin_user.email'))
                     ->email()
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 Select::make('roles')
+                    ->label(__('admin_user.roles'))
                     ->multiple()
                     ->options(Role::all()->pluck('name', 'id'))
                     ->required()
@@ -54,11 +57,13 @@ class AdminUserResource extends Resource
                         }
                     }),
                 TextInput::make('password')
+                    ->label(__('admin_user.password'))
                     ->password()
                     ->required(fn($livewire) => $livewire instanceof Pages\CreateAdminUser)
                     ->dehydrated(fn($state) => filled($state))
                     ->maxLength(255),
                 TextInput::make('password_confirmation')
+                    ->label(__('admin_user.confirm_password'))
                     ->password()
                     ->required(fn($livewire) => $livewire instanceof Pages\CreateAdminUser)
                     ->dehydrated(fn($state) => filled($state))
@@ -70,24 +75,30 @@ class AdminUserResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('email'),
+                TextColumn::make('name')
+                    ->label(__('admin_user.name')),
+                TextColumn::make('email')
+                    ->label(__('admin_user.email')),
                 TextColumn::make('roles.name')
-                    ->label('角色'),
+                    ->label(__('admin_user.roles')),
                 TextColumn::make('created_at')
+                    ->label(__('common.created_at'))
                     ->dateTime('Y-m-d H:i:s'),
                 TextColumn::make('updated_at')
+                    ->label(__('common.updated_at'))
                     ->dateTime('Y-m-d H:i:s'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label(__('admin_user.edit')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label(__('admin_user.delete')),
                 ]),
             ]);
     }
