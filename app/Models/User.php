@@ -23,7 +23,7 @@ class User extends Authenticatable
         'password',
         'phone',
         'otp_secret',
-        'member_level_id',
+        'user_level_id',
         'status'
     ];
 
@@ -45,7 +45,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'is_active' => 'boolean',
+            'status' => 'boolean',
             'password' => 'hashed',
         ];
     }
@@ -53,9 +53,9 @@ class User extends Authenticatable
     /**
      * Get the member level associated with the user.
      */
-    public function memberLevel()
+    public function userLevel()
     {
-        return $this->belongsTo(MemberLevel::class);
+        return $this->belongsTo(UserLevel::class);
     }
     
     /**
