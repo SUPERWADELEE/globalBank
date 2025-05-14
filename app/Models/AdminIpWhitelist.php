@@ -27,11 +27,22 @@ class AdminIpWhitelist extends Model
         'admin_user_id',
     ];
 
+    protected $casts = [
+        'ip_address' => 'string',
+        'description' => 'string',
+        'admin_user_id' => 'integer',
+    ];
+
     /**
      * Get the admin user that created this IP whitelist entry.
      */
     public function adminUser()
     {
         return $this->belongsTo(AdminUser::class);
+    }
+
+    public function getIpAttribute(): string
+    {
+        return $this->ip_address;
     }
 }

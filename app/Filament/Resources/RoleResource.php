@@ -4,14 +4,12 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RoleResource\Pages;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Grid;
 use Spatie\Permission\Models\Role;
 
@@ -38,46 +36,7 @@ class RoleResource extends Resource
                                 ->multiple()
                                 ->preload()
                                 ->searchable(),
-
                         ]),
-
-                        // Fieldset::make('財務操作 - 入金')->schema([
-                        //     CheckboxList::make('permissions')
-                        //         ->relationship('permissions', 'name')
-                        //         ->label('')
-                        //         ->options([
-                        //             'finance.deposit.usdt' => 'USDT',
-                        //             'finance.deposit.krw' => 'KRW',
-                        //             'finance.deposit.sgd' => 'SGD',
-                        //             'finance.deposit.jpy' => 'JPY',
-                        //         ])
-                        // ]),
-
-                        // Fieldset::make('財務操作 - 出金')->schema([
-                        //     CheckboxList::make('permissions')
-                        //         ->relationship('permissions', 'name')
-                        //         ->label('')
-                        //         ->options([
-                        //             'finance.withdraw.usdt' => 'USDT',
-                        //             'finance.withdraw.krw' => 'KRW',
-                        //             'finance.withdraw.sgd' => 'SGD',
-                        //             'finance.withdraw.jpy' => 'JPY',
-                        //         ])
-                        // ]),
-
-                        // Fieldset::make('系統設定')->schema([
-                        //     CheckboxList::make('permissions')
-                        //         ->relationship('permissions', 'name')
-                        //         ->label('')
-                        //         ->options([
-                        //             'system.accounts' => '系統帳號管理',
-                        //             'system.roles' => '權限設定',
-                        //             'system.whitelist' => '白名單設定',
-                        //             'system.balance' => '查看平台餘額',
-                        //         ])
-                        // ]),
-
-                        // 其他群組區塊依照需求加上去
                     ]),
                 ]),
             ]);
@@ -126,6 +85,7 @@ class RoleResource extends Resource
         ];
     }
 
+
     public static function getPermissionPrefixes(): array
     {
         return [
@@ -135,5 +95,9 @@ class RoleResource extends Resource
             'update',
             'delete',
         ];
+    }
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
     }
 }

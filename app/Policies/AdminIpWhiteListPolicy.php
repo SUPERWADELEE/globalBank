@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\AdminUser;
-use App\Models\User;
+use App\Models\AdminIpWhiteList;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserPolicy
+class AdminIpWhiteListPolicy
 {
     use HandlesAuthorization;
 
@@ -15,15 +15,15 @@ class UserPolicy
      */
     public function viewAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('view_any_user');
+        return $adminUser->can('view_any_admin::ip::white::list');
     }
 
     /**
      * Determine whether the adminUser can view the model.
      */
-    public function view(AdminUser $adminUser, User $user): bool
+    public function view(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
     {
-        return $adminUser->can('view_user');
+        return $adminUser->can('view_admin::ip::white::list');
     }
 
     /**
@@ -31,23 +31,23 @@ class UserPolicy
      */
     public function create(AdminUser $adminUser): bool
     {
-        return $adminUser->can('create_user');
+        return $adminUser->can('create_admin::ip::white::list');
     }
 
     /**
      * Determine whether the adminUser can update the model.
      */
-    public function update(AdminUser $adminUser, User $user): bool
+    public function update(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
     {
-        return $adminUser->can('update_user');
+        return $adminUser->can('update_admin::ip::white::list');
     }
 
     /**
      * Determine whether the adminUser can delete the model.
      */
-    public function delete(AdminUser $adminUser, User $user): bool
+    public function delete(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
     {
-        return $adminUser->can('delete_user');
+        return $adminUser->can('delete_admin::ip::white::list');
     }
 
     /**
@@ -55,15 +55,15 @@ class UserPolicy
      */
     public function deleteAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('delete_any_user');
+        return $adminUser->can('delete_any_admin::ip::white::list');
     }
 
     /**
      * Determine whether the adminUser can permanently delete.
      */
-    public function forceDelete(AdminUser $adminUser, User $user): bool
+    public function forceDelete(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
     {
-        return $adminUser->can('force_delete_user');
+        return $adminUser->can('force_delete_admin::ip::white::list');
     }
 
     /**
@@ -71,15 +71,15 @@ class UserPolicy
      */
     public function forceDeleteAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('force_delete_any_user');
+        return $adminUser->can('force_delete_any_admin::ip::white::list');
     }
 
     /**
      * Determine whether the adminUser can restore.
      */
-    public function restore(AdminUser $adminUser, User $user): bool
+    public function restore(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
     {
-        return $adminUser->can('restore_user');
+        return $adminUser->can('restore_admin::ip::white::list');
     }
 
     /**
@@ -87,15 +87,15 @@ class UserPolicy
      */
     public function restoreAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('restore_any_user');
+        return $adminUser->can('restore_any_admin::ip::white::list');
     }
 
     /**
      * Determine whether the adminUser can replicate.
      */
-    public function replicate(AdminUser $adminUser, User $user): bool
+    public function replicate(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
     {
-        return $adminUser->can('replicate_user');
+        return $adminUser->can('replicate_admin::ip::white::list');
     }
 
     /**
@@ -103,6 +103,6 @@ class UserPolicy
      */
     public function reorder(AdminUser $adminUser): bool
     {
-        return $adminUser->can('reorder_user');
+        return $adminUser->can('reorder_admin::ip::white::list');
     }
 }

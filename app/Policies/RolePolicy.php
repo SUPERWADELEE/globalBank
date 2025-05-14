@@ -15,8 +15,7 @@ class RolePolicy
      */
     public function viewAny(AdminUser $adminUser): bool
     {
-        // return $adminUser->can('view_any_role');
-        return true;
+        return $adminUser->can('view_any_role');
     }
 
     /**
@@ -24,8 +23,7 @@ class RolePolicy
      */
     public function view(AdminUser $adminUser, Role $role): bool
     {
-        // return $adminUser->can('view_role');
-        return true;
+        return $adminUser->can('view_role');
     }
 
     /**
@@ -33,8 +31,7 @@ class RolePolicy
      */
     public function create(AdminUser $adminUser): bool
     {
-        // return $adminUser->can('create_role');
-        return true;
+        return $adminUser->can('create_role');
     }
 
     /**
