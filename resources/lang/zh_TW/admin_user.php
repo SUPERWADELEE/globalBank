@@ -31,4 +31,16 @@ return [
     // Status
     'active' => '啟用',
     'inactive' => '停用',
+
+    'locale' => '國家',
+    'locales' => [
+        'zh_TW' => '繁體中文',
+        'en' => '英文',
+        'ja' => '日文',
+        'ko' => '韓文',
+    ],
+    'navigation' => [
+        'system_settings' => '系統設置',
+    ],
+    'operation_log' => '操作日誌',
 ];

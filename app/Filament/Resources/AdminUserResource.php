@@ -13,6 +13,7 @@ use Filament\Tables\Columns\TextColumn;
 use Spatie\Permission\Models\Role;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\DB;
+use App\Enums\LocaleEnum;
 
 
 class AdminUserResource extends Resource
@@ -20,8 +21,11 @@ class AdminUserResource extends Resource
     protected static ?string $model = AdminUser::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationLabel = '系統設置';
-
+    // protected static ?string $navigationLabel = __('admin_user.navigation.system_settings');
+    public static function getNavigationLabel(): string
+    {
+        return __('admin_user.navigation.system_settings');
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -56,6 +60,14 @@ class AdminUserResource extends Resource
                             $component->state($roleIds);
                         }
                     }),
+                Select::make('locale')
+                    ->label(__('admin_user.locale'))
+                    ->options(collect(LocaleEnum::cases())->mapWithKeys(fn($case) => [
+                        $case->value => $case->label()
+                    ])->toArray())
+                    ->default(LocaleEnum::TraditionalChinese->value)
+                    ->required(),
+
                 TextInput::make('password')
                     ->label(__('admin_user.password'))
                     ->password()
@@ -67,9 +79,9 @@ class AdminUserResource extends Resource
                     ->password()
                     ->required(fn($livewire) => $livewire instanceof Pages\CreateAdminUser)
                     ->dehydrated(fn($state) => filled($state))
-                    ->maxLength(255),
             ]);
     }
+
 
     public static function table(Table $table): Table
     {
@@ -115,7 +127,8 @@ class AdminUserResource extends Resource
                 Tables\Actions\DeleteAction::make()
                     ->label(__('admin_user.delete')),
                 Tables\Actions\Action::make('操作日誌')
-                    ->url(route('filament.admin.resources.admin-logs.index')),
+                    ->url(route('filament.admin.resources.admin-logs.index'))
+                    ->label(__('admin_user.operation_log')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

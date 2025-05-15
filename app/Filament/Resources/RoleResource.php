@@ -35,7 +35,8 @@ class RoleResource extends Resource
                                 ->relationship('permissions', 'name')
                                 ->multiple()
                                 ->preload()
-                                ->searchable(),
+                                ->searchable()
+                                ->getOptionLabelFromRecordUsing(fn($record) => __('permissions.' . $record->name)),
                         ]),
                     ]),
                 ]),

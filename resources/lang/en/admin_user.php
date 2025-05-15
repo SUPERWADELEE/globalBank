@@ -31,4 +31,15 @@ return [
     // Status
     'active' => 'Active',
     'inactive' => 'Inactive',
+    'locale' => 'Country',
+    'locales' => [
+        'zh_TW' => 'Traditional Chinese',
+        'en' => 'English',
+        'ja' => 'Japanese',
+        'ko' => 'Korean',
+    ],
+    'navigation' => [
+        'system_settings' => 'System Settings',
+    ],
+    'operation_log' => 'Operation Log',
 ];

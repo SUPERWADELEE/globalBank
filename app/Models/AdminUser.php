@@ -20,6 +20,7 @@ class AdminUser extends Authenticatable
         'name',
         'email',
         'password',
+        'locale',
     ];
 
     /**
