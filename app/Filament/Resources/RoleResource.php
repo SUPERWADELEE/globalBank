@@ -47,15 +47,31 @@ class RoleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('users.name')
-                    ->label('會員'),
+                    ->label(__('admin_user.name'))
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d-m-Y H:i'),
+                    ->dateTime('d-m-Y H:i')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime('d-m-Y H:i'),
+                    ->dateTime('d-m-Y H:i')
+                    ->searchable(),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('name')
+                    ->label(__('admin_user.name'))
+                    ->options(Role::all()->pluck('name', 'id')),
+                Tables\Filters\SelectFilter::make('users.name')
+                    ->label(__('admin_user.name'))
+                    ->options(Role::all()->pluck('name', 'id')),
+                Tables\Filters\SelectFilter::make('created_at')
+                    ->label(__('common.created_at'))
+                    ->options(Role::all()->pluck('created_at', 'id')),
+                Tables\Filters\SelectFilter::make('updated_at')
+                    ->label(__('common.updated_at'))
+                    ->options(Role::all()->pluck('updated_at', 'id')),
                 //
             ])
             ->actions([

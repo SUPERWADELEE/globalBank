@@ -34,18 +34,31 @@ class AdminIpWhiteListResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('ip'),
+                TextColumn::make('ip_address')
+                    ->searchable(),
                 TextColumn::make('created_at')
-                    ->dateTime('Y-m-d H:i:s'),
+                    ->dateTime('Y-m-d H:i:s')
+                    ->searchable(),
                 TextColumn::make('updated_at')
-                    ->dateTime('Y-m-d H:i:s'),
+                    ->dateTime('Y-m-d H:i:s')
+                    ->searchable(),
                 //
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('ip_address')
+                    ->label(__('admin_ip_white_list.ip_address'))
+                    ->options(AdminIpWhiteList::all()->pluck('ip_address', 'id')),
+                Tables\Filters\SelectFilter::make('created_at')
+                    ->label(__('common.created_at'))
+                    ->options(AdminIpWhiteList::all()->pluck('created_at', 'id')),
+                Tables\Filters\SelectFilter::make('updated_at')
+                    ->label(__('common.updated_at'))
+                    ->options(AdminIpWhiteList::all()->pluck('updated_at', 'id')),
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->label(__('admin_user.delete')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

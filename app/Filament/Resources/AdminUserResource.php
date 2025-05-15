@@ -74,11 +74,14 @@ class AdminUserResource extends Resource
                     ->required(fn($livewire) => $livewire instanceof Pages\CreateAdminUser)
                     ->dehydrated(fn($state) => filled($state))
                     ->maxLength(255),
+                    
                 TextInput::make('password_confirmation')
                     ->label(__('admin_user.confirm_password'))
                     ->password()
                     ->required(fn($livewire) => $livewire instanceof Pages\CreateAdminUser)
                     ->dehydrated(fn($state) => filled($state))
+                    ->maxLength(255)
+                    ->rule('confirmed'),
             ]);
     }
 
@@ -88,17 +91,22 @@ class AdminUserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label(__('admin_user.name')),
+                    ->label(__('admin_user.name'))
+                    ->searchable(),
                 TextColumn::make('email')
-                    ->label(__('admin_user.email')),
+                    ->label(__('admin_user.email'))
+                    ->searchable(),
                 TextColumn::make('roles.name')
-                    ->label(__('admin_user.roles')),
+                    ->label(__('admin_user.roles'))
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->label(__('common.created_at'))
-                    ->dateTime('Y-m-d H:i:s'),
+                    ->dateTime('Y-m-d H:i:s')
+                    ->searchable(),
                 TextColumn::make('updated_at')
                     ->label(__('common.updated_at'))
-                    ->dateTime('Y-m-d H:i:s'),
+                    ->dateTime('Y-m-d H:i:s')
+                    ->searchable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('name')
@@ -128,7 +136,7 @@ class AdminUserResource extends Resource
                     ->label(__('admin_user.delete')),
                 Tables\Actions\Action::make('操作日誌')
                     ->url(route('filament.admin.resources.admin-logs.index'))
-                    ->label(__('admin_user.operation_log')),
+                    ->label(__('admin_user.operation_log'))
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

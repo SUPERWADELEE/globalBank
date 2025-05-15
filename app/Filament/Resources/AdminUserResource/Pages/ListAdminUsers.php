@@ -13,13 +13,18 @@ class ListAdminUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make('新增'), // 這樣會顯示在表格上方
+            Actions\CreateAction::make('新增')
+                ->color('success'), // 這樣會顯示在表格上方
+
             Actions\Action::make('帳號管理')
-                ->url(route('filament.admin.resources.admin-users.index')),
+                ->url(route('filament.admin.resources.admin-users.index'))
+                ->label(__('admin_user.navigation.account_management')),
             Actions\Action::make('權限管理')
-                ->url(route('filament.admin.resources.roles.index')),
+                ->url(route('filament.admin.resources.roles.index'))
+                ->label(__('admin_user.navigation.role_management')),
             Actions\Action::make('IP白名單')
-                ->url(route('filament.admin.resources.admin-ip-white-lists.index')),
+                ->url(route('filament.admin.resources.admin-ip-white-lists.index'))
+                ->label(__('admin_user.navigation.ip_white_list')),
         ];
     }
     // public function getHeader(): ?View
@@ -29,6 +34,6 @@ class ListAdminUsers extends ListRecords
 
     public function getTitle(): string
     {
-        return '帳號管理';
+        return __('admin_user.navigation.account_management');
     }
 }

@@ -21,7 +21,7 @@ return [
     // Sections
     'system_settings' => '系統設置',
     'user_management' => '用戶管理',
-    'role_management' => '角色管理',
+    'role_management' => '權限管理',
     
     // Messages
     'record_created' => '記錄已成功建立',
@@ -41,6 +41,9 @@ return [
     ],
     'navigation' => [
         'system_settings' => '系統設置',
+        'account_management' => '帳號管理',
+        'role_management' => '權限管理',
+        'ip_white_list' => 'IP白名單',
     ],
     'operation_log' => '操作日誌',
 ];

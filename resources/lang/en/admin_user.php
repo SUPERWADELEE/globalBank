@@ -21,7 +21,7 @@ return [
     // Sections
     'system_settings' => 'System Settings',
     'user_management' => 'User Management',
-    'role_management' => 'Role Management',
+    'role_management' => 'Permission Management',
     
     // Messages
     'record_created' => 'Record created successfully',
@@ -40,6 +40,9 @@ return [
     ],
     'navigation' => [
         'system_settings' => 'System Settings',
+        'account_management' => 'Account Management',
+        'role_management' => 'Permission Management',
+        'ip_white_list' => 'IP White List',
     ],
     'operation_log' => 'Operation Log',
 ];
