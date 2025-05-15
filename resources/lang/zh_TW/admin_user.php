@@ -22,6 +22,7 @@ return [
     'system_settings' => '系統設置',
     'user_management' => '用戶管理',
     'role_management' => '權限管理',
+    'admin_user' => '操作員',
     
     // Messages
     'record_created' => '記錄已成功建立',
@@ -44,6 +45,7 @@ return [
         'account_management' => '帳號管理',
         'role_management' => '權限管理',
         'ip_white_list' => 'IP白名單',
+        'rate_settings' => '匯率設定',
     ],
     'operation_log' => '操作日誌',
 ];

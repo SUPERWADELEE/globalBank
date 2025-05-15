@@ -9,6 +9,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Spatie\Activitylog\Models\Activity;
+use Filament\Tables\Enums\FiltersLayout;
 
 class AdminLogResource extends Resource
 {
@@ -28,9 +29,37 @@ class AdminLogResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('description')->label('動作')->searchable(),
                 TextColumn::make('causer.name')->label('操作者')->searchable(),
-                TextColumn::make('subject_id')->label('對象 ID')->searchable(),
+                TextColumn::make('description')
+                    ->label('操作紀錄')
+                    ->formatStateUsing(function ($state, $record) {
+                        $causerName = optional($record->causer)->name ?? '未知操作者';
+                        $subjectName = optional($record->subject)->name ?? '未知對象';
+                        $event = $record->event;
+
+                        return __('activity.log_description', [
+                            'causer' => $causerName,
+                            'subject' => $subjectName,
+                            'event' => $event,
+                        ]);
+                    }),
+                TextColumn::make('subject')
+                    ->label('單元')
+                    ->formatStateUsing(function ($state, $record) {
+                        $subjectType = $record->subject_type;
+                        $event = $record->event;
+
+
+                        // 從語系取出對應文字
+                        $module = __('activity.subject_modules.' . $subjectType);
+                        $action = __('activity.event_names.' . $event);
+                        // 如果沒有找到語系就顯示原始型別
+                        $module = $module !== "activity.subject_modules.$subjectType" ? $module : class_basename($subjectType);
+                        $action = $action !== "activity.event_names.deleted" ? $action : $event;
+
+                        return "{$module} - {$action}";
+                    }),
+
                 TextColumn::make('created_at')->label('時間')->since()->searchable(),
                 // 🔹 新值
                 TextColumn::make('properties.attributes')
@@ -42,14 +71,12 @@ class AdminLogResource extends Resource
             ])
 
             ->defaultSort('created_at', 'desc')
-            // ->columns([
-            //     TextColumn::make('description'),
-            //     TextColumn::make('created_at'),
-            // ])
             ->filters([
-                Tables\Filters\SelectFilter::make('causer.name')
+                Tables\Filters\SelectFilter::make('causer_id')
                     ->label('操作者')
-                    ->options(Activity::all()->pluck('causer.name', 'causer.id')),
+                    ->options(
+                        \App\Models\AdminUser::pluck('name', 'id')
+                    ),
                 Tables\Filters\SelectFilter::make('subject_id')
                     ->label('對象 ID')
                     ->options(Activity::all()->pluck('subject_id', 'subject_id')),
@@ -57,7 +84,7 @@ class AdminLogResource extends Resource
                     ->label('動作')
                     ->options(Activity::all()->pluck('description', 'description')),
                 //
-            ])
+            ], layout: FiltersLayout::AboveContent)
             ->actions([])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

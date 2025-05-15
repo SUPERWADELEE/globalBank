@@ -22,7 +22,7 @@ return [
     'system_settings' => 'System Settings',
     'user_management' => 'User Management',
     'role_management' => 'Permission Management',
-    
+    'admin_user' => 'Operator',
     // Messages
     'record_created' => 'Record created successfully',
     'record_updated' => 'Record updated successfully',

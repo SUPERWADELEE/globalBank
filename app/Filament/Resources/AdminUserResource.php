@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Tables\Enums\FiltersLayout;
 use App\Filament\Resources\AdminUserResource\Pages;
 use App\Models\AdminUser;
 use Filament\Forms\Form;
@@ -21,7 +22,6 @@ class AdminUserResource extends Resource
     protected static ?string $model = AdminUser::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    // protected static ?string $navigationLabel = __('admin_user.navigation.system_settings');
     public static function getNavigationLabel(): string
     {
         return __('admin_user.navigation.system_settings');
@@ -74,14 +74,14 @@ class AdminUserResource extends Resource
                     ->required(fn($livewire) => $livewire instanceof Pages\CreateAdminUser)
                     ->dehydrated(fn($state) => filled($state))
                     ->maxLength(255),
-                    
+
                 TextInput::make('password_confirmation')
                     ->label(__('admin_user.confirm_password'))
                     ->password()
                     ->required(fn($livewire) => $livewire instanceof Pages\CreateAdminUser)
                     ->dehydrated(fn($state) => filled($state))
-                    ->maxLength(255)
-                    ->rule('confirmed'),
+                    ->maxLength(255),
+                // ->rule('confirmed'),
             ]);
     }
 
@@ -116,19 +116,33 @@ class AdminUserResource extends Resource
                         return \App\Models\AdminUser::pluck('name', 'name')->toArray();
                     }),
 
+
+
                 Tables\Filters\SelectFilter::make('email')
                     ->label(__('admin_user.email'))
                     ->options(function () {
                         return \App\Models\AdminUser::pluck('email', 'email')->toArray();
                     }),
 
-                Tables\Filters\SelectFilter::make('roles.name')
+                Tables\Filters\SelectFilter::make('role')
                     ->label(__('admin_user.roles'))
                     ->options(function () {
-                        return \Spatie\Permission\Models\Role::pluck('name', 'name')->toArray();
+                        return \Spatie\Permission\Models\Role::whereIn('id', function ($query) {
+                            $query->select('role_id')
+                                ->from('model_has_roles')
+                                ->where('model_type', 'App\\Models\\AdminUser');
+                        })
+                            ->pluck('name', 'id')
+                            ->toArray();
                     })
-                    ->relationship('roles', 'name'),
-            ])
+                    ->query(function ($query, array $data) {
+                        if (isset($data['value'])) {
+                            $query->whereHas('roles', function ($q) use ($data) {
+                                $q->where('id', $data['value']);
+                            });
+                        }
+                    }),
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->label(__('admin_user.edit')),

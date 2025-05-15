@@ -11,6 +11,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Enums\FiltersLayout;
 
 class AdminIpWhiteListResource extends Resource
 {
@@ -47,15 +48,15 @@ class AdminIpWhiteListResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('ip_address')
                     ->label(__('admin_ip_white_list.ip_address'))
-                    ->options(AdminIpWhiteList::all()->pluck('ip_address', 'id')),
+                    ->options(AdminIpWhiteList::pluck('ip_address', 'ip_address')->toArray()),
                 Tables\Filters\SelectFilter::make('created_at')
                     ->label(__('common.created_at'))
-                    ->options(AdminIpWhiteList::all()->pluck('created_at', 'id')),
+                    ->options(AdminIpWhiteList::pluck('created_at', 'created_at')->toArray()),
                 Tables\Filters\SelectFilter::make('updated_at')
                     ->label(__('common.updated_at'))
-                    ->options(AdminIpWhiteList::all()->pluck('updated_at', 'id')),
+                    ->options(AdminIpWhiteList::pluck('updated_at', 'updated_at')->toArray()),
                 //
-            ])
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\DeleteAction::make()
                     ->label(__('admin_user.delete')),
