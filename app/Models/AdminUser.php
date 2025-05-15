@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 
 class AdminUser extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -37,6 +40,16 @@ class AdminUser extends Authenticatable
      *
      * @return array<string, string>
      */
+
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            ->logOnly(['name', 'email', 'locale'])
+            ->logOnlyDirty(true)
+            ->dontSubmitEmptyLogs();
+    }
     protected function casts(): array
     {
         return [
@@ -74,5 +87,9 @@ class AdminUser extends Authenticatable
     public function ipWhitelists()
     {
         return $this->hasMany(AdminIpWhitelist::class, 'admin_user_id');
+    }
+    public function activities()
+    {
+        return $this->morphMany(Activity::class, 'causer');
     }
 }
