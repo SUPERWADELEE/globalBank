@@ -23,13 +23,11 @@ class AdminIpWhitelist extends Model
      */
     protected $fillable = [
         'ip_address',
-        'description',
         'admin_user_id',
     ];
 
     protected $casts = [
         'ip_address' => 'string',
-        'description' => 'string',
         'admin_user_id' => 'integer',
     ];
 

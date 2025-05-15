@@ -24,11 +24,9 @@ class AdminIpWhiteListResource extends Resource
             ->schema([
                 TextInput::make('ip_address')
                     ->required()
-                    ->maxLength(255),
-                TextInput::make('description')
-                    ->required()
-                    ->maxLength(255),
-                //
+                    ->maxLength(255)
+                    ->label(__('admin_ip_white_list.ip_address'))
+                    ->rule('ip'),
             ]);
     }
 
