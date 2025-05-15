@@ -14,6 +14,7 @@ use Spatie\Permission\Models\Role;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\DB;
 
+
 class AdminUserResource extends Resource
 {
     protected static ?string $model = AdminUser::class;
@@ -39,7 +40,6 @@ class AdminUserResource extends Resource
                     ->unique(ignoreRecord: true),
                 Select::make('roles')
                     ->label(__('admin_user.roles'))
-                    ->multiple()
                     ->options(Role::all()->pluck('name', 'id'))
                     ->required()
                     ->afterStateHydrated(function ($component, $state, ?AdminUser $record) {
@@ -89,11 +89,33 @@ class AdminUserResource extends Resource
                     ->dateTime('Y-m-d H:i:s'),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('name')
+                    ->label(__('admin_user.name'))
+                    ->options(function () {
+                        // 從資料庫獲取所有不重複的用戶名稱
+                        return \App\Models\AdminUser::pluck('name', 'name')->toArray();
+                    }),
+
+                Tables\Filters\SelectFilter::make('email')
+                    ->label(__('admin_user.email'))
+                    ->options(function () {
+                        return \App\Models\AdminUser::pluck('email', 'email')->toArray();
+                    }),
+
+                Tables\Filters\SelectFilter::make('roles.name')
+                    ->label(__('admin_user.roles'))
+                    ->options(function () {
+                        return \Spatie\Permission\Models\Role::pluck('name', 'name')->toArray();
+                    })
+                    ->relationship('roles', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->label(__('admin_user.edit')),
+                Tables\Actions\DeleteAction::make()
+                    ->label(__('admin_user.delete')),
+                Tables\Actions\Action::make('操作日誌')
+                    ->url(route('filament.admin.resources.admin-logs.index')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
