@@ -9,7 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
-
+use Illuminate\Support\Facades\Auth;
 class AdminUser extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles, LogsActivity;
@@ -44,10 +44,19 @@ class AdminUser extends Authenticatable
 
     public function getActivitylogOptions(): LogOptions
     {
+        $adminUser = Auth::user()->name;
         return LogOptions::defaults()
             ->logAll()
             ->logOnly(['name', 'email', 'locale'])
             ->logOnlyDirty(true)
+            ->setDescriptionForEvent(function (string $eventName) use ($adminUser) {
+                $subjectName = $this->name;
+                return __('activity.log_description', [
+                    'causer' => $adminUser,
+                    'subject' => $subjectName,
+                    'event' => $eventName
+                ]);
+            })
             ->dontSubmitEmptyLogs();
     }
     protected function casts(): array

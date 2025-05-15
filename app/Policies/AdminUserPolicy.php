@@ -18,7 +18,7 @@ class AdminUserPolicy
      */
     public function viewAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('view_any_admin::user');
+        return $adminUser->can('view_any_admin_user');
     }
 
     /**
@@ -29,7 +29,7 @@ class AdminUserPolicy
      */
     public function view(AdminUser $adminUser): bool
     {
-        return $adminUser->can('view_admin::user');
+        return $adminUser->can('view_admin_user');
     }
 
     /**
@@ -40,7 +40,7 @@ class AdminUserPolicy
      */
     public function create(AdminUser $adminUser): bool
     {
-        return $adminUser->can('create_admin::user');
+        return $adminUser->can('create_admin_user');
     }
 
     /**
@@ -51,7 +51,7 @@ class AdminUserPolicy
      */
     public function update(AdminUser $adminUser): bool
     {
-        return $adminUser->can('update_admin::user');
+        return $adminUser->can('update_admin_user');
     }
 
     /**
@@ -62,7 +62,7 @@ class AdminUserPolicy
      */
     public function delete(AdminUser $adminUser): bool
     {
-        return $adminUser->can('delete_admin::user');
+        return $adminUser->can('delete_admin_user');
     }
 
     /**
@@ -73,7 +73,7 @@ class AdminUserPolicy
      */
     public function deleteAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('delete_any_admin::user');
+        return $adminUser->can('delete_any_admin_user');
     }
 
     /**
@@ -84,7 +84,7 @@ class AdminUserPolicy
      */
     public function forceDelete(AdminUser $adminUser): bool
     {
-        return $adminUser->can('force_delete_admin::user');
+        return $adminUser->can('force_delete_admin_user');
     }
 
     /**
@@ -95,7 +95,7 @@ class AdminUserPolicy
      */
     public function forceDeleteAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('force_delete_any_admin::user');
+        return $adminUser->can('force_delete_any_admin_user');
     }
 
     /**
@@ -106,7 +106,7 @@ class AdminUserPolicy
      */
     public function restore(AdminUser $adminUser): bool
     {
-        return $adminUser->can('restore_admin::user');
+        return $adminUser->can('restore_admin_user');
     }
 
     /**
@@ -117,7 +117,7 @@ class AdminUserPolicy
      */
     public function restoreAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('restore_any_admin::user');
+        return $adminUser->can('restore_any_admin_user');
     }
 
     /**
@@ -128,7 +128,7 @@ class AdminUserPolicy
      */
     public function replicate(AdminUser $adminUser): bool
     {
-        return $adminUser->can('replicate_admin::user');
+        return $adminUser->can('replicate_admin_user');
     }
 
     /**
@@ -139,6 +139,6 @@ class AdminUserPolicy
      */
     public function reorder(AdminUser $adminUser): bool
     {
-        return $adminUser->can('reorder_admin::user');
+        return $adminUser->can('reorder_admin_user');
     }
 }

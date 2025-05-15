@@ -15,7 +15,7 @@ class AdminIpWhiteListPolicy
      */
     public function viewAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('view_any_admin::ip::white::list');
+        return $adminUser->can('view_any_admin_ip_white_list');
     }
 
     /**
@@ -23,7 +23,7 @@ class AdminIpWhiteListPolicy
      */
     public function view(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
     {
-        return $adminUser->can('view_admin::ip::white::list');
+        return $adminUser->can('view_admin_ip_white_list');
     }
 
     /**
@@ -31,7 +31,7 @@ class AdminIpWhiteListPolicy
      */
     public function create(AdminUser $adminUser): bool
     {
-        return $adminUser->can('create_admin::ip::white::list');
+        return $adminUser->can('create_admin_ip_white_list');
     }
 
     /**
@@ -39,7 +39,7 @@ class AdminIpWhiteListPolicy
      */
     public function update(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
     {
-        return $adminUser->can('update_admin::ip::white::list');
+        return $adminUser->can('update_admin_ip_white_list');
     }
 
     /**
@@ -47,7 +47,7 @@ class AdminIpWhiteListPolicy
      */
     public function delete(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
     {
-        return $adminUser->can('delete_admin::ip::white::list');
+        return $adminUser->can('delete_admin_ip_white_list');
     }
 
     /**
@@ -55,7 +55,7 @@ class AdminIpWhiteListPolicy
      */
     public function deleteAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('delete_any_admin::ip::white::list');
+        return $adminUser->can('delete_any_admin_ip_white_list');
     }
 
     /**
@@ -63,7 +63,7 @@ class AdminIpWhiteListPolicy
      */
     public function forceDelete(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
     {
-        return $adminUser->can('force_delete_admin::ip::white::list');
+        return $adminUser->can('force_delete_admin_ip_white_list');
     }
 
     /**
@@ -71,7 +71,7 @@ class AdminIpWhiteListPolicy
      */
     public function forceDeleteAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('force_delete_any_admin::ip::white::list');
+        return $adminUser->can('force_delete_any_admin_ip_white_list');
     }
 
     /**
@@ -79,7 +79,7 @@ class AdminIpWhiteListPolicy
      */
     public function restore(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
     {
-        return $adminUser->can('restore_admin::ip::white::list');
+        return $adminUser->can('restore_admin_ip_white_list');
     }
 
     /**
@@ -87,7 +87,7 @@ class AdminIpWhiteListPolicy
      */
     public function restoreAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('restore_any_admin::ip::white::list');
+        return $adminUser->can('restore_any_admin_ip_white_list');
     }
 
     /**
@@ -95,7 +95,7 @@ class AdminIpWhiteListPolicy
      */
     public function replicate(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
     {
-        return $adminUser->can('replicate_admin::ip::white::list');
+        return $adminUser->can('replicate_admin_ip_white_list');
     }
 
     /**
@@ -103,6 +103,6 @@ class AdminIpWhiteListPolicy
      */
     public function reorder(AdminUser $adminUser): bool
     {
-        return $adminUser->can('reorder_admin::ip::white::list');
+        return $adminUser->can('reorder_admin_ip_white_list');
     }
 }

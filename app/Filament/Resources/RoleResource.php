@@ -12,6 +12,8 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Spatie\Permission\Models\Role;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Forms\Components\CheckboxList;
 
 class RoleResource extends Resource
 {
@@ -29,17 +31,94 @@ class RoleResource extends Resource
                     ->required(),
 
                 Section::make('權限分配')->schema([
-                    Grid::make(3)->schema([
-                        Fieldset::make('會員管理')->schema([
-                            Forms\Components\Select::make('permissions')
+                    Grid::make(2)->schema([
+                        Fieldset::make(__('permissions.groups.system'))->schema([
+                            CheckboxList::make('permissions')
                                 ->relationship('permissions', 'name')
-                                ->multiple()
-                                ->preload()
-                                ->searchable()
-                                ->getOptionLabelFromRecordUsing(fn($record) => __('permissions.' . $record->name)),
+                                ->columns(4)
+                                ->options(
+                                    \Spatie\Permission\Models\Permission::all()
+                                        ->filter(fn($p) => str_contains($p->name, 'admin_user'))
+                                        ->pluck('name', 'id') // ✔️ 正確：key 是 id
+                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
+                                        ->toArray()
+                                )
+                                ->bulkToggleable(),
                         ]),
-                    ]),
-                ]),
+
+                        Fieldset::make(__('permissions.groups.system'))->schema([
+                            CheckboxList::make('permissions')
+                                ->relationship('permissions', 'name')
+                                ->options(
+                                    \Spatie\Permission\Models\Permission::all()
+                                        ->filter(fn($p) => str_starts_with($p->name, 'system.'))
+                                        ->pluck('name', 'id')
+                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
+                                        ->toArray()
+                                )
+                                ->bulkToggleable(),
+                        ]),
+
+                        Fieldset::make(__('permissions.groups.whitelist'))->schema([
+                            CheckboxList::make('permissions')
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    \Spatie\Permission\Models\Permission::all()
+                                        ->filter(fn($p) => str_contains($p->name, 'admin_ip_white_list'))
+                                        ->pluck('name', 'id')
+                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
+                                        ->toArray()
+                                )
+                                ->bulkToggleable(),
+                        ]),
+
+                        Fieldset::make(__('permissions.groups.member'))->schema([
+                            CheckboxList::make('permissions')
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    \Spatie\Permission\Models\Permission::all()
+                                        ->filter(fn($p) => str_contains($p->name, 'user'))
+                                        ->pluck('name', 'id')
+                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
+                                        ->toArray()
+                                )
+                                ->bulkToggleable(),
+                        ]),
+
+                        Fieldset::make(__('permissions.groups.role'))->schema([
+                            CheckboxList::make('permissions')
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    \Spatie\Permission\Models\Permission::all()
+                                        ->filter(fn($p) => str_contains($p->name, 'role'))
+                                        ->pluck('name', 'id')
+                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
+                                        ->toArray()
+                                )
+                                ->bulkToggleable(),
+                        ]),
+
+                        Fieldset::make(__('permissions.groups.permission'))->schema([
+                            CheckboxList::make('permissions')
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    \Spatie\Permission\Models\Permission::all()
+                                        ->filter(fn($p) => str_contains($p->name, 'permission'))
+                                        ->pluck('name', 'id')
+                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
+                                        ->toArray()
+                                )
+                                ->bulkToggleable(),
+                        ]),
+
+                        // 再加上財務操作、交易紀錄、訂單管理等群組
+
+                    ])
+                ])
             ]);
     }
 
@@ -48,32 +127,30 @@ class RoleResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('users.name')
                     ->label(__('admin_user.name'))
                     ->searchable(),
+                Tables\Columns\TextColumn::make('users.name')
+                    ->label(__('admin_user.admin_user'))
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d-m-Y H:i')
+                    ->dateTime('Y-m-d H:i:s')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime('d-m-Y H:i')
+                    ->dateTime('Y-m-d H:i:s')
                     ->searchable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('name')
                     ->label(__('admin_user.name'))
-                    ->options(Role::all()->pluck('name', 'id')),
-                Tables\Filters\SelectFilter::make('users.name')
-                    ->label(__('admin_user.name'))
-                    ->options(Role::all()->pluck('name', 'id')),
+                    ->options(Role::pluck('name', 'name')->toArray()),
                 Tables\Filters\SelectFilter::make('created_at')
                     ->label(__('common.created_at'))
-                    ->options(Role::all()->pluck('created_at', 'id')),
+                    ->options(Role::pluck('created_at', 'created_at')->toArray()),
                 Tables\Filters\SelectFilter::make('updated_at')
                     ->label(__('common.updated_at'))
-                    ->options(Role::all()->pluck('updated_at', 'id')),
+                    ->options(Role::pluck('updated_at', 'updated_at')->toArray()),
                 //
-            ])
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
