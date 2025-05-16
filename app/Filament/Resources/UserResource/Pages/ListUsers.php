@@ -13,7 +13,11 @@ class ListUsers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()->label(__('user.create_user')),
         ];
+    }
+    public function getTitle(): string
+    {
+        return __('user.user_management_query');
     }
 }

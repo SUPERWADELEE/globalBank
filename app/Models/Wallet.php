@@ -36,4 +36,9 @@ class Wallet extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function currencyCode()
+    {
+        return $this->belongsTo(CurrencyCode::class);
+    }
 }

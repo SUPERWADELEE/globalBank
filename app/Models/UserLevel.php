@@ -15,7 +15,8 @@ class UserLevel extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'level',
+        'name',
+        
     ];
 
     /**
