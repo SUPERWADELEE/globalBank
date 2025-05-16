@@ -114,6 +114,24 @@ class RoleResource extends Resource
                                 )
                                 ->bulkToggleable(),
                         ]),
+                        Fieldset::make(__('permissions.groups.permission'))->schema([
+                            CheckboxList::make('permissions')
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    \Spatie\Permission\Models\Permission::all()
+                                        ->filter(function ($p) {
+                                            return str_contains($p->name, 'usdt_rate') ||
+                                                str_contains($p->name, 'jpy_rate') ||
+                                                str_contains($p->name, 'sgd_rate') ||
+                                                str_contains($p->name, 'krw_rate');
+                                        })
+                                        ->pluck('name', 'id')
+                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
+                                        ->toArray()
+                                )
+                                ->bulkToggleable(),
+                        ]),
 
                         // 再加上財務操作、交易紀錄、訂單管理等群組
 

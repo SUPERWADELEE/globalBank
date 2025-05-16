@@ -8,10 +8,17 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-
+use Filament\Forms\Components\Select;
+use App\Models\CurrencyCode;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
+use App\Models\AdminUser;
 class RateResource extends Resource
 {
     protected static ?string $model = Rate::class;
+
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     public static function getNavigationLabel(): string
@@ -21,17 +28,51 @@ class RateResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                //
+            return $form
+                ->schema([
+                    Select::make('from_currency_id')
+                    ->options(
+                        CurrencyCode::query()
+                            ->whereIn('code', Auth::user()->getAllowedCurrencyCodesForRate())
+                            ->pluck('code', 'id')
+                    ),
+                Select::make('to_currency_id')
+                    ->label(__('rate.to_currency'))
+                    ->options(CurrencyCode::all()->pluck('code', 'id')),
+                TextInput::make('sell_rate')
+                    ->label(__('rate.sell_rate'))
+                    ->numeric()
+                    ->minValue(0)
+                    ->step(0.01)
+                    ->required(),
+                TextInput::make('buy_rate')
+                    ->label(__('rate.buy_rate'))
+                    ->numeric()
+                    ->minValue(0)
+                    ->step(0.01)
+                    ->required(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
+        $currencies = CurrencyCode::all()->pluck('code', 'id');
         return $table
             ->columns([
-                //
+                TextColumn::make('fromCurrency.code')
+                    ->label(__('rate.from_currency')),
+                TextColumn::make('toCurrency.code')
+                    ->label(__('rate.to_currency')),
+                TextColumn::make('sell_rate')
+                    ->label(__('rate.sell_rate')),
+                TextColumn::make('buy_rate')
+                    ->label(__('rate.buy_rate')),
+                TextColumn::make('created_at')
+                    ->label(__('rate.created_at'))
+                    ->dateTime('Y-m-d H:i:s'),
+                TextColumn::make('updated_at')
+                    ->label(__('rate.updated_at'))
+                    ->dateTime('Y-m-d H:i:s'),
             ])
             ->filters([
                 //
@@ -39,11 +80,7 @@ class RateResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->bulkActions([]);
     }
 
     public static function getRelations(): array
@@ -60,5 +97,19 @@ class RateResource extends Resource
             'create' => Pages\CreateRate::route('/create'),
             'edit' => Pages\EditRate::route('/{record}/edit'),
         ];
+    }
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+        ];
+    }
+    public static function getEloquentQuery(): Builder
+    {
+        $allowed = Auth::user()->getAllowedCurrencyCodesForRate();
+
+        return parent::getEloquentQuery()->whereHas('fromCurrency', function ($q) use ($allowed) {
+            $q->whereIn('code', $allowed);
+        });
     }
 }

@@ -10,13 +10,15 @@ class MoneyCast implements CastsAttributes
 {
     public function get($model, string $key, $value, array $attributes)
     {
-        // 回傳 Brick\Math 的 BigDecimal 實例
-        return BigDecimal::of($value)->toScale(6, RoundingMode::DOWN);
+        return BigDecimal::of($value)
+            ->toScale(2, RoundingMode::DOWN)
+            ->__toString(); // ✅ 回傳 string 給 Livewire 用
     }
 
     public function set($model, string $key, $value, array $attributes)
     {
-        // 存回 DB 前轉成字串（記得固定小數位）
-        return BigDecimal::of($value)->toScale(6, RoundingMode::DOWN)->__toString();
+        return BigDecimal::of($value)
+            ->toScale(6, RoundingMode::DOWN)
+            ->__toString(); // ✅ 存入也轉為字串
     }
 }
