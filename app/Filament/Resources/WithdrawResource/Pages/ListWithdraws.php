@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\DepositLogResource\Pages;
+namespace App\Filament\Resources\WithdrawResource\Pages;
 
-use App\Filament\Resources\DepositLogResource;
+use App\Filament\Resources\WithdrawResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListDepositLogs extends ListRecords
+class ListWithdraws extends ListRecords
 {
-    protected static string $resource = DepositLogResource::class;
+    protected static string $resource = WithdrawResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -25,6 +25,6 @@ class ListDepositLogs extends ListRecords
 
     public function getTitle(): string
     {
-        return __('deposit.title');
+        return __('withdraw.title');
     }
 }

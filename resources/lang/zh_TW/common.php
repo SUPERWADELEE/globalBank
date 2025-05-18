@@ -29,4 +29,5 @@ return [
     'email_invalid' => '請輸入有效的電子郵件地址',
     'password_min' => '密碼必須至少8個字符',
     'password_mismatch' => '密碼不匹配',
+    'export' => '匯出',
 ]; 

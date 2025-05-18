@@ -2,26 +2,25 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DepositLogResource\Pages;
-use App\Models\Deposit;
+use App\Filament\Resources\WithdrawResource\Pages;
+use App\Models\Withdraw;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
-use App\Enums\DepositStatus;
 use Filament\Tables\Filters\SelectFilter;
-use App\Models\User;
-use App\Models\CurrencyCode;
-use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\DatePicker;
-use App\Filament\Exports\DepositeExporter;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Actions\ExportAction;
+use App\Enums\WithdrawStatus;
+use App\Models\CurrencyCode;
+use App\Filament\Exports\WithdrawExporter;
 
 
-class DepositLogResource extends Resource
+class WithdrawResource extends Resource
 {
-    protected static ?string $model = Deposit::class;
+    protected static ?string $model = Withdraw::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -32,8 +31,9 @@ class DepositLogResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('deposit.title');
+        return __('withdraw.title');
     }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -47,44 +47,44 @@ class DepositLogResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('order_number')
-                    ->label(__('deposit.order_number')),
+                    ->label(__('withdraw.order_number')),
                 TextColumn::make('user.name')
-                    ->label(__('deposit.user')),
+                    ->label(__('withdraw.user')),
                 TextColumn::make('currencyCode.code')
-                    ->label(__('deposit.currency_code')),
+                    ->label(__('withdraw.currency_code')),
                 TextColumn::make('amount')
-                    ->label(__('deposit.amount')),
+                    ->label(__('withdraw.amount')),
                 TextColumn::make('status')
                     ->badge()
-                    ->color(fn($state) => match ($state instanceof DepositStatus ? $state : DepositStatus::from((int) $state)) {
-                        DepositStatus::Pending => 'warning',
-                        DepositStatus::Success => 'success',
-                        DepositStatus::Failed => 'danger',
+                    ->color(fn($state) => match ($state instanceof WithdrawStatus ? $state : WithdrawStatus::from((int) $state)) {
+                        WithdrawStatus::Pending => 'warning',
+                        WithdrawStatus::Success => 'success',
+                        WithdrawStatus::Failed => 'danger',
                     })
-                    ->formatStateUsing(fn($state) => ($state instanceof DepositStatus ? $state : DepositStatus::from((int) $state))->label())
-                    ->label(__('deposit.status')),
+                    ->formatStateUsing(fn($state) => ($state instanceof WithdrawStatus ? $state : WithdrawStatus::from((int) $state))->label())
+                    ->label(__('withdraw.status')),
                 TextColumn::make('created_at')
-                    ->label(__('deposit.created_at')),
+                    ->label(__('withdraw.created_at')),
             ])
             ->filters([
                 SelectFilter::make('user_id')
                     ->options(
-                        Deposit::with('user')
+                        Withdraw::with('user')
                             ->get()
                             ->pluck('user.username', 'user.id')
                             ->unique()
                     )
-                    ->label(__('deposit.user'))
+                    ->label(__('withdraw.user'))
                     ->native(false)
                     ->searchable(),
                 SelectFilter::make('currency_code_id')
                     ->options(CurrencyCode::all()->pluck('code', 'id'))
-                    ->label(__('deposit.currency_code'))
+                    ->label(__('withdraw.currency_code'))
                     ->native(false)
                     ->searchable(),
                 SelectFilter::make('order_number')
-                    ->options(Deposit::where('status', '1')->pluck('order_number', 'order_number'))
-                    ->label(__('deposit.order_number'))
+                    ->options(Withdraw::where('status', '1')->pluck('order_number', 'order_number'))
+                    ->label(__('withdraw.order_number'))
                     ->native(false)
                     ->searchable(),
                 // 4. 建立時間：改為範圍選擇
@@ -98,15 +98,14 @@ class DepositLogResource extends Resource
                             ->when($data['from'], fn($q) => $q->whereDate('created_at', '>=', $data['from']))
                             ->when($data['until'], fn($q) => $q->whereDate('created_at', '<=', $data['until']))
                     )
-                    ->label(__('deposit.created_at')),
+                    ->label(__('withdraw.created_at')),
             ], layout: FiltersLayout::AboveContent)
             ->headerActions([
                 ExportAction::make()
-                    ->exporter(DepositeExporter::class)
-                    ->modalHeading(__('deposit.export_heading'))
-                    ->modalDescription(__('deposit.export_description'))
-                    ->label(__('common.export')),
-
+                    ->exporter(WithdrawExporter::class)
+                    ->modalHeading(__('withdraw.export_heading'))
+                    ->modalDescription(__('withdraw.export_description'))
+                    ->label(__('common.export'))
             ]);
     }
 
@@ -120,8 +119,8 @@ class DepositLogResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDepositLogs::route('/'),
-            'create' => Pages\CreateDepositLog::route('/create'),
+            'index' => Pages\ListWithdraws::route('/'),
+            'create' => Pages\CreateWithdraw::route('/create'),
         ];
     }
 }

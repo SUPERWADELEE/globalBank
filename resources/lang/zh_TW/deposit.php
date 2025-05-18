@@ -16,4 +16,8 @@ return [
     'export_failed' => '入金紀錄匯出失敗',
     'export_heading' => '入金紀錄匯出',
     'export_description' => '請選擇要匯出的欄位',
+    'status' => '狀態',
+    'navigation' => [
+        'deposit_record' => '入金紀錄',
+    ],
 ];

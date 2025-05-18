@@ -15,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AdminUser;
+
 class RateResource extends Resource
 {
     protected static ?string $model = Rate::class;
@@ -28,9 +29,9 @@ class RateResource extends Resource
 
     public static function form(Form $form): Form
     {
-            return $form
-                ->schema([
-                    Select::make('from_currency_id')
+        return $form
+            ->schema([
+                Select::make('from_currency_id')
                     ->options(
                         CurrencyCode::query()
                             ->whereIn('code', Auth::user()->getAllowedCurrencyCodesForRate())
@@ -98,18 +99,18 @@ class RateResource extends Resource
             'edit' => Pages\EditRate::route('/{record}/edit'),
         ];
     }
-    public static function getPermissionPrefixes(): array
-    {
-        return [
-            'view',
-        ];
-    }
-    public static function getEloquentQuery(): Builder
-    {
-        $allowed = Auth::user()->getAllowedCurrencyCodesForRate();
+    // public static function getPermissionPrefixes(): array
+    // {
+    //     return [
+    //         'view',
+    //     ];
+    // }
+    // public static function getEloquentQuery(): Builder
+    // {
+    //     $allowed = Auth::user()->getAllowedCurrencyCodesForRate();
 
-        return parent::getEloquentQuery()->whereHas('fromCurrency', function ($q) use ($allowed) {
-            $q->whereIn('code', $allowed);
-        });
-    }
+    //     return parent::getEloquentQuery()->whereHas('fromCurrency', function ($q) use ($allowed) {
+    //         $q->whereIn('code', $allowed);
+    //     });
+    // }
 }
