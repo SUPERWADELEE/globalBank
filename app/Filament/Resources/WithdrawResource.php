@@ -16,6 +16,7 @@ use Filament\Tables\Actions\ExportAction;
 use App\Enums\WithdrawStatus;
 use App\Models\CurrencyCode;
 use App\Filament\Exports\WithdrawExporter;
+use Illuminate\Database\Eloquent\Builder;
 
 
 class WithdrawResource extends Resource
@@ -122,5 +123,10 @@ class WithdrawResource extends Resource
             'index' => Pages\ListWithdraws::route('/'),
             'create' => Pages\CreateWithdraw::route('/create'),
         ];
+    }
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereIn('status', [WithdrawStatus::Success, WithdrawStatus::Failed]);
     }
 }

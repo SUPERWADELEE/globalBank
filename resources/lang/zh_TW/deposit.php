@@ -20,4 +20,8 @@ return [
     'navigation' => [
         'deposit_record' => '入金紀錄',
     ],
+    'order' => [
+        'title' => '入金訂單',
+    ],
+    'deposit_address' => '發送地址',
 ];

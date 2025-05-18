@@ -22,4 +22,5 @@ return [
     'navigation' => [
         'withdraw_record' => '出金紀錄',
     ],
+    'withdraw_address' => '發送地址',
 ];

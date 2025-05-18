@@ -2,24 +2,22 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DepositLogResource\Pages;
-use App\Models\Deposit;
+use App\Filament\Resources\DepositOrderResource\Pages;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use App\Models\Deposit;
 use Filament\Tables\Columns\TextColumn;
-use App\Enums\DepositStatus;
 use Filament\Tables\Filters\SelectFilter;
-use App\Models\User;
-use App\Models\CurrencyCode;
-use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Enums\FiltersLayout;
+use App\Models\CurrencyCode;
 use Filament\Forms\Components\DatePicker;
-use App\Filament\Exports\DepositeExporter;
-use Filament\Tables\Actions\ExportAction;
+use App\Enums\DepositStatus;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Actions\Action;
 
-class DepositLogResource extends Resource
+class DepositOrderResource extends Resource
 {
     protected static ?string $model = Deposit::class;
 
@@ -27,13 +25,14 @@ class DepositLogResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return __('transaction.title');
+        return __('common.order_management');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('deposit.title');
+        return __('deposit.order.title');
     }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -65,6 +64,10 @@ class DepositLogResource extends Resource
                     ->label(__('deposit.status')),
                 TextColumn::make('created_at')
                     ->label(__('deposit.created_at')),
+                TextColumn::make('deposit_address')
+                    ->label(__('deposit.deposit_address')),
+                TextColumn::make('tx_hash')
+                    ->label(__('common.tx_hash')),
             ])
             ->filters([
                 SelectFilter::make('user_id')
@@ -100,13 +103,19 @@ class DepositLogResource extends Resource
                     )
                     ->label(__('deposit.created_at')),
             ], layout: FiltersLayout::AboveContent)
-            ->headerActions([
-                ExportAction::make()
-                    ->exporter(DepositeExporter::class)
-                    ->modalHeading(__('deposit.export_heading'))
-                    ->modalDescription(__('deposit.export_description'))
-                    ->label(__('common.export')),
-
+            ->actions([
+                Action::make('markAsCompleted')
+                    ->label(__('common.mark_as_completed'))
+                    ->requiresConfirmation()
+                    ->color('success')
+                    ->icon('heroicon-o-check-circle')
+                    ->action(fn($record) => $record->update(['status' => \App\Enums\DepositStatus::Success])),
+                Action::make('markAsFailed')
+                    ->label(__('common.mark_as_failed'))
+                    ->requiresConfirmation()
+                    ->color('danger')
+                    ->icon('heroicon-o-x-circle')
+                    ->action(fn($record) => $record->update(['status' => \App\Enums\DepositStatus::Failed])),
             ]);
     }
 
@@ -120,14 +129,14 @@ class DepositLogResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDepositLogs::route('/'),
-            'create' => Pages\CreateDepositLog::route('/create'),
+            'index' => Pages\ListDepositOrders::route('/'),
+            'create' => Pages\CreateDepositOrder::route('/create'),
         ];
     }
 
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->whereIn('status', [DepositStatus::Success, DepositStatus::Failed]);
+            ->where('status', DepositStatus::Pending);
     }
 }

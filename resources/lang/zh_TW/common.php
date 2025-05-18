@@ -30,4 +30,8 @@ return [
     'password_min' => '密碼必須至少8個字符',
     'password_mismatch' => '密碼不匹配',
     'export' => '匯出',
+    'order_management' => '訂單管理',
+    'tx_hash' => 'TxID',
+    'mark_as_completed' => '通過',
+    'mark_as_failed' => '拒絕',
 ]; 
