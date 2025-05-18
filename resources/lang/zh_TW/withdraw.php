@@ -23,4 +23,9 @@ return [
         'withdraw_record' => '出金紀錄',
     ],
     'withdraw_address' => '發送地址',
+    'order' => [
+        'title' => '出金訂單',
+    ],
+    'add_tx_hash' => '新增TxID',
+    'modify_tx_hash' => '修改TxID',
 ];
