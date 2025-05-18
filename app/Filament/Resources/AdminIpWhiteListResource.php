@@ -18,6 +18,14 @@ class AdminIpWhiteListResource extends Resource
     protected static ?string $model = AdminIpWhiteList::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('system_management.title');
+    }
+    public static function getNavigationLabel(): string
+    {
+        return __('admin_user.navigation.ip_white_list');
+    }
 
     public static function form(Form $form): Form
     {
@@ -82,10 +90,6 @@ class AdminIpWhiteListResource extends Resource
             'create' => Pages\CreateAdminIpWhiteList::route('/create'),
             'edit' => Pages\EditAdminIpWhiteList::route('/{record}/edit'),
         ];
-    }
-    public static function shouldRegisterNavigation(): bool
-    {
-        return false;
     }
     public static function getPermissionPrefixes(): array
     {

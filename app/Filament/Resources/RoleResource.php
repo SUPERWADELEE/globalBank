@@ -22,6 +22,16 @@ class RoleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function getNavigationGroup(): ?string
+    {
+        return __('system_management.title');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin_user.navigation.role_management');
+    }
+
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form
@@ -207,9 +217,5 @@ class RoleResource extends Resource
             'update',
             'delete',
         ];
-    }
-    public static function shouldRegisterNavigation(): bool
-    {
-        return false;
     }
 }

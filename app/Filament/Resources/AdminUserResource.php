@@ -24,7 +24,11 @@ class AdminUserResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     public static function getNavigationLabel(): string
     {
-        return __('admin_user.navigation.system_settings');
+        return __('admin_user.navigation.account_management');
+    }
+    public static function getNavigationGroup(): ?string
+    {
+        return __('system_management.title');
     }
     public static function form(Form $form): Form
     {
