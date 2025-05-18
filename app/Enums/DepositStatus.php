@@ -11,9 +11,9 @@ enum DepositStatus: int
     public function label(): string
     {
         return match ($this) {
-            self::Pending => __('deposite.status.pending'),
-            self::Success => __('deposite.status.success'),
-            self::Failed => __('deposite.status.failed'),
+            self::Pending => __('deposit.status.pending'),
+            self::Success => __('deposit.status.success'),
+            self::Failed => __('deposit.status.failed'),
         };
     }
 }

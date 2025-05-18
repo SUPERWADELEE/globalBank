@@ -23,7 +23,5 @@ class AppServiceProvider extends ServiceProvider
         $locale = session('locale', config('app.locale'));
         app()->setLocale($locale);
         
-        // 添加偵錯日誌
-        Log::info('AppServiceProvider: 設定語言為 ' . $locale);
     }
 }

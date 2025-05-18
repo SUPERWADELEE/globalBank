@@ -19,6 +19,6 @@ class ListDepositLogs extends ListRecords
 
     public function getTitle(): string
     {
-        return __('deposite.title');
+        return __('deposit.title');
     }
 }

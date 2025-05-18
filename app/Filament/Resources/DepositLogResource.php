@@ -15,6 +15,9 @@ use App\Models\CurrencyCode;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\DatePicker;
+use App\Filament\Exports\DepositeExporter;
+use Filament\Tables\Actions\ExportAction;
+
 
 class DepositLogResource extends Resource
 {
@@ -29,7 +32,7 @@ class DepositLogResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('deposite.title');
+        return __('deposit.title');
     }
     public static function form(Form $form): Form
     {
@@ -44,13 +47,13 @@ class DepositLogResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('order_number')
-                    ->label(__('deposite.order_number')),
+                    ->label(__('deposit.order_number')),
                 TextColumn::make('user.name')
-                    ->label(__('deposite.user')),
+                    ->label(__('deposit.user')),
                 TextColumn::make('currencyCode.code')
-                    ->label(__('deposite.currency_code')),
+                    ->label(__('deposit.currency_code')),
                 TextColumn::make('amount')
-                    ->label(__('deposite.amount')),
+                    ->label(__('deposit.amount')),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn($state) => match ($state instanceof DepositStatus ? $state : DepositStatus::from((int) $state)) {
@@ -60,7 +63,7 @@ class DepositLogResource extends Resource
                     })
                     ->formatStateUsing(fn($state) => ($state instanceof DepositStatus ? $state : DepositStatus::from((int) $state))->label()),
                 TextColumn::make('created_at')
-                    ->label(__('deposite.created_at')),
+                    ->label(__('deposit.created_at')),
             ])
             ->filters([
                 SelectFilter::make('user_id')
@@ -70,17 +73,17 @@ class DepositLogResource extends Resource
                             ->pluck('user.username', 'user.id')
                             ->unique()
                     )
-                    ->label(__('deposite.user'))
+                    ->label(__('deposit.user'))
                     ->native(false)
                     ->searchable(),
                 SelectFilter::make('currency_code_id')
                     ->options(CurrencyCode::all()->pluck('code', 'id'))
-                    ->label(__('deposite.currency_code'))
+                    ->label(__('deposit.currency_code'))
                     ->native(false)
                     ->searchable(),
                 SelectFilter::make('order_number')
                     ->options(Deposit::where('status', '1')->pluck('order_number', 'order_number'))
-                    ->label(__('deposite.order_number'))
+                    ->label(__('deposit.order_number'))
                     ->native(false)
                     ->searchable(),
                 // 4. 建立時間：改為範圍選擇
@@ -94,9 +97,14 @@ class DepositLogResource extends Resource
                             ->when($data['from'], fn($q) => $q->whereDate('created_at', '>=', $data['from']))
                             ->when($data['until'], fn($q) => $q->whereDate('created_at', '<=', $data['until']))
                     )
-                    ->label(__('deposite.created_at')),
+                    ->label(__('deposit.created_at')),
             ], layout: FiltersLayout::AboveContent)
-            ->actions([]);
+            ->headerActions([
+                ExportAction::make()
+                    ->exporter(DepositeExporter::class)
+                    ->modalHeading(__('deposit.export_heading'))
+                    ->modalDescription(__('deposit.export_description'))
+            ]);
     }
 
     public static function getRelations(): array
@@ -111,7 +119,6 @@ class DepositLogResource extends Resource
         return [
             'index' => Pages\ListDepositLogs::route('/'),
             'create' => Pages\CreateDepositLog::route('/create'),
-            // 'edit' => Pages\EditDepositLog::route('/{record}/edit'),
         ];
     }
 }

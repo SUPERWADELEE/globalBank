@@ -41,6 +41,9 @@ return [
             'queue' => env('DB_QUEUE', 'default'),
             'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 90),
             'after_commit' => false,
+            'after_queue' => false,
+            'max_attempts' => 3,
+            
         ],
 
         'beanstalkd' => [

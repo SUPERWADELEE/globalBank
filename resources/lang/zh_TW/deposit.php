@@ -12,4 +12,8 @@ return [
     'order_number' => '訂單號',
     'created_at' => '日期',
     'amount' => '金額',
+    'export_completed' => '入金紀錄匯出已完成',
+    'export_failed' => '入金紀錄匯出失敗',
+    'export_heading' => '入金紀錄匯出',
+    'export_description' => '請選擇要匯出的欄位',
 ];
