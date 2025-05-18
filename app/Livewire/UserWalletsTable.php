@@ -13,7 +13,7 @@ use App\Models\Deposit;
 use App\Enums\DepositStatus;
 use App\Models\Withdraw;
 use App\Enums\WithdrawStatus;
-
+use Illuminate\Support\Str;
 class UserWalletsTable extends Component
 {
     public array $amounts = [];
@@ -44,6 +44,7 @@ class UserWalletsTable extends Component
     private function addDeposit(Wallet $wallet, BigDecimal $amount): void
     {
         $this->deposit = Deposit::create([
+            'order_number' => $this->generateOrderNumber('D'),
             'user_id' => $this->user->id,
             'currency_code_id' => $wallet->currency_code_id,
             'amount' => $amount,
@@ -81,12 +82,18 @@ class UserWalletsTable extends Component
     private function addWithdraw(Wallet $wallet, BigDecimal $amount): void
     {
         $this->withdraw = Withdraw::create([
+            'order_number' => $this->generateOrderNumber('W'),
             'user_id' => $this->user->id,
             'currency_code_id' => $wallet->currency_code_id,
             'amount' => $amount,
             'status' => WithdrawStatus::Success,
             'admin_user_id' => auth()->user()->id,
         ]);
+    }
+
+    private function generateOrderNumber(string $prefix): string
+    {
+        return $prefix . now()->format('YmdHis') . strtoupper(Str::random(4));
     }
 
     private function validateAmount($rawAmount): ?BigDecimal

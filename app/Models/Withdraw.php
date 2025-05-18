@@ -31,6 +31,7 @@ class Withdraw extends Model
         'tx_hash',
         'admin_user_id',
         'description',
+        'order_number',
     ];
 
     /**

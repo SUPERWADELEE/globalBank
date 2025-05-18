@@ -31,6 +31,7 @@ class Deposit extends Model
         'status',
         'admin_user_id',
         'description',
+        'order_number',
     ];
 
     /**
