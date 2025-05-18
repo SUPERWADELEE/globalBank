@@ -101,4 +101,19 @@ class AdminUser extends Authenticatable
     {
         return $this->morphMany(Activity::class, 'causer');
     }
+    public function getAllowedCurrencyCodesForRate(): array
+    {
+        $map = [
+            'edit_usdt_rate' => 'USDT',
+            'edit_sgd_rate' => 'SGD',
+            'edit_krw_rate' => 'KRW',
+        ];
+    
+        return collect($map)
+            ->filter(function ($code, $permission) {
+                return $this->can($permission);
+            })
+            ->values()
+            ->all();
+    }
 }

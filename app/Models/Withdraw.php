@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Casts\MoneyCast;
+use App\Enums\WithdrawStatus;
+
 class Withdraw extends Model
 {
     use HasFactory;
@@ -38,6 +40,7 @@ class Withdraw extends Model
      */
     protected $casts = [
         'amount' => MoneyCast::class,
+        'status' => WithdrawStatus::class,
     ];
 
     /**

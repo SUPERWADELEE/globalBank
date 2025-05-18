@@ -11,7 +11,7 @@ class UserWalletPage extends Page
     protected static string $view = 'filament.resources.user-resource.pages.user-wallet-page';
     protected static string $resource = UserResource::class;
     public ?User $user = null;
-    
+
 
     protected static ?string $title = '使用者錢包';
 
@@ -22,12 +22,11 @@ class UserWalletPage extends Page
 
     public function getTitle(): string
     {
-        return $this->user->name . ' 的錢包';
+        return __('user.user') . ' ' . $this->user->name . ' ' . __('user.wallet');
     }
 
     public static function getSlug(): string
     {
         return '{record}/wallets';
     }
-    
 }

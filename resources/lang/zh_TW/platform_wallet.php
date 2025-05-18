@@ -7,4 +7,5 @@ return [
     'title' => [
         'platform_wallet' => '平台錢包',
     ],
+    "insufficient_balance" => '平台餘額不足',
 ];

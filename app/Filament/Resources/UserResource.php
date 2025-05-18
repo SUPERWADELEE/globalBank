@@ -103,9 +103,13 @@ class UserResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('wallet')
-                    ->label(__('user.wallet'))
+                    ->label(__('user.account_operation'))
                     ->url(fn(User $record) => UserResource::getUrl('user-wallet-page', ['record' => $record->id]))
                     ->icon('heroicon-o-wallet'),
+                Tables\Actions\Action::make('operation_log')
+                    ->label(__('user.operation_log'))
+                    ->url(fn(User $record) => UserResource::getUrl('user-wallet-logs', ['record' => $record->id]))
+                    ->icon('heroicon-o-clock'),
                 // Tables\Actions\Action::make('operation_log')
                 //     ->label(__('user.operation_log'))
                 //     ->url(fn(User $record) => UserResource::getUrl('user-operation-log-page', ['record' => $record->id]))
@@ -125,6 +129,8 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
             'user-wallet-page' => Pages\UserWalletPage::route('/{record}/wallets'),
+            'user-wallet-logs' => Pages\UserWalletLogPage::route('/{record}/wallets/logs'),
+
             // 'financial-operation' => Pages\FinancialOperation::route('/{record}/financial-operation'),
             // 'wallet' => WalletResource::route('/{record}/wallet'),
 
