@@ -21,7 +21,7 @@ class RateResource extends Resource
     protected static ?string $model = Rate::class;
 
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
     public static function getNavigationLabel(): string
     {
         return __('admin_user.navigation.rate_settings');

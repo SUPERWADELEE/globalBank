@@ -21,7 +21,7 @@ class AdminUserResource extends Resource
 {
     protected static ?string $model = AdminUser::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
     public static function getNavigationLabel(): string
     {
         return __('admin_user.navigation.account_management');
@@ -71,6 +71,10 @@ class AdminUserResource extends Resource
                     ])->toArray())
                     ->default(LocaleEnum::TraditionalChinese->value)
                     ->required(),
+                TextInput::make('job_title')
+                    ->label(__('admin_user.job_title'))
+                    ->required()
+                    ->maxLength(255),
 
                 TextInput::make('password')
                     ->label(__('admin_user.password'))

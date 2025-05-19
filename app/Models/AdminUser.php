@@ -24,7 +24,9 @@ class AdminUser extends Authenticatable
         'email',
         'password',
         'locale',
+        'job_title',
     ];
+    protected $guard_name = 'admin';
 
     /**
      * The attributes that should be hidden for serialization.

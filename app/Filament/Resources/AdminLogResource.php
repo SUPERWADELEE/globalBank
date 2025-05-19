@@ -105,7 +105,6 @@ class AdminLogResource extends Resource
         return [
             'index' => Pages\ListAdminLogs::route('/'),
             'create' => Pages\CreateAdminLog::route('/create'),
-            'edit' => Pages\EditAdminLog::route('/{record}/edit'),
         ];
     }
     public static function shouldRegisterNavigation(): bool

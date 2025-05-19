@@ -17,7 +17,7 @@ class AdminIpWhiteListResource extends Resource
 {
     protected static ?string $model = AdminIpWhiteList::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-shield-exclamation';
     public static function getNavigationGroup(): ?string
     {
         return __('system_management.title');

@@ -23,7 +23,7 @@ class DepositLogResource extends Resource
 {
     protected static ?string $model = Deposit::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-up-tray';
 
     public static function getNavigationGroup(): ?string
     {
