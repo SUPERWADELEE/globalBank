@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\AdminUser;
-use Spatie\Permission\Models\Permission;
+use App\Models\PlatformWallet;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PermissionPolicy
+class PlatformWalletPolicy
 {
     use HandlesAuthorization;
 
@@ -15,17 +15,15 @@ class PermissionPolicy
      */
     public function viewAny(AdminUser $adminUser): bool
     {
-        // return $adminUser->can('view_any_permission');
-        return true;
+        return $adminUser->can('view_any_platform::wallet');
     }
 
     /**
      * Determine whether the adminUser can view the model.
      */
-    public function view(AdminUser $adminUser, Permission $permission): bool
+    public function view(AdminUser $adminUser, PlatformWallet $platformWallet): bool
     {
-        // return $adminUser->can('view_permission');
-        return true;
+        return $adminUser->can('view_platform::wallet');
     }
 
     /**
@@ -33,23 +31,23 @@ class PermissionPolicy
      */
     public function create(AdminUser $adminUser): bool
     {
-        return $adminUser->can('create_permission');
+        return $adminUser->can('create_platform::wallet');
     }
 
     /**
      * Determine whether the adminUser can update the model.
      */
-    public function update(AdminUser $adminUser, Permission $permission): bool
+    public function update(AdminUser $adminUser, PlatformWallet $platformWallet): bool
     {
-        return $adminUser->can('update_permission');
+        return $adminUser->can('update_platform::wallet');
     }
 
     /**
      * Determine whether the adminUser can delete the model.
      */
-    public function delete(AdminUser $adminUser, Permission $permission): bool
+    public function delete(AdminUser $adminUser, PlatformWallet $platformWallet): bool
     {
-        return $adminUser->can('delete_permission');
+        return $adminUser->can('delete_platform::wallet');
     }
 
     /**
@@ -57,15 +55,15 @@ class PermissionPolicy
      */
     public function deleteAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('delete_any_permission');
+        return $adminUser->can('{{ DeleteAny }}');
     }
 
     /**
      * Determine whether the adminUser can permanently delete.
      */
-    public function forceDelete(AdminUser $adminUser, Permission $permission): bool
+    public function forceDelete(AdminUser $adminUser, PlatformWallet $platformWallet): bool
     {
-        return $adminUser->can('force_delete_permission');
+        return $adminUser->can('{{ ForceDelete }}');
     }
 
     /**
@@ -73,15 +71,15 @@ class PermissionPolicy
      */
     public function forceDeleteAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('force_delete_any_permission');
+        return $adminUser->can('{{ ForceDeleteAny }}');
     }
 
     /**
      * Determine whether the adminUser can restore.
      */
-    public function restore(AdminUser $adminUser, Permission $permission): bool
+    public function restore(AdminUser $adminUser, PlatformWallet $platformWallet): bool
     {
-        return $adminUser->can('restore_permission');
+        return $adminUser->can('{{ Restore }}');
     }
 
     /**
@@ -89,15 +87,15 @@ class PermissionPolicy
      */
     public function restoreAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('restore_any_permission');
+        return $adminUser->can('{{ RestoreAny }}');
     }
 
     /**
      * Determine whether the adminUser can replicate.
      */
-    public function replicate(AdminUser $adminUser, Permission $permission): bool
+    public function replicate(AdminUser $adminUser, PlatformWallet $platformWallet): bool
     {
-        return $adminUser->can('replicate_permission');
+        return $adminUser->can('{{ Replicate }}');
     }
 
     /**
@@ -105,6 +103,6 @@ class PermissionPolicy
      */
     public function reorder(AdminUser $adminUser): bool
     {
-        return $adminUser->can('reorder_permission');
+        return $adminUser->can('{{ Reorder }}');
     }
 }

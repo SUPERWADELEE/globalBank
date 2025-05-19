@@ -32,8 +32,8 @@ return [
     // Status
     'active' => '啟用',
     'inactive' => '停用',
-
-    'locale' => '國家',
+    'job title' => '職稱',
+    'locale' => '語系',
     'locales' => [
         'zh_TW' => '繁體中文',
         'en' => '英文',
@@ -48,4 +48,11 @@ return [
         'rate_settings' => '匯率設定',
     ],
     'operation_log' => '操作日誌',
+    'job_title' => '職稱',
+    'current_password' => '舊密碼',
+    'new_password' => '新密碼',
+    'new_password_confirmation' => '確認新密碼',
+    'language' => '語系',
+    'account_settings' => '帳號設置',
+    'account_settings_updated' => '帳號資料已更新',
 ];

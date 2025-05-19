@@ -72,6 +72,7 @@ return [
     ],
 
     'column_names' => [
+        'guard_name' => 'guard_name',    
         /*
          * Change this if you want to name the related pivots other than defaults
          */

@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\AdminUser;
-use Spatie\Permission\Models\Role;
+use Spatie\Activitylog\Models\Activity;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class RolePolicy
+class ActivityPolicy
 {
     use HandlesAuthorization;
 
@@ -15,15 +15,15 @@ class RolePolicy
      */
     public function viewAny(AdminUser $adminUser): bool
     {
-        return $adminUser->can('view_any_role');
+        return $adminUser->can('view_any_admin::log');
     }
 
     /**
      * Determine whether the adminUser can view the model.
      */
-    public function view(AdminUser $adminUser, Role $role): bool
+    public function view(AdminUser $adminUser, Activity $activity): bool
     {
-        return $adminUser->can('view_role');
+        return $adminUser->can('view_admin::log');
     }
 
     /**
@@ -31,23 +31,23 @@ class RolePolicy
      */
     public function create(AdminUser $adminUser): bool
     {
-        return $adminUser->can('create_role');
+        return $adminUser->can('create_admin::log');
     }
 
     /**
      * Determine whether the adminUser can update the model.
      */
-    public function update(AdminUser $adminUser, Role $role): bool
+    public function update(AdminUser $adminUser, Activity $activity): bool
     {
-        return $adminUser->can('update_role');
+        return $adminUser->can('update_admin::log');
     }
 
     /**
      * Determine whether the adminUser can delete the model.
      */
-    public function delete(AdminUser $adminUser, Role $role): bool
+    public function delete(AdminUser $adminUser, Activity $activity): bool
     {
-        return $adminUser->can('delete_role');
+        return $adminUser->can('delete_admin::log');
     }
 
     /**
@@ -61,7 +61,7 @@ class RolePolicy
     /**
      * Determine whether the adminUser can permanently delete.
      */
-    public function forceDelete(AdminUser $adminUser, Role $role): bool
+    public function forceDelete(AdminUser $adminUser, Activity $activity): bool
     {
         return $adminUser->can('{{ ForceDelete }}');
     }
@@ -77,7 +77,7 @@ class RolePolicy
     /**
      * Determine whether the adminUser can restore.
      */
-    public function restore(AdminUser $adminUser, Role $role): bool
+    public function restore(AdminUser $adminUser, Activity $activity): bool
     {
         return $adminUser->can('{{ Restore }}');
     }
@@ -93,7 +93,7 @@ class RolePolicy
     /**
      * Determine whether the adminUser can replicate.
      */
-    public function replicate(AdminUser $adminUser, Role $role): bool
+    public function replicate(AdminUser $adminUser, Activity $activity): bool
     {
         return $adminUser->can('{{ Replicate }}');
     }
