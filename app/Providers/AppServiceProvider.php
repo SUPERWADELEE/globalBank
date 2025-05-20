@@ -3,13 +3,19 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Log;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Contracts\View\View;
 use Filament\View\PanelsRenderHook;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Gate;
+use App\Models\Wallet;
+use App\Policies\UserWalletPolicy;
+
 class AppServiceProvider extends ServiceProvider
 {
+    protected $policies = [
+        \App\Models\Wallet::class => \App\Policies\UserWalletPolicy::class,
+    ];
     /**
      * Register any application services.
      */
@@ -32,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
         $this->createUserWalletPermissions();
         $this->createUserWalletLogsPermissions();
         $this->createAccountSettingsPermissions();
-        // $this->registerPolicies();
+        $this->registerPolicies();
     }
     public function createUserWalletPermissions()
     {
@@ -55,10 +61,9 @@ class AppServiceProvider extends ServiceProvider
         Permission::firstOrCreate(['name' => 'view_account_settings']);
         Permission::firstOrCreate(['name' => 'edit_account_settings']);
     }
-    // public function registerPolicies()
-    // {
-    //     Gate::policy(Wallet::class, UserWalletPolicy::class);
-    //     Gate::policy(Wallet::class, UserWalletLogsPolicy::class);
-    // }
+    public function registerPolicies()
+    {
+        Gate::policy(Wallet::class, UserWalletPolicy::class);
 
+    }
 }

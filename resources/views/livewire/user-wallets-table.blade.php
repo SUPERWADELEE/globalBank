@@ -16,8 +16,10 @@
             <tbody>
                 @foreach ($user->wallets as $wallet)
                 @php
-                $canDeposit = auth()->user()->can('deposit', $wallet);
-                $canWithdraw = auth()->user()->can('withdraw', $wallet);
+              
+                $canDeposit = Auth::user()->can('deposit', $wallet);
+                $canWithdraw = Auth::user()->can('withdraw', $wallet);
+
                 @endphp
 
                 <tr class="border-t border-gray-200 dark:border-gray-700">
@@ -28,7 +30,6 @@
                         {{ number_format($wallet->balance, 2) }}
                     </td>
 
-                    {{-- ✅ 如果有任一權限就顯示金額輸入框，否則空欄 --}}
                     <td class="px-4 py-2 text-right w-1/4">
                         @if($canDeposit || $canWithdraw)
                         <input
@@ -38,7 +39,6 @@
                         @endif
                     </td>
 
-                    {{-- ✅ 操作按鈕區 --}}
                     <td class="px-4 py-2 text-center w-1/4">
                         @if($canDeposit)
                         <x-filament::button
