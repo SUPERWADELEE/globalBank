@@ -18,6 +18,7 @@ class UserWalletPage extends Page
     public function mount($record): void
     {
         $this->user = User::with('wallets')->findOrFail($record);
+        $this->authorize('view_user_wallet', $this->user);
     }
 
     public function getTitle(): string
@@ -27,6 +28,6 @@ class UserWalletPage extends Page
 
     public static function getSlug(): string
     {
-        return '{record}/wallets';
+        return 'user-wallet-page';
     }
 }

@@ -189,12 +189,39 @@ class RoleResource extends Resource
                         ]),
                         Fieldset::make(__('user.user_management'))->schema([
                             CheckboxList::make('permissions')
+                                ->label(__('user.user_management'))
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
                                     \Spatie\Permission\Models\Permission::all()
                                         ->filter(function ($p) {
                                             return str_ends_with($p->name, '_user');
+                                        })
+                                        ->pluck('name', 'id')
+                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
+                                        ->toArray()
+                                )->bulkToggleable(),
+                            CheckboxList::make('permissions')
+                                ->label(__('user.account_operation'))
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    \Spatie\Permission\Models\Permission::all()
+                                        ->filter(function ($p) {
+                                            return str_ends_with($p->name, 'user_wallet');
+                                        })
+                                        ->pluck('name', 'id')
+                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
+                                        ->toArray()
+                                )->bulkToggleable(),
+                            CheckboxList::make('permissions')
+                                ->label(__('user.operation_log'))
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    \Spatie\Permission\Models\Permission::all()
+                                        ->filter(function ($p) {
+                                            return str_ends_with($p->name, 'user_wallet_logs');
                                         })
                                         ->pluck('name', 'id')
                                         ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
@@ -217,9 +244,22 @@ class RoleResource extends Resource
                                         })
                                         ->toArray()
                                 )->bulkToggleable(),
+                        ]),
+                        Fieldset::make(__('admin_user.account_settings'))->schema([
+                            CheckboxList::make('permissions')
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    \Spatie\Permission\Models\Permission::all()
+                                        ->filter(function ($p) {
+                                            return str_contains($p->name, 'account_settings');
+                                        })
+                                        ->pluck('name', 'id')
+                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
+                                        ->toArray()
+                                )->bulkToggleable(),
                         ])
 
-                        // 再加上財務操作、交易紀錄、訂單管理等群組
 
                     ])
                 ])

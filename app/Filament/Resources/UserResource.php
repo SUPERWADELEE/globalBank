@@ -13,6 +13,7 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Enums\FiltersLayout;
 use App\Enums\UserStatusEnum;
 use App\Models\UserLevel;
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
@@ -105,11 +106,13 @@ class UserResource extends Resource
                 Tables\Actions\Action::make('wallet')
                     ->label(__('user.account_operation'))
                     ->url(fn(User $record) => UserResource::getUrl('user-wallet-page', ['record' => $record->id]))
-                    ->icon('heroicon-o-wallet'),
+                    ->icon('heroicon-o-wallet')
+                    ->visible(fn(User $record) => Auth::user()->can('view_user_wallet', $record)),
                 Tables\Actions\Action::make('operation_log')
                     ->label(__('user.operation_log'))
                     ->url(fn(User $record) => UserResource::getUrl('user-wallet-logs', ['record' => $record->id]))
-                    ->icon('heroicon-o-clock'),
+                    ->icon('heroicon-o-clock')
+                    ->visible(fn(User $record) => Auth::user()->can('view_user_wallet_logs', $record)),
                 // Tables\Actions\Action::make('operation_log')
                 //     ->label(__('user.operation_log'))
                 //     ->url(fn(User $record) => UserResource::getUrl('user-operation-log-page', ['record' => $record->id]))

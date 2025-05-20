@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Form;
 use App\Enums\LocaleEnum;
 use Filament\Notifications\Notification;
+
 class AccountSettings extends Page implements HasForms
 {
     use InteractsWithForms;
@@ -74,15 +75,18 @@ class AccountSettings extends Page implements HasForms
 
                 TextInput::make('current_password')
                     ->label(__('admin_user.current_password'))
+                    ->disabled(fn() => !Auth::user()->can('edit_account_settings'))
                     ->password(),
 
                 TextInput::make('new_password')
                     ->label(__('admin_user.new_password'))
-                    ->password(),
+                    ->password()
+                    ->disabled(fn() => !Auth::user()->can('edit_account_settings')),
 
                 TextInput::make('new_password_confirmation')
                     ->label(__('admin_user.new_password_confirmation'))
                     ->password()
+                    ->disabled(fn() => !Auth::user()->can('edit_account_settings'))
                     ->same('new_password'),
 
                 Select::make('locale')
@@ -91,7 +95,8 @@ class AccountSettings extends Page implements HasForms
                         $case->value => $case->label()
                     ])->toArray())
                     ->default(LocaleEnum::TraditionalChinese->value)
-                    ->required(),
+                    ->required()
+                    ->disabled(fn() => !Auth::user()->can('edit_account_settings')),
             ])
         ];
     }
@@ -111,5 +116,9 @@ class AccountSettings extends Page implements HasForms
             ->title(__('admin_user.account_settings_updated'))
             ->success()
             ->send();
+    }
+    public static function canAccess(): bool
+    {
+        return Auth::user()->can('view_account_settings');
     }
 }

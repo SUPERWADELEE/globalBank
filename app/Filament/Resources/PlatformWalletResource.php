@@ -33,18 +33,17 @@ class PlatformWalletResource extends Resource
 
     public static function table(Table $table): Table
     {
+        // 把所有幣別的平台餘額及code 及匯率撈出，
+        // 把所有錢都轉換成USDT並加總
+        $usdtTotal = PlatformWallet::getTotalInUSDT();
+
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('currencyCode.code'),
-                Tables\Columns\TextColumn::make('amount'),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-            ])
-            ->bulkActions([
-                //
+                Tables\Columns\TextColumn::make('currencyCode.code')
+                    ->label(__('platform_wallet.USDT_balance')),
+
+                Tables\Columns\TextColumn::make('amount')
+                    ->label($usdtTotal),
             ]);
     }
 
@@ -60,7 +59,6 @@ class PlatformWalletResource extends Resource
         return [
             'index' => Pages\ListPlatformWallets::route('/'),
             'create' => Pages\CreatePlatformWallet::route('/create'),
-            'edit' => Pages\EditPlatformWallet::route('/{record}/edit'),
         ];
     }
 }
