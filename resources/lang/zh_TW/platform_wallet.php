@@ -7,5 +7,7 @@ return [
     'title' => [
         'platform_wallet' => '平台錢包',
     ],
+    "USDT_balance" => 'USDT 總餘額：',
     "insufficient_balance" => '平台餘額不足',
+    "renew" => '刷新',
 ];

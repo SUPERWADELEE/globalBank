@@ -63,4 +63,13 @@ return [
         'team_management' => '單位管理',
         'create' => '新增單位',
     ],
+    'deposit_location' => [
+        'title' => '入金地址管理',
+        'navigation_label' => '入金地址管理',
+        'currency_code' => '幣別',
+        'location' => '地址',
+        'channel' => '通道',
+        'status' => '狀態',
+        'create' => '新增入金地址',
+    ],
 ];
