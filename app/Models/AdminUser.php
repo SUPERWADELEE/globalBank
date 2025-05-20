@@ -25,6 +25,7 @@ class AdminUser extends Authenticatable
         'password',
         'locale',
         'job_title',
+        'team_id',
     ];
     protected $guard_name = 'admin';
 
@@ -117,5 +118,9 @@ class AdminUser extends Authenticatable
             })
             ->values()
             ->all();
+    }
+    public function team()
+    {
+        return $this->belongsTo(AdminUserTeam::class);
     }
 }

@@ -15,7 +15,7 @@ use Spatie\Permission\Models\Role;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\DB;
 use App\Enums\LocaleEnum;
-
+use App\Models\AdminUserTeam;
 
 class AdminUserResource extends Resource
 {
@@ -75,6 +75,10 @@ class AdminUserResource extends Resource
                     ->label(__('admin_user.job_title'))
                     ->required()
                     ->maxLength(255),
+                Select::make('team_id')
+                    ->label(__('admin_user.team.name'))
+                    ->options(AdminUserTeam::all()->pluck('name', 'id'))
+                    ->required(),
 
                 TextInput::make('password')
                     ->label(__('admin_user.password'))
@@ -107,6 +111,9 @@ class AdminUserResource extends Resource
                 TextColumn::make('roles.name')
                     ->label(__('admin_user.roles'))
                     ->searchable(),
+                TextColumn::make('team.name')
+                    ->label(__('admin_user.team.name'))
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->label(__('common.created_at'))
                     ->dateTime('Y-m-d H:i:s')
@@ -130,6 +137,11 @@ class AdminUserResource extends Resource
                     ->label(__('admin_user.email'))
                     ->options(function () {
                         return \App\Models\AdminUser::pluck('email', 'email')->toArray();
+                    }),
+                Tables\Filters\SelectFilter::make('team_id')
+                    ->label(__('admin_user.team.name'))
+                    ->options(function () {
+                        return \App\Models\AdminUserTeam::pluck('name', 'id')->toArray();
                     }),
 
                 Tables\Filters\SelectFilter::make('role')

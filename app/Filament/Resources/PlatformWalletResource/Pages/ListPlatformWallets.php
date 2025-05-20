@@ -13,6 +13,9 @@ class ListPlatformWallets extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('deposit')
+                ->label(__('platform_wallet.renew'))
+                ->url(route('filament.admin.resources.platform-wallets.index')),
 
         ];
     }

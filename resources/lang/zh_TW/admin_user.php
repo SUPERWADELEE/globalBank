@@ -46,6 +46,7 @@ return [
         'role_management' => '權限管理',
         'ip_white_list' => 'IP白名單',
         'rate_settings' => '匯率設定',
+        'team_management' => '單位管理',
     ],
     'operation_log' => '操作日誌',
     'job_title' => '職稱',
@@ -53,6 +54,13 @@ return [
     'new_password' => '新密碼',
     'new_password_confirmation' => '確認新密碼',
     'language' => '語系',
-    'account_settings' => '帳號設置',
+    'account_settings' => '帳號設定',
     'account_settings_updated' => '帳號資料已更新',
+    'team' => [
+        'title' => '單位管理',
+        'name' => '單位名稱',
+        'description' => '單位描述',
+        'team_management' => '單位管理',
+        'create' => '新增單位',
+    ],
 ];

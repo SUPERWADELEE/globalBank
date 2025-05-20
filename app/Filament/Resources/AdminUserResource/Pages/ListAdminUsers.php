@@ -25,6 +25,9 @@ class ListAdminUsers extends ListRecords
             Actions\Action::make('IP白名單')
                 ->url(route('filament.admin.resources.admin-ip-white-lists.index'))
                 ->label(__('admin_user.navigation.ip_white_list')),
+            Actions\Action::make('單位管理')
+                ->url(route('filament.admin.resources.admin-user-teams.index'))
+                ->label(__('admin_user.navigation.team_management')),
         ];
     }
     // public function getHeader(): ?View
