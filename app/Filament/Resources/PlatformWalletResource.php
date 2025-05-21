@@ -28,7 +28,7 @@ class PlatformWalletResource extends Resource
     public static function table(Table $table): Table
     {
         $usdtTotal = PlatformWallet::getTotalInUSDT();
-        $pollingTime = 300000;
+        $pollingTime = '300s';
 
         return $table
             ->columns([
