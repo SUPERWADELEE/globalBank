@@ -6,12 +6,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -52,7 +53,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
+
     /**
      * Get the member level associated with the user.
      */
@@ -60,7 +61,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo(UserLevel::class);
     }
-    
+
     /**
      * Get the wallets for the user.
      */
@@ -68,12 +69,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(Wallet::class);
     }
-    
+
     /**
      * Get the deposit addresses for the user.
      */
     public function depositAddresses()
     {
         return $this->hasMany(DepositAddress::class);
+    }
+    public function getActivitylogOptions(): LogOptions
+    {
+        $adminUser = Auth::user()->name;
+        return LogOptions::defaults()
+            ->logAll()
+            ->logOnly(['name', 'email', 'username', 'register_location', 'phone', 'status', 'user_level_id'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(function (string $eventName) use ($adminUser) {
+                $subjectName = $this->name;
+                return __('activity.log_description', [
+                    'causer' => $adminUser,
+                    'subject' => $subjectName,
+                    'event' => $eventName
+                ]);
+            })
+            ->dontSubmitEmptyLogs();
     }
 }

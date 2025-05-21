@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\SoftDeletes;
 class AdminIpWhitelist extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     /**
      * The table associated with the model.
@@ -42,5 +45,22 @@ class AdminIpWhitelist extends Model
     public function getIpAttribute(): string
     {
         return $this->ip_address;
+    }
+    public function getActivitylogOptions(): LogOptions
+    {
+        $adminUser = Auth::user()->name;
+        return LogOptions::defaults()
+            ->logAll()
+            ->logOnly(['ip_address'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(function (string $eventName) use ($adminUser) {
+                $subjectName = $this->name;
+                return __('activity.log_description', [
+                    'causer' => $adminUser,
+                    'subject' => $subjectName,
+                    'event' => $eventName
+                ]);
+            })
+            ->dontSubmitEmptyLogs();
     }
 }

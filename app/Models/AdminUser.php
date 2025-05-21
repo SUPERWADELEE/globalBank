@@ -50,7 +50,7 @@ class AdminUser extends Authenticatable
         $adminUser = Auth::user()->name;
         return LogOptions::defaults()
             ->logAll()
-            ->logOnly(['name', 'email', 'locale'])
+            ->logOnly(['name', 'email', 'locale', 'job_title', 'team_id'])
             ->logOnlyDirty(true)
             ->setDescriptionForEvent(function (string $eventName) use ($adminUser) {
                 $subjectName = $this->name;

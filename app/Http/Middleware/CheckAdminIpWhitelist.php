@@ -12,8 +12,6 @@ class CheckAdminIpWhitelist
     public function handle(Request $request, Closure $next): Response
     {
         $allowedIps = AdminIpWhiteList::pluck('ip_address')->toArray();
-
-
         if (!in_array($request->ip(), $allowedIps)) {
             abort(403, '您的 IP 不在允許的白名單內');
         }

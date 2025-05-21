@@ -47,6 +47,13 @@ return [
         'ip_white_list' => 'IP白名單',
         'rate_settings' => '匯率設定',
         'team_management' => '單位管理',
+        'deposit' => '入金',
+        'withdraw' => '出金',
+        'deposit_location_management' => '入金地址管理',
+        'platform_wallet_management' => '平台錢包管理',
+        'user_management' => '用戶管理',
+        'wallet_management' => '錢包管理',
+        'admin_user_team' => '操作員單位管理',
     ],
     'operation_log' => '操作日誌',
     'job_title' => '職稱',
@@ -71,5 +78,9 @@ return [
         'channel' => '通道',
         'status' => '狀態',
         'create' => '新增入金地址',
+    ],
+    'activity_log' => [
+        'title' => '操作紀錄',
+        'navigation_label' => '操作紀錄',
     ],
 ];

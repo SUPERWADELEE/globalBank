@@ -13,8 +13,10 @@ class ListAdminLogs extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('新增帳號')
-            ->url(route('filament.admin.resources.admin-users.create')),
         ];
+    }
+    public function getTitle(): string
+    {
+        return __('admin_user.activity_log.title');
     }
 }

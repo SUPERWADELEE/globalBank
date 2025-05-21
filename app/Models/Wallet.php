@@ -55,26 +55,22 @@ class Wallet extends Model
      */
 
 
-     public function getActivitylogOptions(): LogOptions
-     {
-         $adminUser = Auth::user()->name;
-         return LogOptions::defaults()
-             ->logAll()
-             ->logOnly(['balance'])
-             ->logOnlyDirty(true)
-             ->setDescriptionForEvent(function (string $eventName) use ($adminUser) {
-                 $subjectName = $this->name;
-                 return __('activity.log_description', [
-                     'causer' => $adminUser,
-                     'subject' => $subjectName,
-                     'event' => $eventName
-                 ]);
-             })
-             
-             ->dontSubmitEmptyLogs();
-     }
-     public function activityLogs()
-     {
-         return $this->morphMany(Activity::class, 'subject');
-     }
+    public function getActivitylogOptions(): LogOptions
+    {
+        $adminUser = Auth::check() ? Auth::user()->name : 'System';
+        return LogOptions::defaults()
+            ->logAll()
+            ->logOnly(['balance'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(function (string $eventName) use ($adminUser) {
+                $currencyCode = $this->currencyCode?->code ?? '';
+                return "Wallet {$currencyCode} {$eventName} by {$adminUser}";
+            })
+            ->dontSubmitEmptyLogs();
+    }
+
+    public function activityLogs()
+    {
+        return $this->morphMany(Activity::class, 'subject');
+    }
 }

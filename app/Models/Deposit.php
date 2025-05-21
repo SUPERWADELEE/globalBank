@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Casts\MoneyCast;
 use App\Enums\DepositStatus;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+use Illuminate\Support\Facades\Auth;
 
 class Deposit extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     /**
      * The table associated with the model.
@@ -66,5 +69,23 @@ class Deposit extends Model
     public function currencyCode()
     {
         return $this->belongsTo(CurrencyCode::class, 'currency_code_id', 'id');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        $adminUser = Auth::user()->name;
+        return LogOptions::defaults()
+            ->logAll()
+            ->logOnly(['amount'])
+            ->logOnlyDirty()
+            ->setDescriptionForEvent(function (string $eventName) use ($adminUser) {
+                $subjectName = $this->name;
+                return __('activity.log_description', [
+                    'causer' => $adminUser,
+                    'subject' => $subjectName,
+                    'event' => $eventName
+                ]);
+            })
+            ->dontSubmitEmptyLogs();
     }
 }

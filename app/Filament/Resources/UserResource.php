@@ -102,7 +102,6 @@ class UserResource extends Resource
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('wallet')
                     ->label(__('user.account_operation'))
                     ->url(fn(User $record) => UserResource::getUrl('user-wallet-page', ['record' => $record->id]))
