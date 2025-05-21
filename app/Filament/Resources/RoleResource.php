@@ -38,6 +38,7 @@ class RoleResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->label('群組名稱')
+                    ->unique(ignoreRecord: true)
                     ->required(),
 
                 Section::make('權限分配')->schema([
@@ -49,7 +50,11 @@ class RoleResource extends Resource
                                 ->columns(4)
                                 ->options(
                                     \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_contains($p->name, 'admin::ip::white::list'))
+                                        ->filter(
+                                            fn($p) =>
+                                            str_contains($p->name, 'admin::ip::white::list') &&
+                                                !str_contains($p->name, 'view_admin::ip::white::list')
+                                        )
                                         ->pluck('name', 'id')
                                         ->mapWithKeys(function ($label, $id) {
                                             $translationKey = str_replace('::', '_', $label); // 將 :: 換成 _
@@ -64,7 +69,7 @@ class RoleResource extends Resource
                                 ->columns(4)
                                 ->options(
                                     \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_contains($p->name, 'admin::user'))
+                                        ->filter(fn($p) => str_contains($p->name, 'admin::user') && !str_contains($p->name, 'view_admin::user') && !str_contains($p->name, 'delete_admin::user'))
                                         ->pluck('name', 'id')
                                         ->mapWithKeys(function ($label, $id) {
                                             $translationKey = str_replace('::', '_', $label); // 將 :: 換成 _
@@ -79,7 +84,7 @@ class RoleResource extends Resource
                                 ->columns(4)
                                 ->options(
                                     \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_contains($p->name, 'role'))
+                                        ->filter(fn($p) => str_contains($p->name, 'role') && !str_contains($p->name, 'view_role') && !str_contains($p->name, 'delete_role'))
                                         ->pluck('name', 'id')
                                         ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
                                         ->toArray()
@@ -96,7 +101,7 @@ class RoleResource extends Resource
                                 ->columns(4)
                                 ->options(
                                     \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_contains($p->name, 'deposit::log'))
+                                        ->filter(fn($p) => str_contains($p->name, 'view_any_deposit::log'))
                                         ->pluck('name', 'id')
                                         ->mapWithKeys(function ($label, $id) {
                                             $translationKey = str_replace('::', '_', $label); // 將 :: 換成 _
@@ -112,7 +117,7 @@ class RoleResource extends Resource
                                 ->columns(4)
                                 ->options(
                                     \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_ends_with($p->name, 'withdraw'))
+                                        ->filter(fn($p) => str_ends_with($p->name, 'view_any_withdraw'))
                                         ->pluck('name', 'id')
                                         ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
                                         ->toArray()
@@ -129,7 +134,7 @@ class RoleResource extends Resource
                                 ->columns(4)
                                 ->options(
                                     \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_contains($p->name, 'deposit::order'))
+                                        ->filter(fn($p) => str_contains($p->name, 'view_any_deposit::order'))
                                         ->pluck('name', 'id')
                                         ->mapWithKeys(function ($label, $id) {
                                             $translationKey = str_replace('::', '_', $label); // 將 :: 換成 _
@@ -144,7 +149,7 @@ class RoleResource extends Resource
                                 ->columns(4)
                                 ->options(
                                     \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_contains($p->name, 'withdraw::order'))
+                                        ->filter(fn($p) => str_contains($p->name, 'view_any_withdraw::order'))
                                         ->pluck('name', 'id')
                                         ->mapWithKeys(function ($label, $id) {
                                             $translationKey = str_replace('::', '_', $label); // 將 :: 換成 _
@@ -156,28 +161,14 @@ class RoleResource extends Resource
                                 ->bulkToggleable(),
                         ]),
                         Fieldset::make(__('permissions.groups.rate'))->schema([
-                            // CheckboxList::make('permissions')
-                            //     ->relationship('permissions', 'name')
-                            //     ->columns(4)
-                            //     ->options(
-                            //         \Spatie\Permission\Models\Permission::all()
-                            //             ->filter(function ($p) {
-                            //                 return str_contains($p->name, 'usdt_rate') ||
-                            //                     str_contains($p->name, 'jpy_rate') ||
-                            //                     str_contains($p->name, 'sgd_rate') ||
-                            //                     str_contains($p->name, 'krw_rate');
-                            //             })
-                            //             ->pluck('name', 'id')
-                            //             ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
-                            //             ->toArray()
-                            //     )->bulkToggleable(), 
                             CheckboxList::make('permissions')
+                                ->label(__('permissions.groups.rate'))
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
                                     \Spatie\Permission\Models\Permission::all()
                                         ->filter(function ($p) {
-                                            return str_contains($p->name, 'rate');
+                                            return str_contains($p->name, 'view_any_rate') || str_contains($p->name, 'update_rate');
                                         })
                                         ->pluck('name', 'id')
                                         ->mapWithKeys(function ($label, $id) {
@@ -195,7 +186,7 @@ class RoleResource extends Resource
                                 ->options(
                                     \Spatie\Permission\Models\Permission::all()
                                         ->filter(function ($p) {
-                                            return str_ends_with($p->name, '_user');
+                                            return str_ends_with($p->name, '_user') && !str_contains($p->name, 'view_any_user') && !str_contains($p->name, 'delete_user');
                                         })
                                         ->pluck('name', 'id')
                                         ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
@@ -230,12 +221,13 @@ class RoleResource extends Resource
                         ]),
                         Fieldset::make(__('platform_wallet.title.platform_wallet'))->schema([
                             CheckboxList::make('permissions')
+                                ->label(__('platform_wallet.title.platform_wallet'))
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
                                     \Spatie\Permission\Models\Permission::all()
                                         ->filter(function ($p) {
-                                            return str_contains($p->name, 'platform::wallet');
+                                            return str_contains($p->name, 'view_any_platform::wallet');
                                         })
                                         ->pluck('name', 'id')
                                         ->mapWithKeys(function ($label, $id) {
@@ -247,6 +239,7 @@ class RoleResource extends Resource
                         ]),
                         Fieldset::make(__('admin_user.account_settings'))->schema([
                             CheckboxList::make('permissions')
+                                ->label(__('admin_user.account_settings'))
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
@@ -297,8 +290,6 @@ class RoleResource extends Resource
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

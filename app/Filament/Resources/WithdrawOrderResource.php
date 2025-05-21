@@ -75,38 +75,12 @@ class WithdrawOrderResource extends Resource
                     ->label(__('common.tx_hash')),
             ])
             ->filters([
-                SelectFilter::make('user_id')
-                    ->options(
-                        Withdraw::with('user')
-                            ->get()
-                            ->pluck('user.username', 'user.id')
-                            ->unique()
-                    )
-                    ->label(__('withdraw.user'))
-                    ->native(false)
-                    ->searchable(),
+
                 SelectFilter::make('currency_code_id')
                     ->options(CurrencyCode::all()->pluck('code', 'id'))
                     ->label(__('withdraw.currency_code'))
                     ->native(false)
                     ->searchable(),
-                SelectFilter::make('order_number')
-                    ->options(Withdraw::where('status', '1')->pluck('order_number', 'order_number'))
-                    ->label(__('withdraw.order_number'))
-                    ->native(false)
-                    ->searchable(),
-                // 4. 建立時間：改為範圍選擇
-                Filter::make('created_at')
-                    ->form([
-                        DatePicker::make('from')->label('起始日'),
-                        DatePicker::make('until')->label('結束日'),
-                    ])
-                    ->query(
-                        fn($query, $data) => $query
-                            ->when($data['from'], fn($q) => $q->whereDate('created_at', '>=', $data['from']))
-                            ->when($data['until'], fn($q) => $q->whereDate('created_at', '<=', $data['until']))
-                    )
-                    ->label(__('withdraw.created_at')),
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 EditAction::make()

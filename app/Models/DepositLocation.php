@@ -48,4 +48,15 @@ class DepositLocation extends Model
             })
             ->dontSubmitEmptyLogs();
     }
+    protected static function booted(): void
+    {
+        static::saving(function ($model) {
+            if ($model->status === \App\Enums\DepositLocationStatus::Enable) {
+                // 把其他全改成 disable
+                static::where('id', '!=', $model->id)
+                    ->where('status', \App\Enums\DepositLocationStatus::Enable)
+                    ->update(['status' => \App\Enums\DepositLocationStatus::Disable]);
+            }
+        });
+    }
 }

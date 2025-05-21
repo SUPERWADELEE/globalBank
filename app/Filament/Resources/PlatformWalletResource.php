@@ -3,15 +3,11 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PlatformWalletResource\Pages;
-use App\Filament\Resources\PlatformWalletResource\RelationManagers;
 use App\Models\PlatformWallet;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PlatformWalletResource extends Resource
 {
@@ -26,16 +22,13 @@ class PlatformWalletResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                //
-            ]);
+            ->schema([]);
     }
 
     public static function table(Table $table): Table
     {
-        // 把所有幣別的平台餘額及code 及匯率撈出，
-        // 把所有錢都轉換成USDT並加總
         $usdtTotal = PlatformWallet::getTotalInUSDT();
+        $pollingTime = 300000;
 
         return $table
             ->columns([
@@ -44,7 +37,7 @@ class PlatformWalletResource extends Resource
 
                 Tables\Columns\TextColumn::make('amount')
                     ->label($usdtTotal),
-            ]);
+            ])->poll($pollingTime);
     }
 
     public static function getRelations(): array

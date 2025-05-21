@@ -13,15 +13,20 @@ use App\Models\Deposit;
 use App\Enums\DepositStatus;
 use App\Models\Withdraw;
 use App\Enums\WithdrawStatus;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+
 class UserWalletsTable extends Component
 {
+    public bool $showConfirmation = false;
+    public string $confirmAction = '';
+    public ?int $selectedWalletId = null;
     public array $amounts = [];
 
     public User $user;
-    public Wallet $wallet;
-    public Deposit $deposit;
-    public Withdraw $withdraw;
+
+    protected $listeners = ['executeConfirmedAction'];
+
     public function render()
     {
         return view('livewire.user-wallets-table');
@@ -29,7 +34,7 @@ class UserWalletsTable extends Component
 
     public function makeDeposit($walletId)
     {
-        $wallet = $this->user->wallets()->findOrFail($walletId);
+        $wallet = Wallet::findOrFail($walletId);
         $amount = $this->validateAmount($this->amounts[$walletId] ?? null);
         if (!$amount) return;
 
@@ -43,19 +48,19 @@ class UserWalletsTable extends Component
 
     private function addDeposit(Wallet $wallet, BigDecimal $amount): void
     {
-        $this->deposit = Deposit::create([
+        Deposit::create([
             'order_number' => $this->generateOrderNumber('D'),
-            'user_id' => $this->user->id,
+            'user_id' => $wallet->user_id,
             'currency_code_id' => $wallet->currency_code_id,
             'amount' => $amount,
             'status' => DepositStatus::Success,
-            'admin_user_id' => auth()->user()->id,
+            'admin_user_id' => Auth::id(),
         ]);
     }
 
     public function makeWithdraw($walletId)
     {
-        $wallet = $this->user->wallets()->findOrFail($walletId);
+        $wallet = Wallet::findOrFail($walletId);
         $amount = $this->validateAmount($this->amounts[$walletId] ?? null);
         if (!$amount) return;
 
@@ -81,13 +86,13 @@ class UserWalletsTable extends Component
 
     private function addWithdraw(Wallet $wallet, BigDecimal $amount): void
     {
-        $this->withdraw = Withdraw::create([
+        Withdraw::create([
             'order_number' => $this->generateOrderNumber('W'),
-            'user_id' => $this->user->id,
+            'user_id' => $wallet->user_id,
             'currency_code_id' => $wallet->currency_code_id,
             'amount' => $amount,
             'status' => WithdrawStatus::Success,
-            'admin_user_id' => auth()->user()->id,
+            'admin_user_id' => Auth::id(),
         ]);
     }
 
@@ -125,6 +130,7 @@ class UserWalletsTable extends Component
     {
         Notification::make()->title($message)->success()->send();
     }
+
     private function updateWalletBalance(Wallet $wallet, BigDecimal $amount, bool $add): void
     {
         $current = $this->decimal($wallet->balance);
@@ -148,4 +154,41 @@ class UserWalletsTable extends Component
         $this->reset('amounts');
         $this->notifySuccess($message);
     }
+
+    public function confirmDeposit($walletId): void
+    {
+        $this->dispatch('open-modal', id: 'wallet-confirm-modal');  // 打開
+        $this->selectedWalletId = $walletId;
+        $this->confirmAction = 'deposit';
+        $this->showConfirmation = true;
+    }
+
+    public function confirmWithdraw($walletId): void
+    {
+        $this->dispatch('open-modal', id: 'wallet-confirm-modal');  // 打開
+        $this->selectedWalletId = $walletId;
+        $this->confirmAction = 'withdraw';
+        $this->showConfirmation = true;
+    }
+
+    public function executeConfirmedAction(): void
+    {
+        if ($this->confirmAction === 'deposit') {
+            $this->makeDeposit($this->selectedWalletId);
+        }
+
+        if ($this->confirmAction === 'withdraw') {
+            $this->makeWithdraw($this->selectedWalletId);
+        }
+
+        $this->dispatch('close-modal', id: 'wallet-confirm-modal'); // 關閉
+
+        $this->showConfirmation = false;
+    }
+    public function closeModal()
+    {
+        $this->dispatch('close-modal', id: 'wallet-confirm-modal'); // 關閉
+        $this->showConfirmation = false;
+    }
+
 }

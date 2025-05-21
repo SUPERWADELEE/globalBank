@@ -16,7 +16,7 @@
             <tbody>
                 @foreach ($user->wallets as $wallet)
                 @php
-              
+
                 $canDeposit = Auth::user()->can('deposit', $wallet);
                 $canWithdraw = Auth::user()->can('withdraw', $wallet);
 
@@ -42,7 +42,8 @@
                     <td class="px-4 py-2 text-center w-1/4">
                         @if($canDeposit)
                         <x-filament::button
-                            wire:click="makeDeposit({{ $wallet->id }})"
+                            {{-- 修改這裡 👇 --}}
+                            wire:click="confirmDeposit({{ $wallet->id }})"
                             size="sm"
                             color="success"
                             class="mr-2">
@@ -52,7 +53,8 @@
 
                         @if($canWithdraw)
                         <x-filament::button
-                            wire:click="makeWithdraw({{ $wallet->id }})"
+                            {{-- 修改這裡 👇 --}}
+                            wire:click="confirmWithdraw({{ $wallet->id }})"
                             size="sm"
                             color="danger">
                             出金
@@ -64,5 +66,28 @@
             </tbody>
         </table>
     </div>
+    <x-filament::modal
+
+        id="wallet-confirm-modal"
+        icon="heroicon-o-question-mark-circle"
+        heading="{{ __('wallet.confirm_operation', [
+            'action' => __('wallet.actions.' . $confirmAction)
+        ]) }}"
+        wire:model="showConfirmation">
+        <p class="text-sm text-gray-500 dark:text-gray-300">
+            {{ __('wallet.confirm_operation', [
+              'action' => __('wallet.actions.' . $confirmAction)
+            ]) }}
+        </p>
+        <x-slot name="footer">
+            <x-filament::button color="gray" wire:click="closeModal">
+                取消
+            </x-filament::button>
+
+            <x-filament::button color="primary" wire:click="executeConfirmedAction">
+                確認
+            </x-filament::button>
+        </x-slot>
+    </x-filament::modal>
 
 </x-filament::section>
