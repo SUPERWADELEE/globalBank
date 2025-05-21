@@ -24,6 +24,10 @@ class UserResource extends Resource
     {
         return __('user.user_management');
     }
+    public static function getNavigationGroup(): string
+    {
+        return __('user.user_management');
+    }
     public static function form(Form $form): Form
     {
         return $form
