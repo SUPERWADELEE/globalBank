@@ -14,6 +14,8 @@ use App\Enums\DepositCode;
 use App\Enums\DepositChannel;
 use App\Enums\DepositLocationStatus;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Columns\ToggleColumn;
 
 class DepositLocationResource extends Resource
 {
@@ -28,19 +30,27 @@ class DepositLocationResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $isEdit = request()->routeIs('filament.admin.resources.deposit-locations.edit');
+
         return $form
             ->schema([
                 Select::make('currency_code_id')
                     ->label(__('admin_user.deposit_location.currency_code'))
                     ->options(DepositCode::class)
-                    ->required(),
+                    ->required()
+                    ->visible(!$isEdit),
+
                 TextInput::make('location')
                     ->label(__('admin_user.deposit_location.location'))
-                    ->required(),
+                    ->required()
+                    ->visible(!$isEdit),
+
                 Select::make('channel')
                     ->label(__('admin_user.deposit_location.channel'))
                     ->options(DepositChannel::class)
-                    ->required(),
+                    ->required()
+                    ->visible(!$isEdit),
+
                 Select::make('status')
                     ->label(__('admin_user.deposit_location.status'))
                     ->options(DepositLocationStatus::class)
@@ -58,14 +68,29 @@ class DepositLocationResource extends Resource
                     ->label(__('admin_user.deposit_location.location')),
                 TextColumn::make('channel')
                     ->label(__('admin_user.deposit_location.channel')),
-                TextColumn::make('status')
-                    ->label(__('admin_user.deposit_location.status')),
+                ToggleColumn::make('status')
+                    ->label(__('admin_user.deposit_location.status'))
+                    ->onIcon('heroicon-m-check')
+                    ->offIcon('heroicon-m-x-mark')
+                    ->onColor('success')
+                    ->offColor('gray')
+                    ->getStateUsing(fn($record): bool => $record->status === DepositLocationStatus::Enable)
+                    ->afterStateUpdated(function ($record, $state) {
+                        $record->status = $state ? DepositLocationStatus::Enable : DepositLocationStatus::Disable;
+                        $record->save();
+
+                        if ($state) {
+                            \App\Models\DepositLocation::where('id', '!=', $record->id)
+                                ->where('status', DepositLocationStatus::Enable)
+                                ->update(['status' => DepositLocationStatus::Disable]);
+                        }
+                    })
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

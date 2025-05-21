@@ -28,4 +28,8 @@ return [
     ],
     'add_tx_hash' => '新增TxID',
     'modify_tx_hash' => '修改TxID',
+    'date' => [
+        'from' => '起始日',
+        'until' => '結束日',
+    ],
 ];

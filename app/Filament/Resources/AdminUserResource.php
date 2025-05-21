@@ -166,10 +166,8 @@ class AdminUserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->label(__('admin_user.edit')),
-                Tables\Actions\DeleteAction::make()
-                    ->label(__('admin_user.delete')),
                 Tables\Actions\Action::make('操作日誌')
-                    ->url(route('filament.admin.resources.admin-logs.index'))
+                    ->url(fn($record) => route('filament.admin.resources.admin-logs.index', ['causer_id' => $record->id]))
                     ->label(__('admin_user.operation_log'))
             ])
             ->bulkActions([

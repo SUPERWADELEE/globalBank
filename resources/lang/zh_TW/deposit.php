@@ -1,11 +1,8 @@
 <?php
 
 return [
-    'status' => [
-        'pending' => '待處理',
-        'success' => '已完成',
-        'failed' => '失敗',
-    ],
+   
+
     'title' => '入金紀錄',
     'user' => '用戶',
     'currency_code' => '幣種',
@@ -24,4 +21,18 @@ return [
         'title' => '入金訂單',
     ],
     'deposit_address' => '發送地址',
+    'location' => [
+        'enable' => '啟用',
+        'disable' => '停用',
+    ],
+    'date' => [
+        'from' => '起始日',
+        'until' => '結束日',
+    ],
+    'status' => [
+        'pending' => '待處理',
+        'success' => '已完成',
+        'failed' => '失敗',
+        'status' => '狀態',
+    ],
 ];

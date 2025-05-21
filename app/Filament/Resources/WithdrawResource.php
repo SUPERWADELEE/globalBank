@@ -91,8 +91,8 @@ class WithdrawResource extends Resource
                 // 4. 建立時間：改為範圍選擇
                 Filter::make('created_at')
                     ->form([
-                        DatePicker::make('from')->label('起始日'),
-                        DatePicker::make('until')->label('結束日'),
+                        DatePicker::make('from')->label(__('withdraw.date.from')),
+                        DatePicker::make('until')->label(__('withdraw.date.until')),
                     ])
                     ->query(
                         fn($query, $data) => $query

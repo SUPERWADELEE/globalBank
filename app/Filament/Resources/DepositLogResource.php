@@ -62,7 +62,7 @@ class DepositLogResource extends Resource
                         DepositStatus::Failed => 'danger',
                     })
                     ->formatStateUsing(fn($state) => ($state instanceof DepositStatus ? $state : DepositStatus::from((int) $state))->label())
-                    ->label(__('deposit.status')),
+                    ->label(__('deposit.status.status')),
                 TextColumn::make('created_at')
                     ->label(__('deposit.created_at')),
             ])
@@ -75,23 +75,21 @@ class DepositLogResource extends Resource
                             ->unique()
                     )
                     ->label(__('deposit.user'))
-                    ->native(false)
-                    ->searchable(),
+                    ->native(false),
+
                 SelectFilter::make('currency_code_id')
                     ->options(CurrencyCode::all()->pluck('code', 'id'))
                     ->label(__('deposit.currency_code'))
-                    ->native(false)
-                    ->searchable(),
+                    ->native(false),
                 SelectFilter::make('order_number')
                     ->options(Deposit::where('status', '1')->pluck('order_number', 'order_number'))
                     ->label(__('deposit.order_number'))
-                    ->native(false)
-                    ->searchable(),
+                    ->native(false),
                 // 4. 建立時間：改為範圍選擇
                 Filter::make('created_at')
                     ->form([
-                        DatePicker::make('from')->label('起始日'),
-                        DatePicker::make('until')->label('結束日'),
+                        DatePicker::make('from')->label(__('deposit.date.from')),
+                        DatePicker::make('until')->label(__('deposit.date.until')),
                     ])
                     ->query(
                         fn($query, $data) => $query

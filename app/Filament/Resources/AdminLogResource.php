@@ -9,7 +9,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
+use App\Enums\DepositLocationStatus;
 use App\Models\CustomActivity;
+use Illuminate\Database\Eloquent\Builder;
 
 class AdminLogResource extends Resource
 {
@@ -38,9 +40,9 @@ class AdminLogResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('causer.name')->label('操作者')->searchable(),
+                TextColumn::make('causer.name')->label(__('admin_user.activity_log.causer'))->searchable(),
                 TextColumn::make('description')
-                    ->label('操作紀錄')
+                    ->label(__('admin_user.activity_log.description'))
                     ->formatStateUsing(function ($state, $record) {
                         $causerName = optional($record->causer)->name ?? '未知操作者';
                         $subject = $record->subject;
@@ -110,7 +112,11 @@ class AdminLogResource extends Resource
 
                                 if ($event === 'updated') {
                                     $changes = collect($attributes)->map(function ($newValue, $field) use ($old, $fieldMap) {
+
                                         $oldValue = $old[$field] ?? '（無）';
+                                        // old newdata要用enum轉換
+                                        $oldValue = DepositLocationStatus::tryFrom((string) $old[$field] ?? '')?->label() ?? $old[$field] ?? '（無）';
+                                        $newValue = DepositLocationStatus::tryFrom((string) $newValue)?->label() ?? $newValue;
                                         $translatedField = $fieldMap[$field] ?? $field;
                                         return __('activity.deposit_location_change_line', [
                                             'field' => $translatedField,
@@ -318,7 +324,7 @@ class AdminLogResource extends Resource
                         }
                     }),
                 TextColumn::make('subject')
-                    ->label('單元')
+                    ->label(__('admin_user.activity_log.subject'))
                     ->formatStateUsing(function ($state, $record) {
                         $subjectType = $record->subject_type;
                         $event = $record->event;
@@ -372,13 +378,13 @@ class AdminLogResource extends Resource
                         return "{$module} -{$unit}- {$action}";
                     }),
 
-                TextColumn::make('created_at')->label('時間')->since()->searchable(),
+                TextColumn::make('created_at')->label(__('admin_user.activity_log.time'))->since()->searchable(),
             ])
 
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\SelectFilter::make('causer_id')
-                    ->label('操作者')
+                    ->label(__('admin_user.activity_log.causer'))
                     ->options(
                         \App\Models\AdminUser::pluck('name', 'id')
                     ),
@@ -400,5 +406,15 @@ class AdminLogResource extends Resource
             'index' => Pages\ListAdminLogs::route('/'),
             'create' => Pages\CreateAdminLog::route('/create'),
         ];
+    }
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (request()->filled('causer_id')) {
+            $query->where('causer_id', request('causer_id'));
+        }
+
+        return $query;
     }
 }

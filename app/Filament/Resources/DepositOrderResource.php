@@ -9,10 +9,8 @@ use Filament\Tables\Table;
 use App\Models\Deposit;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\Filter;
 use Filament\Tables\Enums\FiltersLayout;
 use App\Models\CurrencyCode;
-use Filament\Forms\Components\DatePicker;
 use App\Enums\DepositStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\Action;
@@ -61,7 +59,7 @@ class DepositOrderResource extends Resource
                         DepositStatus::Failed => 'danger',
                     })
                     ->formatStateUsing(fn($state) => ($state instanceof DepositStatus ? $state : DepositStatus::from((int) $state))->label())
-                    ->label(__('deposit.status')),
+                    ->label(__('deposit.status.status')),
                 TextColumn::make('created_at')
                     ->label(__('deposit.created_at')),
                 TextColumn::make('deposit_address')
@@ -70,38 +68,12 @@ class DepositOrderResource extends Resource
                     ->label(__('common.tx_hash')),
             ])
             ->filters([
-                SelectFilter::make('user_id')
-                    ->options(
-                        Deposit::with('user')
-                            ->get()
-                            ->pluck('user.username', 'user.id')
-                            ->unique()
-                    )
-                    ->label(__('deposit.user'))
-                    ->native(false)
-                    ->searchable(),
+
                 SelectFilter::make('currency_code_id')
                     ->options(CurrencyCode::all()->pluck('code', 'id'))
                     ->label(__('deposit.currency_code'))
                     ->native(false)
                     ->searchable(),
-                SelectFilter::make('order_number')
-                    ->options(Deposit::where('status', '1')->pluck('order_number', 'order_number'))
-                    ->label(__('deposit.order_number'))
-                    ->native(false)
-                    ->searchable(),
-                // 4. 建立時間：改為範圍選擇
-                Filter::make('created_at')
-                    ->form([
-                        DatePicker::make('from')->label('起始日'),
-                        DatePicker::make('until')->label('結束日'),
-                    ])
-                    ->query(
-                        fn($query, $data) => $query
-                            ->when($data['from'], fn($q) => $q->whereDate('created_at', '>=', $data['from']))
-                            ->when($data['until'], fn($q) => $q->whereDate('created_at', '<=', $data['until']))
-                    )
-                    ->label(__('deposit.created_at')),
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Action::make('markAsCompleted')

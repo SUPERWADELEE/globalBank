@@ -1,0 +1,7 @@
+<?php
+return [
+    'location' => [
+        'enable' => '활성화',
+        'disable' => '비활성화',
+    ],
+]; 

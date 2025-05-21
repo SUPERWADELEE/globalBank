@@ -15,8 +15,8 @@ return [
     
     // Confirmation
     'are_you_sure' => '本当によろしいですか？',
-    'confirm_action' => '操作を確認',
-    'this_action_cannot_be_undone' => 'この操作は元に戻すことができません。',
+    'confirm_action' => 'アクション確認',
+    'this_action_cannot_be_undone' => 'このアクションは元に戻せません。',
     
     // Admin Panel
     'admin_panel' => '管理パネル',
@@ -29,4 +29,9 @@ return [
     'email_invalid' => '有効なメールアドレスを入力してください',
     'password_min' => 'パスワードは8文字以上である必要があります',
     'password_mismatch' => 'パスワードが一致しません',
+    'export' => 'エクスポート',
+    'order_management' => '注文管理',
+    'tx_hash' => 'TxID',
+    'mark_as_completed' => '承認',
+    'mark_as_failed' => '拒否',
 ]; 

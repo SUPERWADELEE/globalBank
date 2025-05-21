@@ -29,4 +29,9 @@ return [
     'email_invalid' => 'Please enter a valid email address',
     'password_min' => 'Password must be at least 8 characters',
     'password_mismatch' => 'Passwords do not match',
+    'export' => 'Export',
+    'order_management' => 'Order Management',
+    'tx_hash' => 'TxID',
+    'mark_as_completed' => 'Approve',
+    'mark_as_failed' => 'Reject',
 ]; 

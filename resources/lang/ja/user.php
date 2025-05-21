@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'user_management' => 'ユーザー管理',
+    'user_management_query' => 'ユーザー検索',
+    'register_time' => '登録時間',
+    'name' => '名前',
+    'email' => 'メール',
+    'username' => 'ユーザー名',
+    'register_location' => '登録場所',
+    'phone' => '電話',
+    'status' => 'ステータス',
+    'active' => '有効',
+    'frozen' => '凍結',
+    'create_user' => 'ユーザー作成',
+    'level' => 'レベル',
+    'account_operation' => 'アカウント操作',
+    'operation_log' => '操作ログ',
+    'user' => 'ユーザー',
+    'wallet' => 'ウォレット',
+    'deposit' => '入金',
+    'withdraw' => '出金',
+    'deposit_success' => '入金成功',
+    'withdraw_success' => '出金成功',
+    'insufficient_balance' => 'ユーザー残高不足',
+    'invalid_amount' => '無効な金額'
+]; 

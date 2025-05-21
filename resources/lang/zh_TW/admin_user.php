@@ -82,5 +82,9 @@ return [
     'activity_log' => [
         'title' => '操作紀錄',
         'navigation_label' => '操作紀錄',
+        'time' => '時間',
+        'causer' => '操作者',
+        'description' => '操作紀錄',
+        'subject' => '單元',
     ],
 ];
