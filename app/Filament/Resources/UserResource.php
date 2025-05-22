@@ -111,21 +111,6 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('user.register_time'))
                     ->dateTime('Y-m-d H:i:s'),
-
-                // Tables\Columns\TextColumn::make('created_at')
-                // ->label(__('user.register_time'))
-                // ->formatStateUsing(function ($state) {
-                //     $locale = Auth::user()?->locale ?? 'zh_TW'; // 預設 zh_TW
-                //     $timezone = match ($locale) {
-                //         'zh_TW' => 'Asia/Taipei',
-                //         'ja'    => 'Asia/Tokyo',
-                //         'en_US' => 'UTC',
-                //         default => 'UTC',
-                //     };
-            
-                //     return Carbon::parse($state)->setTimezone($timezone)->format('Y-m-d H:i:s');
-                // }),
-
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('email')
@@ -143,99 +128,8 @@ class UserResource extends Resource
                 Tables\Filters\SelectFilter::make('phone')
                     ->label(__('user.phone'))
                     ->options(User::pluck('phone', 'phone')->toArray()),
-                Filter::make('created_at_range')
-                    ->label(__('user.register_time'))
-                    ->form([
-                        DatePicker::make('from')
-                            ->label(__('user.start_date'))
-                            ->reactive()
-                            ->afterStateUpdated(function ($state, callable $set, callable $get) {
-                                // 若起始日 > 終止日，重設並警示
-                                if ($state && $get('until') && $state > $get('until')) {
-                                    $set('from', null);
-                                    Notification::make()
-                                        ->title('開始日不可大於結束日')
-                                        ->danger()
-                                        ->send();
-                                }
-                            }),
-
-                        DatePicker::make('until')
-                            ->label(__('user.end_date'))
-                            ->reactive()
-                            ->afterStateUpdated(function ($state, callable $set, callable $get) {
-                                // 若終止日 < 起始日，重設並警示
-                                if ($state && $get('from') && $state < $get('from')) {
-                                    $set('until', null);
-                                    Notification::make()
-                                        ->title('結束日不可小於開始日')
-                                        ->danger()
-                                        ->send();
-                                }
-                            }),
-                    ])
-                    ->query(function ($query, array $data) {
-                        return $query
-                            ->when(
-                                $data['from'],
-                                fn($q, $date) => $q->whereDate('created_at', '>=', $date)
-                            )
-                            ->when(
-                                $data['until'],
-                                fn($q, $date) => $q->whereDate('created_at', '<=', $date)
-                            );
-                    }),
-                Filter::make('quick_range')
-                    ->label(__('user.quick_range'))
-                    ->form([
-                        Select::make('preset')
-                            ->label(__('user.date_range'))
-                            ->options([
-                                'today'      => '今日',
-                                'yesterday'  => '昨日',
-                                'last7'      => '近 7 日',
-                                'last30'     => '近 30 日',
-                                'this_week'  => '本週',
-                                'last_week'  => '上週',
-                                'this_month' => '本月',
-                            ])
-                            ->placeholder('請選擇…'),
-                    ])
-                    ->query(function ($query, array $data) {
-                        if (blank($data['preset'])) {
-                            return $query;               // 沒選就不過濾
-                        }
-
-                        switch ($data['preset']) {
-                            case 'today':
-                                return $query->whereDate('created_at', Carbon::today());
-
-                            case 'yesterday':
-                                return $query->whereDate('created_at', Carbon::yesterday());
-
-                            case 'last7':
-                                return $query->whereDate('created_at', '>=', Carbon::today()->subDays(6));
-
-                            case 'last30':
-                                return $query->whereDate('created_at', '>=', Carbon::today()->subDays(29));
-
-                            case 'this_week':
-                                return $query->whereDate('created_at', '>=', Carbon::now()->startOfWeek())
-                                    ->whereDate('created_at', '<=', Carbon::now()->endOfWeek());
-
-                            case 'last_week':
-                                return $query->whereDate('created_at', '>=', Carbon::now()->subWeek()->startOfWeek())
-                                    ->whereDate('created_at', '<=', Carbon::now()->subWeek()->endOfWeek());
-
-                            case 'this_month':
-                                return $query->whereDate('created_at', '>=', Carbon::now()->startOfMonth())
-                                    ->whereDate('created_at', '<=', Carbon::now()->endOfMonth());
-                        }
-
-                        return $query;
-                    }),
-
-                //
+                static::makeDateRangeFilter(),
+                static::makeQuickRangeFilter(),
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -283,5 +177,84 @@ class UserResource extends Resource
             'user-wallet-page' => Pages\UserWalletPage::route('/{record}/wallets'),
             'user-wallet-logs' => Pages\UserWalletLogPage::route('/{record}/wallets/logs'),
         ];
+    }
+    /**
+     * 日期範圍 Filter：開始／結束日互斥檢查 + 查詢
+     */
+    protected static function makeDateRangeFilter(): Filter
+    {
+        return Filter::make('created_at_range')
+            ->label(__('user.register_time'))
+            ->form([
+                DatePicker::make('from')
+                    ->label(__('user.start_date'))
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        if ($state && $get('until') && $state > $get('until')) {
+                            $set('from', null);
+                            Notification::make()
+                                ->title(__('user.error.start_after_end')) // 建議把訊息也抽翻譯
+                                ->danger()
+                                ->send();
+                        }
+                    }),
+
+                DatePicker::make('until')
+                    ->label(__('user.end_date'))
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        if ($state && $get('from') && $state < $get('from')) {
+                            $set('until', null);
+                            Notification::make()
+                                ->title(__('user.error.end_before_start'))
+                                ->danger()
+                                ->send();
+                        }
+                    }),
+            ])
+            ->query(function ($query, array $data) {
+                return $query
+                    ->when($data['from'], fn($q, $date) => $q->whereDate('created_at', '>=', $date))
+                    ->when($data['until'], fn($q, $date) => $q->whereDate('created_at', '<=', $date));
+            });
+    }
+
+    /**
+     * 快捷範圍 Filter：今日／昨日／近幾日／本週／本月
+     */
+    protected static function makeQuickRangeFilter(): Filter
+    {
+        return Filter::make('quick_range')
+            ->label(__('user.quick_range'))
+            ->form([
+                Select::make('preset')
+                    ->label(__('user.date_range'))
+                    ->options([
+                        'today'      => __('user.range.today'),
+                        'yesterday'  => __('user.range.yesterday'),
+                        'last7'      => __('user.range.last7'),
+                        'last30'     => __('user.range.last30'),
+                        'this_week'  => __('user.range.this_week'),
+                        'last_week'  => __('user.range.last_week'),
+                        'this_month' => __('user.range.this_month'),
+                    ])
+                    ->placeholder(__('user.range.select')),
+            ])
+            ->query(function ($query, array $data) {
+                if (blank($data['preset'])) {
+                    return $query;
+                }
+
+                return match ($data['preset']) {
+                    'today'      => $query->whereDate('created_at', Carbon::today()),
+                    'yesterday'  => $query->whereDate('created_at', Carbon::yesterday()),
+                    'last7'      => $query->whereDate('created_at', '>=', Carbon::today()->subDays(6)),
+                    'last30'     => $query->whereDate('created_at', '>=', Carbon::today()->subDays(29)),
+                    'this_week'  => $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]),
+                    'last_week'  => $query->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]),
+                    'this_month' => $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]),
+                    default      => $query,
+                };
+            });
     }
 }

@@ -103,46 +103,37 @@ class AdminUserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label(__('admin_user.name'))
-                    ->searchable(),
+                    ->label(__('admin_user.username')),
                 TextColumn::make('email')
-                    ->label(__('admin_user.email'))
-                    ->searchable(),
+                    ->label(__('admin_user.email')),
+
                 TextColumn::make('roles.name')
-                    ->label(__('admin_user.roles'))
-                    ->searchable(),
+                    ->label(__('admin_user.roles')),
                 TextColumn::make('team.name')
-                    ->label(__('admin_user.team.name'))
-                    ->searchable(),
+                    ->label(__('admin_user.team.name')),
                 TextColumn::make('created_at')
                     ->label(__('common.created_at'))
-                    ->dateTime('Y-m-d H:i:s')
-                    ->searchable(),
+                    ->dateTime('Y-m-d H:i:s'),
                 TextColumn::make('updated_at')
                     ->label(__('common.updated_at'))
-                    ->dateTime('Y-m-d H:i:s')
-                    ->searchable(),
+                    ->dateTime('Y-m-d H:i:s'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('name')
-                    ->label(__('admin_user.name'))
+                    ->label(__('admin_user.username'))
                     ->options(function () {
-                        // 從資料庫獲取所有不重複的用戶名稱
                         return \App\Models\AdminUser::pluck('name', 'name')->toArray();
-                    }),
-
-
-
+                    })->searchable(),
                 Tables\Filters\SelectFilter::make('email')
                     ->label(__('admin_user.email'))
                     ->options(function () {
                         return \App\Models\AdminUser::pluck('email', 'email')->toArray();
-                    }),
+                    })->searchable(),
                 Tables\Filters\SelectFilter::make('team_id')
                     ->label(__('admin_user.team.name'))
                     ->options(function () {
                         return \App\Models\AdminUserTeam::pluck('name', 'id')->toArray();
-                    }),
+                    })->searchable(),
 
                 Tables\Filters\SelectFilter::make('role')
                     ->label(__('admin_user.roles'))
@@ -161,7 +152,7 @@ class AdminUserResource extends Resource
                                 $q->where('id', $data['value']);
                             });
                         }
-                    }),
+                    })->searchable(),
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
@@ -169,12 +160,6 @@ class AdminUserResource extends Resource
                 Tables\Actions\Action::make('操作日誌')
                     ->url(fn($record) => route('filament.admin.resources.admin-logs.index', ['causer_id' => $record->id]))
                     ->label(__('admin_user.operation_log'))
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->label(__('admin_user.delete')),
-                ]),
             ]);
     }
 

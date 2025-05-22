@@ -40,7 +40,7 @@ class AdminLogResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('causer.name')->label(__('admin_user.activity_log.causer'))->searchable(),
+                TextColumn::make('causer.name')->label(__('admin_user.activity_log.causer')),
                 TextColumn::make('description')
                     ->label(__('admin_user.activity_log.description'))
                     ->formatStateUsing(function ($state, $record) {
@@ -486,7 +486,7 @@ class AdminLogResource extends Resource
                         return "{$module} -{$unit}- {$action}";
                     }),
 
-                TextColumn::make('created_at')->label(__('admin_user.activity_log.time'))->since()->searchable(),
+                TextColumn::make('created_at')->label(__('admin_user.activity_log.time'))->since(),
             ])
 
             ->defaultSort('created_at', 'desc')
@@ -495,7 +495,8 @@ class AdminLogResource extends Resource
                     ->label(__('admin_user.activity_log.causer'))
                     ->options(
                         \App\Models\AdminUser::pluck('name', 'id')
-                    ),
+                    )
+                    ->default(request('causer_id')),
                 //
             ], layout: FiltersLayout::AboveContent)
             ->actions([]);
@@ -515,14 +516,14 @@ class AdminLogResource extends Resource
             'create' => Pages\CreateAdminLog::route('/create'),
         ];
     }
-    public static function getEloquentQuery(): Builder
-    {
-        $query = parent::getEloquentQuery();
+    // public static function getEloquentQuery(): Builder
+    // {
+    //     $query = parent::getEloquentQuery();
 
-        if (request()->filled('causer_id')) {
-            $query->where('causer_id', request('causer_id'));
-        }
+    //     if (request()->filled('causer_id')) {
+    //         $query->where('causer_id', request('causer_id'));
+    //     }
 
-        return $query;
-    }
+    //     return $query;
+    // }
 }

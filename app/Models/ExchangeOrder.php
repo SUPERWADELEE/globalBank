@@ -62,16 +62,14 @@ class ExchangeOrder extends Model
      */
     public function fromCurrency()
     {
-        return $this->belongsTo(CurrencyCode::class, 'from_currency', 'code');
+        return $this->belongsTo(CurrencyCode::class, 'from_currency_id', 'id');
     }
-
-    /**
-     * Get the to currency code.
-     */
+    
     public function toCurrency()
     {
-        return $this->belongsTo(CurrencyCode::class, 'to_currency', 'code');
+        return $this->belongsTo(CurrencyCode::class, 'to_currency_id', 'id');
     }
+    
     public function getActivitylogOptions(): LogOptions
     {
         $adminUser = Auth::user()->name;

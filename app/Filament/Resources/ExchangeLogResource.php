@@ -2,33 +2,33 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DepositLogResource\Pages;
-use App\Models\Deposit;
+use App\Filament\Resources\ExchangeLogResource\Pages;
+use App\Filament\Resources\ExchangeLogResource\RelationManagers;
+use App\Models\ExchangeLog;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\ExchangeOrder;
 use Filament\Tables\Columns\TextColumn;
-use App\Enums\DepositStatus;
+use App\Enums\ExchangeOrderStatus;
 use Filament\Tables\Filters\SelectFilter;
-use App\Models\User;
-use App\Models\CurrencyCode;
-use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\DatePicker;
-use App\Filament\Exports\DepositeExporter;
-use Filament\Tables\Actions\ExportAction;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\Notification;
 use Carbon\Carbon;
-use Filament\Forms\Components\Select;
+use App\Models\CurrencyCode;
+use Filament\Tables\Enums\FiltersLayout;
 
-
-
-class DepositLogResource extends Resource
+class ExchangeLogResource extends Resource
 {
-    protected static ?string $model = Deposit::class;
+    protected static ?string $model = ExchangeOrder::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrow-up-tray';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getNavigationGroup(): ?string
     {
@@ -37,8 +37,9 @@ class DepositLogResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('deposit.title');
+        return __('exchange.title');
     }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -50,63 +51,52 @@ class DepositLogResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(
+                ExchangeOrder::query()->with(['user', 'fromCurrency', 'toCurrency'])
+            )
             ->columns([
-                TextColumn::make('order_number')
-                    ->label(__('deposit.order_number')),
-                TextColumn::make('user.username')
-                    ->label(__('user.username')),
-                TextColumn::make('currencyCode.code')
-                    ->label(__('deposit.currency_code')),
-                TextColumn::make('amount')
-                    ->label(__('deposit.amount')),
+                TextColumn::make('order_number')->label(__('exchange.order_number')),
+                TextColumn::make('user.name')->label(__('exchange.user')),
+                TextColumn::make('buy_display')
+                    ->label('買入')
+                    ->getStateUsing(function ($record) {
+                        return number_format($record->amount_to, 2) . ' ' . ($record->toCurrency->code ?? '');
+                    }),
+                TextColumn::make('sell_display')
+                    ->label('賣出')
+                    ->getStateUsing(function ($record) {
+                        return '-' . number_format($record->amount_from, 2) . ' ' . ($record->fromCurrency->code ?? '');
+                    }),
+                TextColumn::make('unit_price')
+                    ->label('單位價格')
+                    ->getStateUsing(function ($record) {
+                        return number_format($record->rate, 2);
+                    }),
                 TextColumn::make('status')
-                    ->badge()
-                    ->color(fn($state) => match ($state instanceof DepositStatus ? $state : DepositStatus::from((int) $state)) {
-                        DepositStatus::Pending => 'warning',
-                        DepositStatus::Success => 'success',
-                        DepositStatus::Failed => 'danger',
+                    ->label(__('exchange.status'))
+                    ->getStateUsing(function ($record) {
+                        return ExchangeOrderStatus::from($record->status)->label();
                     })
-                    ->formatStateUsing(fn($state) => ($state instanceof DepositStatus ? $state : DepositStatus::from((int) $state))->label())
-                    ->label(__('deposit.status.status')),
-                TextColumn::make('created_at')
-                    ->label(__('deposit.created_at')),
+                    ->badge()
+                    ->color(fn($state) => match ($state instanceof ExchangeOrderStatus ? $state : ExchangeOrderStatus::from((int) $state)) {
+                        ExchangeOrderStatus::Pending => 'warning',
+                        ExchangeOrderStatus::Success => 'success',
+                        ExchangeOrderStatus::Failed => 'danger',
+                    }),
+                TextColumn::make('created_at')->label(__('exchange.created_at')),
+
             ])
             ->filters([
-                // 1. User 篩選：用 relationship 簡化寫法
-                SelectFilter::make('user_id')
-                    ->label(__('user.username'))
-                    ->relationship('user', 'username')
-                    ->searchable(),
-
-                // 2. 狀態篩選：從 Enum 取出 value => label
-                SelectFilter::make('status')
-                    ->label(__('deposit.status.status'))
-                    ->options(
-                        collect(DepositStatus::cases())
-                            ->mapWithKeys(fn(DepositStatus $case) => [
-                                $case->value => $case->label(),
-                            ])
-                            ->toArray()
-                    )
-                    ->native(false),
-                SelectFilter::make('currency_code_id')
-                    ->options(CurrencyCode::all()->pluck('code', 'id'))
-                    ->label(__('deposit.currency_code'))
-                    ->native(false),
-                SelectFilter::make('order_number')
-                    ->options(Deposit::where('status', '1')->pluck('order_number', 'order_number'))
-                    ->label(__('deposit.order_number'))
-                    ->native(false),
+                SelectFilter::make('from_currency_id')
+                    ->label(__('exchange.buy_currency_code'))
+                    ->options(CurrencyCode::pluck('code', 'id')),
+                SelectFilter::make('to_currency_id')
+                    ->label(__('exchange.sell_currency_code'))
+                    ->options(CurrencyCode::pluck('code', 'id')),
                 static::makeDateRangeFilter(),
                 static::makeQuickRangeFilter(),
             ], layout: FiltersLayout::AboveContent)
-            ->headerActions([
-                ExportAction::make()
-                    ->exporter(DepositeExporter::class)
-                    ->modalHeading(__('deposit.export_heading'))
-                    ->modalDescription(__('deposit.export_description'))
-                    ->label(__('common.export')),
-            ]);
+            ->actions([]);
     }
 
     public static function getRelations(): array
@@ -119,16 +109,11 @@ class DepositLogResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDepositLogs::route('/'),
-            'create' => Pages\CreateDepositLog::route('/create'),
+            'index' => Pages\ListExchangeLogs::route('/'),
+            'create' => Pages\CreateExchangeLog::route('/create'),
+            'edit' => Pages\EditExchangeLog::route('/{record}/edit'),
         ];
     }
-
-    // public static function getEloquentQuery(): Builder
-    // {
-    //     return parent::getEloquentQuery()
-    //         ->whereIn('status', [DepositStatus::Success, DepositStatus::Failed]);
-    // }
     /**
      * 日期範圍 Filter：開始／結束日互斥檢查 + 查詢
      */

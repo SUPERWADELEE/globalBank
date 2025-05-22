@@ -17,6 +17,9 @@ use App\Enums\WithdrawStatus;
 use App\Models\CurrencyCode;
 use App\Filament\Exports\WithdrawExporter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Notification;
+use Carbon\Carbon;
+use Filament\Forms\Components\Select;
 
 
 class WithdrawResource extends Resource
@@ -49,8 +52,8 @@ class WithdrawResource extends Resource
             ->columns([
                 TextColumn::make('order_number')
                     ->label(__('withdraw.order_number')),
-                TextColumn::make('user.name')
-                    ->label(__('withdraw.user')),
+                TextColumn::make('user.username')
+                    ->label(__('user.username')),
                 TextColumn::make('currencyCode.code')
                     ->label(__('withdraw.currency_code')),
                 TextColumn::make('amount')
@@ -75,31 +78,30 @@ class WithdrawResource extends Resource
                             ->pluck('user.username', 'user.id')
                             ->unique()
                     )
-                    ->label(__('withdraw.user'))
-                    ->native(false)
+                    ->label(__('user.username'))
                     ->searchable(),
+
+                SelectFilter::make('status')
+                    ->label(__('withdraw.status'))
+                    ->options(
+                        collect(WithdrawStatus::cases())
+                            ->mapWithKeys(fn(WithdrawStatus $case) => [
+                                $case->value => $case->label(),
+                            ])
+                            ->toArray()
+                    )
+                    ->searchable(),
+
                 SelectFilter::make('currency_code_id')
                     ->options(CurrencyCode::all()->pluck('code', 'id'))
                     ->label(__('withdraw.currency_code'))
-                    ->native(false)
                     ->searchable(),
                 SelectFilter::make('order_number')
                     ->options(Withdraw::where('status', '1')->pluck('order_number', 'order_number'))
                     ->label(__('withdraw.order_number'))
-                    ->native(false)
                     ->searchable(),
-                // 4. 建立時間：改為範圍選擇
-                Filter::make('created_at')
-                    ->form([
-                        DatePicker::make('from')->label(__('withdraw.date.from')),
-                        DatePicker::make('until')->label(__('withdraw.date.until')),
-                    ])
-                    ->query(
-                        fn($query, $data) => $query
-                            ->when($data['from'], fn($q) => $q->whereDate('created_at', '>=', $data['from']))
-                            ->when($data['until'], fn($q) => $q->whereDate('created_at', '<=', $data['until']))
-                    )
-                    ->label(__('withdraw.created_at')),
+                static::makeDateRangeFilter(),
+                static::makeQuickRangeFilter(),
             ], layout: FiltersLayout::AboveContent)
             ->headerActions([
                 ExportAction::make()
@@ -124,9 +126,88 @@ class WithdrawResource extends Resource
             'create' => Pages\CreateWithdraw::route('/create'),
         ];
     }
-    public static function getEloquentQuery(): Builder
+    // public static function getEloquentQuery(): Builder
+    // {
+    //     return parent::getEloquentQuery()
+    //         ->whereIn('status', [WithdrawStatus::Success, WithdrawStatus::Failed]);
+    // }
+    /**
+     * 日期範圍 Filter：開始／結束日互斥檢查 + 查詢
+     */
+    protected static function makeDateRangeFilter(): Filter
     {
-        return parent::getEloquentQuery()
-            ->whereIn('status', [WithdrawStatus::Success, WithdrawStatus::Failed]);
+        return Filter::make('created_at_range')
+            ->label(__('user.register_time'))
+            ->form([
+                DatePicker::make('from')
+                    ->label(__('user.start_date'))
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        if ($state && $get('until') && $state > $get('until')) {
+                            $set('from', null);
+                            Notification::make()
+                                ->title(__('user.error.start_after_end')) // 建議把訊息也抽翻譯
+                                ->danger()
+                                ->send();
+                        }
+                    }),
+
+                DatePicker::make('until')
+                    ->label(__('user.end_date'))
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                        if ($state && $get('from') && $state < $get('from')) {
+                            $set('until', null);
+                            Notification::make()
+                                ->title(__('user.error.end_before_start'))
+                                ->danger()
+                                ->send();
+                        }
+                    }),
+            ])
+            ->query(function ($query, array $data) {
+                return $query
+                    ->when($data['from'], fn($q, $date) => $q->whereDate('created_at', '>=', $date))
+                    ->when($data['until'], fn($q, $date) => $q->whereDate('created_at', '<=', $date));
+            });
+    }
+
+    /**
+     * 快捷範圍 Filter：今日／昨日／近幾日／本週／本月
+     */
+    protected static function makeQuickRangeFilter(): Filter
+    {
+        return Filter::make('quick_range')
+            ->label(__('user.quick_range'))
+            ->form([
+                Select::make('preset')
+                    ->label(__('user.date_range'))
+                    ->options([
+                        'today'      => __('user.range.today'),
+                        'yesterday'  => __('user.range.yesterday'),
+                        'last7'      => __('user.range.last7'),
+                        'last30'     => __('user.range.last30'),
+                        'this_week'  => __('user.range.this_week'),
+                        'last_week'  => __('user.range.last_week'),
+                        'this_month' => __('user.range.this_month'),
+                    ])
+                    ->placeholder(__('user.range.select')),
+            ])
+            ->query(function ($query, array $data) {
+                if (blank($data['preset'])) {
+                    return $query;
+                }
+
+                return match ($data['preset']) {
+                    'today'      => $query->whereDate('created_at', Carbon::today()),
+                    'yesterday'  => $query->whereDate('created_at', Carbon::yesterday()),
+                    'last7'      => $query->whereDate('created_at', '>=', Carbon::today()->subDays(6)),
+                    'last30'     => $query->whereDate('created_at', '>=', Carbon::today()->subDays(29)),
+                    'this_week'  => $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]),
+                    'last_week'  => $query->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]),
+                    'this_month' => $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]),
+                    default      => $query,
+                };
+            });
     }
 }
