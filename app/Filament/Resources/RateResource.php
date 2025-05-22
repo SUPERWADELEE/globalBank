@@ -32,14 +32,13 @@ class RateResource extends Resource
         return $form
             ->schema([
                 Select::make('from_currency_id')
-                    ->options(
-                        CurrencyCode::query()
-                            ->whereIn('code', Auth::user()->getAllowedCurrencyCodesForRate())
-                            ->pluck('code', 'id')
-                    ),
+                    ->label(__('rate.from_currency'))
+                    ->options(CurrencyCode::all()->pluck('code', 'id'))
+                    ->disabled(),
                 Select::make('to_currency_id')
                     ->label(__('rate.to_currency'))
-                    ->options(CurrencyCode::all()->pluck('code', 'id')),
+                    ->options(CurrencyCode::all()->pluck('code', 'id'))
+                    ->disabled(),
                 TextInput::make('sell_rate')
                     ->label(__('rate.sell_rate'))
                     ->numeric()
@@ -68,12 +67,6 @@ class RateResource extends Resource
                     ->label(__('rate.sell_rate')),
                 TextColumn::make('buy_rate')
                     ->label(__('rate.buy_rate')),
-                TextColumn::make('created_at')
-                    ->label(__('rate.created_at'))
-                    ->dateTime('Y-m-d H:i:s'),
-                TextColumn::make('updated_at')
-                    ->label(__('rate.updated_at'))
-                    ->dateTime('Y-m-d H:i:s'),
             ])
             ->filters([
                 //

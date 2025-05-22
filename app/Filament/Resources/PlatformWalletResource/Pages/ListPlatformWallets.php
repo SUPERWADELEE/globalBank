@@ -12,7 +12,7 @@ use Filament\Notifications\Notification;
 class ListPlatformWallets extends ListRecords
 {
     protected static string $resource = PlatformWalletResource::class;
-    protected $seconds = 2;
+    protected $minutes = 2;
 
     public function mount(): void
     {
@@ -46,8 +46,8 @@ class ListPlatformWallets extends ListRecords
 
     public function manualRefresh()
     {
-        // 设置 2 分钟内不可再点
-        $this->refreshDisabledUntil = now()->addSeconds($this->seconds);
+        // 设置 5 分钟内不可再点
+        $this->refreshDisabledUntil = now()->addMinutes($this->minutes);
 
         // 将禁用时间存储在会话中
         Session::put('platform_wallet_refresh_disabled_until', $this->refreshDisabledUntil->toDateTimeString());
@@ -57,7 +57,7 @@ class ListPlatformWallets extends ListRecords
 
         // 显示通知
         Notification::make()
-            ->title(__('platform_wallet.refreshed_successfully') . ' ' . __('platform_wallet.refresh_disabled', ['seconds' => $this->seconds]))
+            ->title(__('platform_wallet.refreshed_successfully') . ' ' . __('platform_wallet.refresh_disabled', ['minutes' => $this->minutes]))
             ->success()
             ->send();
     }

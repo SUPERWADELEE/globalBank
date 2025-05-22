@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\RateResource\Pages;
 
 use App\Filament\Resources\RateResource;
-use Filament\Actions;
+
 use Filament\Resources\Pages\EditRecord;
 
 class EditRate extends EditRecord
@@ -14,5 +14,9 @@ class EditRate extends EditRecord
     {
         return [
         ];
+    }
+    public function getTitle(): string
+    {
+        return __('rate.edit_rate');
     }
 }
