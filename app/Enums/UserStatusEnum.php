@@ -2,12 +2,14 @@
 
 namespace App\Enums;
 
-enum UserStatusEnum: int
-{
-    case Active = 1;
-    case Frozen = 2;
 
-    public function getLabel(): string
+
+enum UserStatusEnum: int   // ← 用 int
+{
+    case Active = 1;       // 啟用
+    case Frozen = 0;       // 凍結
+
+    public function label(): string
     {
         return match ($this) {
             self::Active => __('user.active'),
