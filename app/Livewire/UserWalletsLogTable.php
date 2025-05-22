@@ -5,10 +5,8 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Wallet;
-use App\Services\OperateUserWalletLogService;
-use Spatie\Activitylog\Models\Activity;
 use App\Models\AdminUser;
-use App\Models\CurrencyCode;
+use Brick\Math\BigDecimal;
 
 class UserWalletsLogTable extends Component
 {
@@ -29,7 +27,7 @@ class UserWalletsLogTable extends Component
     private function getFormattedWalletActivityLogs()
     {
         return $this->user->wallets()->with('activityLogs')->get()->map(function ($wallet) {
-            $wallet->activityLogs = $wallet->activityLogs->map(fn ($log) => $this->formatActivityLog($log));
+            $wallet->activityLogs = $wallet->activityLogs->map(fn($log) => $this->formatActivityLog($log));
             return $wallet;
         });
     }
@@ -39,11 +37,15 @@ class UserWalletsLogTable extends Component
         $activityLog->causer_name = $activityLog->causer_type === AdminUser::class
             ? AdminUser::find($activityLog->causer_id)?->name
             : null;
+        $activityLog->causer_job_title = $activityLog->causer_type === AdminUser::class
+            ? AdminUser::find($activityLog->causer_id)?->job_title
+            : null;
 
-        $oldBalance = $activityLog->properties['old']['balance'] ?? 0;
-        $newBalance = $activityLog->properties['attributes']['balance'] ?? 0;
+        $oldBalance = BigDecimal::of($activityLog->properties['old']['balance'] ?? 0);
+        $newBalance = BigDecimal::of($activityLog->properties['attributes']['balance'] ?? 0);
 
-        $activityLog->balance_change = $newBalance - $oldBalance;
+        $activityLog->balance_change = $newBalance->minus($oldBalance)->toScale(2); // 保留 2 位小數
+
 
         $currencyCode = Wallet::find($activityLog->subject_id)?->currencyCode?->code ?? '';
 
