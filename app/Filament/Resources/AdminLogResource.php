@@ -78,24 +78,116 @@ class AdminLogResource extends Resource
                                 ]);
 
                             case $subject instanceof \App\Models\Deposit:
+                                $event = $record->event;
+                                $properties = $record->properties ?? [];
+                                $attributes = $properties['attributes'] ?? [];
+                                $old = $properties['old'] ?? [];
+
                                 $member = optional($subject->user)->name ?? "未知會員";
-                                $amount = number_format($subject->amount, 2);
-                                return __('activity.deposit_created', [
-                                    'causer' => $causerName,
-                                    'member' => $member,
-                                    'amount' => $amount,
-                                    'currency' => $subject->currencyCode->code ?? '未知',
-                                ]);
+                                $currency = $subject->currencyCode->code ?? '未知';
+
+                                $statusMap = [
+                                    '0' => __('activity.status.pending'),
+                                    '1' => __('activity.status.success'),
+                                    '2' => __('activity.status.failed'),
+                                ];
+
+                                if ($event === 'created') {
+                                    $amount = number_format($subject->amount, 2);
+                                    return __('activity.deposit_created', [
+                                        'causer'   => $causerName,
+                                        'member'   => $member,
+                                        'amount'   => $amount,
+                                        'currency' => $currency,
+                                    ]);
+                                }
+
+                                if ($event === 'updated') {
+                                    // 狀態異動
+                                    if (array_key_exists('status', $attributes)) {
+                                        $oldStatus = $statusMap[$old['status'] ?? ''] ?? ($old['status'] ?? '未知');
+                                        $newStatus = $statusMap[$attributes['status']] ?? $attributes['status'];
+
+                                        return __('activity.deposit_status_updated', [
+                                            'causer'     => $causerName,
+                                            'member'     => $member,
+                                            'old_status' => $oldStatus,
+                                            'new_status' => $newStatus,
+                                        ]);
+                                    }
+
+                                    // 金額異動
+                                    if (array_key_exists('amount', $attributes)) {
+                                        $oldAmount = number_format($old['amount'] ?? 0, 2);
+                                        $newAmount = number_format($attributes['amount'], 2);
+
+                                        return __('activity.deposit_amount_updated', [
+                                            'causer'     => $causerName,
+                                            'member'     => $member,
+                                            'old_amount' => $oldAmount,
+                                            'new_amount' => $newAmount,
+                                            'currency'   => $currency,
+                                        ]);
+                                    }
+                                }
+
+                                return "操作員 {$causerName} 對會員 {$member} 進行了 {$event} 操作。";
 
                             case $subject instanceof \App\Models\Withdraw:
+                                $event = $record->event;
+                                $properties = $record->properties ?? [];
+                                $attributes = $properties['attributes'] ?? [];
+                                $old = $properties['old'] ?? [];
+
                                 $member = optional($subject->user)->name ?? "未知會員";
-                                $amount = number_format($subject->amount, 2);
-                                return __('activity.withdraw_created', [
-                                    'causer' => $causerName,
-                                    'member' => $member,
-                                    'amount' => $amount,
-                                    'currency' => $subject->currencyCode->code ?? '未知',
-                                ]);
+                                $currency = $subject->currencyCode->code ?? '未知';
+
+                                $statusMap = [
+                                    '0' => __('deposit.status.pending'),
+                                    '1' => __('deposit.status.success'),
+                                    '2' => __('deposit.status.failed'),
+                                ];
+
+                                if ($event === 'created') {
+                                    $amount = number_format($subject->amount, 2);
+                                    return __('activity.withdraw_created', [
+                                        'causer'   => $causerName,
+                                        'member'   => $member,
+                                        'amount'   => $amount,
+                                        'currency' => $currency,
+                                    ]);
+                                }
+
+                                if ($event === 'updated') {
+                                    // 狀態異動
+                                    if (array_key_exists('status', $attributes)) {
+                                        $oldStatus = $statusMap[$old['status'] ?? ''] ?? ($old['status'] ?? '未知');
+                                        $newStatus = $statusMap[$attributes['status']] ?? $attributes['status'];
+
+                                        return __('activity.withdraw_status_updated', [
+                                            'causer'     => $causerName,
+                                            'member'     => $member,
+                                            'old_status' => $oldStatus,
+                                            'new_status' => $newStatus,
+                                        ]);
+                                    }
+
+                                    // 金額異動
+                                    if (array_key_exists('amount', $attributes)) {
+                                        $oldAmount = number_format($old['amount'] ?? 0, 2);
+                                        $newAmount = number_format($attributes['amount'], 2);
+
+                                        return __('activity.withdraw_amount_updated', [
+                                            'causer'     => $causerName,
+                                            'member'     => $member,
+                                            'old_amount' => $oldAmount,
+                                            'new_amount' => $newAmount,
+                                            'currency'   => $currency,
+                                        ]);
+                                    }
+                                }
+
+                                return "操作員 {$causerName} 對會員 {$member} 進行了 {$event} 操作。";
                             case $subject instanceof \App\Models\DepositLocation:
                                 $event = $record->event;
                                 $attributes = $properties['attributes'] ?? [];
@@ -166,8 +258,24 @@ class AdminLogResource extends Resource
 
                                 if ($event === 'updated') {
                                     $changes = collect($attributes)->map(function ($newValue, $field) use ($old, $fieldMap) {
+
                                         $oldValue = $old[$field] ?? '（無）';
                                         $translatedField = $fieldMap[$field] ?? $field;
+                                        if ($field === 'status') {
+
+
+                                            $oldValue = match ((string) $oldValue) {
+                                                '1' => '正常',
+                                                '0' => '凍結',
+                                                default => $oldValue,
+                                            };
+
+                                            $newValue = match ((string) $newValue) {
+                                                '1' => '正常',
+                                                '0' => '凍結',
+                                                default => $newValue,
+                                            };
+                                        }
                                         return __('activity.user_change_line', [
                                             'field' => $translatedField,
                                             'old' => $oldValue,
