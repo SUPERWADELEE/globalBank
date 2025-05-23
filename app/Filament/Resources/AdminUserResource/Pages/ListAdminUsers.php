@@ -10,6 +10,14 @@ class ListAdminUsers extends ListRecords
 {
     protected static string $resource = AdminUserResource::class;
 
+    public function getHeading(): string
+    {
+        return __('system_management.title');
+    }
+    public function getSubheading(): string
+    {
+        return __('admin_user.navigation.account_management');
+    }
     protected function getHeaderActions(): array
     {
         return [
