@@ -118,11 +118,16 @@ class AdminUserResource extends Resource
                     ->options(function () {
                         return \App\Models\AdminUser::pluck('name', 'name')->toArray();
                     })->searchable(),
-                Tables\Filters\SelectFilter::make('email')
-                    ->label(__('admin_user.email'))
+                Tables\Filters\SelectFilter::make('job_title')
+                    ->label(__('admin_user.job_title'))
                     ->options(function () {
-                        return \App\Models\AdminUser::pluck('email', 'email')->toArray();
-                    })->searchable(),
+                        return \App\Models\AdminUser::query()
+                            ->whereNotNull('job_title')     
+                            ->distinct()                   
+                            ->pluck('job_title', 'job_title')
+                            ->toArray();
+                    })
+                    ->searchable(),
                 Tables\Filters\SelectFilter::make('team_id')
                     ->label(__('admin_user.team.name'))
                     ->options(function () {
@@ -130,7 +135,7 @@ class AdminUserResource extends Resource
                     })->searchable(),
 
                 Tables\Filters\SelectFilter::make('role')
-                    ->label(__('admin_user.roles'))
+                    ->label(__('role.role_name'))
                     ->options(function () {
                         return \Spatie\Permission\Models\Role::whereIn('id', function ($query) {
                             $query->select('role_id')
