@@ -23,5 +23,10 @@ return [
     'deposit_success' => '入金成功',
     'withdraw_success' => '出金成功',
     'insufficient_balance' => 'ユーザー残高不足',
-    'invalid_amount' => '無効な金額'
+    'invalid_amount' => '無効な金額',
+    'random_password' => 'ランダムパスワード',
+    'password' => 'パスワード',
+    'user_level' => 'ユーザーレベル',
+    'status_enabled' => '有効',
+    'status_frozen' => '凍結',
 ]; 

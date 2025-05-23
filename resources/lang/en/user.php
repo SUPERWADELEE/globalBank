@@ -23,5 +23,10 @@ return [
     'deposit_success' => 'Deposit Successful',
     'withdraw_success' => 'Withdrawal Successful',
     'insufficient_balance' => 'Insufficient User Balance',
-    'invalid_amount' => 'Invalid Amount'
+    'invalid_amount' => 'Invalid Amount',
+    'random_password' => 'Random Password',
+    'password' => 'Password',
+    'user_level' => 'User Level',
+    'status_enabled' => 'Enabled',
+    'status_frozen' => 'Frozen',
 ]; 

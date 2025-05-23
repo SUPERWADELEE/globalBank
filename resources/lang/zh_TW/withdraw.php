@@ -32,4 +32,8 @@ return [
         'from' => '起始日',
         'until' => '結束日',
     ],
+    'refresh' => '重新整理',
+    'withdraw_status_updated' => '操作員 :causer 把會員 :member 的出金訂單狀態從 :old_status 變更為 :new_status',
+    'withdraw_amount_updated' => '操作員 :causer 把會員 :member 的出金訂單金額從 :old 變更為 :new',
+
 ];

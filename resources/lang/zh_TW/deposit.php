@@ -1,7 +1,7 @@
 <?php
 
 return [
-   
+
 
     'title' => '入金紀錄',
     'user' => '用戶',
@@ -35,4 +35,5 @@ return [
         'failed' => '失敗',
         'status' => '狀態',
     ],
+    'refresh' => '重新整理',
 ];

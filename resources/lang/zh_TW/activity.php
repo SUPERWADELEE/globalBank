@@ -35,6 +35,8 @@ return [
     'rate_buy_rate_change' => '買入匯率從 :old 變更為 :new',
     'rate_sell_rate_change' => '賣出匯率從 :old 變更為 :new',
     'deposit_created' => '操作員 :causer 為會員 :member 入金 :amount :currency',
+    'deposit_status_updated' => '操作員 :causer 把會員 :member 的入金訂單狀態從 :old_status 變更為 :new_status',
+    'deposit_amount_updated' => '操作員 :causer 把會員 :member 的入金訂單金額從 :old 變更為 :new',
     'withdraw_created' => '操作員 :causer 為會員 :member 出金 :amount :currency',
     'deposit_location_created' => '操作員 :causer 新增了入金地址 :location。',
     'deposit_location_updated' => '操作員 :causer 更新了入金地址資料：:changes。',
@@ -82,4 +84,11 @@ return [
     'role_created' => '操作員 :causer 建立了角色 :role，並指派權限：:permissions。',
     'role_updated' => '操作員 :causer 更新了角色 :role 的資料：:changes。',
     'role_change_line' => ':field 從「:old」變更為「:new」',
+    'withdraw_status_updated' => '操作員 :causer 把會員 :member 的出金訂單狀態從 :old_status 變更為 :new_status',
+    'withdraw_amount_updated' => '操作員 :causer 把會員 :member 的出金訂單金額從 :old 變更為 :new',
+    'status' => [
+        'pending' => '待處理',
+        'success' => '已完成',
+        'failed' => '失敗',
+    ],
 ];

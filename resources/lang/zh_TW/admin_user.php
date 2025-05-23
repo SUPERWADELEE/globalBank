@@ -56,6 +56,7 @@ return [
         'admin_user_team' => '操作員單位管理',
     ],
     'operation_log' => '操作日誌',
+    'username' => '帳號',
     'job_title' => '職稱',
     'current_password' => '舊密碼',
     'new_password' => '新密碼',
@@ -86,5 +87,12 @@ return [
         'causer' => '操作者',
         'description' => '操作紀錄',
         'subject' => '單元',
+    ],
+    'user_team' => [
+        'title' => '單位管理',
+        'navigation_label' => '單位管理',
+        'name' => '單位名稱',
+        'description' => '單位描述',
+        'create' => '新增單位',
     ],
 ];

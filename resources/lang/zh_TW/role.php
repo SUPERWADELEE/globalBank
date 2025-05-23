@@ -6,6 +6,8 @@ return [
     'permission_removed' => '移除：',
     'permission_updated' => '更新：',
     'permission_updated_log' => '更新角色權限：',
+    'role_name' => '群組名稱',
+    'add_role' => '新增群組',
 ];
 
 

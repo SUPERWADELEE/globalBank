@@ -23,5 +23,10 @@ return [
     'deposit_success' => '입금 성공',
     'withdraw_success' => '출금 성공',
     'insufficient_balance' => '사용자 잔액 부족',
-    'invalid_amount' => '유효하지 않은 금액'
+    'invalid_amount' => '유효하지 않은 금액',
+    'random_password' => '랜덤 비밀번호',
+    'password' => '비밀번호',
+    'user_level' => '사용자 등급',
+    'status_enabled' => '활성화',
+    'status_frozen' => '동결',
 ]; 
