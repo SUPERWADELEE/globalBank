@@ -105,19 +105,12 @@ class AdminUserResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->label(__('admin_user.username')),
-                TextColumn::make('email')
-                    ->label(__('admin_user.email')),
-
+                TextColumn::make('job_title')
+                    ->label(__('admin_user.job_title')),
                 TextColumn::make('roles.name')
-                    ->label(__('admin_user.roles')),
+                    ->label(__('role.role_name')),
                 TextColumn::make('team.name')
                     ->label(__('admin_user.team.name')),
-                TextColumn::make('created_at')
-                    ->label(__('common.created_at'))
-                    ->dateTime('Y-m-d H:i:s'),
-                TextColumn::make('updated_at')
-                    ->label(__('common.updated_at'))
-                    ->dateTime('Y-m-d H:i:s'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('name')
