@@ -16,7 +16,7 @@ use App\Enums\DepositLocationStatus;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\ToggleColumn;
-
+use Filament\Notifications\Notification;
 class DepositLocationResource extends Resource
 {
     protected static ?string $model = DepositLocation::class;
@@ -78,6 +78,10 @@ class DepositLocationResource extends Resource
                     ->afterStateUpdated(function ($record, $state) {
                         $record->status = $state ? DepositLocationStatus::Enable : DepositLocationStatus::Disable;
                         $record->save();
+                        Notification::make()
+                            ->title(__('deposit_location.status_updated', ['location' => $record->location]))
+                            ->success()
+                            ->send();
 
                         if ($state) {
                             \App\Models\DepositLocation::where('id', '!=', $record->id)
