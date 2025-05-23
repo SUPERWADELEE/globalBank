@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\Auth;
 class CreateRole extends CreateRecord
 {
     protected static string $resource = RoleResource::class;
+    public function getHeading(): string
+    {
+        return __('system_management.title');
+    }
+    public function getSubheading(): string
+    {
+        return __('permissions.create_permission_group');
+    }
     protected function afterCreate(): void
     {
         $role = $this->record;
