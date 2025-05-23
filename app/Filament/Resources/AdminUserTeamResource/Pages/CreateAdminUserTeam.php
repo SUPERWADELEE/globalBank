@@ -9,4 +9,16 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateAdminUserTeam extends CreateRecord
 {
     protected static string $resource = AdminUserTeamResource::class;
+
+
+    public function getHeading(): string
+    {
+        return __('system_management.title');
+    }
+
+    public function getSubheading(): string
+    {
+        return __('admin_user.user_team.create');
+    }
+   
 }
