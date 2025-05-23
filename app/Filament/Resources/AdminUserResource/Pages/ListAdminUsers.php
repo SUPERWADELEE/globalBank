@@ -22,6 +22,7 @@ class ListAdminUsers extends ListRecords
     {
         return [
             Actions\CreateAction::make('新增')
+                ->label(__('permissions.create_admin_user'))
                 ->color('success'), // 這樣會顯示在表格上方
 
             Actions\Action::make('帳號管理')
