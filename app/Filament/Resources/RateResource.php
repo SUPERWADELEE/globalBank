@@ -15,6 +15,8 @@ use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AdminUser;
+use App\Policies\RatePolicy;
+use Illuminate\Support\Facades\Gate;
 
 class RateResource extends Resource
 {
@@ -44,13 +46,15 @@ class RateResource extends Resource
                     ->numeric()
                     ->minValue(0)
                     ->step(0.01)
-                    ->required(),
+                    ->required()
+                    ->disabled(fn($record) => !$record || Gate::denies('edit', $record)),
                 TextInput::make('buy_rate')
                     ->label(__('rate.buy_rate'))
                     ->numeric()
                     ->minValue(0)
                     ->step(0.01)
-                    ->required(),
+                    ->required()
+                    ->disabled(fn($record) => !$record || Gate::denies('edit', $record)),
             ]);
     }
 
@@ -92,11 +96,7 @@ class RateResource extends Resource
             'edit' => Pages\EditRate::route('/{record}/edit'),
         ];
     }
-    // public static function getPermissionPrefixes(): array
-    // {
-    //     return [
-    //         'view',
-    //     ];
+    
     // }
     // public static function getEloquentQuery(): Builder
     // {

@@ -14,6 +14,7 @@ class ListRoles extends ListRecords
     {
         return [
             Actions\CreateAction::make('新增')
+                ->label(__('role.add_role'))
                 ->color('success'),
 
             Actions\Action::make('帳號管理')

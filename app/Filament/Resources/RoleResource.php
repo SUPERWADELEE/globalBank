@@ -168,7 +168,7 @@ class RoleResource extends Resource
                                 ->options(
                                     \Spatie\Permission\Models\Permission::all()
                                         ->filter(function ($p) {
-                                            return str_contains($p->name, 'view_any_rate') || str_contains($p->name, 'update_rate');
+                                            return (str_contains($p->name, 'view_any_rate') || str_contains($p->name, 'edit_')) && str_ends_with($p->name, 'rate');
                                         })
                                         ->pluck('name', 'id')
                                         ->mapWithKeys(function ($label, $id) {
@@ -264,29 +264,15 @@ class RoleResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label(__('admin_user.name'))
-                    ->searchable(),
+                    ->label(__('role.role_name')),
                 Tables\Columns\TextColumn::make('users.name')
-                    ->label(__('admin_user.admin_user'))
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('Y-m-d H:i:s')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime('Y-m-d H:i:s')
-                    ->searchable(),
+                    ->label(__('admin_user.admin_user')),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('name')
-                    ->label(__('admin_user.name'))
-                    ->options(Role::pluck('name', 'name')->toArray()),
-                Tables\Filters\SelectFilter::make('created_at')
-                    ->label(__('common.created_at'))
-                    ->options(Role::pluck('created_at', 'created_at')->toArray()),
-                Tables\Filters\SelectFilter::make('updated_at')
-                    ->label(__('common.updated_at'))
-                    ->options(Role::pluck('updated_at', 'updated_at')->toArray()),
-                //
+                    ->label(__('role.role_name'))
+                    ->options(Role::pluck('name', 'name')->toArray())
+                    ->searchable(),
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),

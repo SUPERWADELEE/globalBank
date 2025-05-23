@@ -10,6 +10,8 @@ use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Wallet;
 use App\Policies\UserWalletPolicy;
+use App\Models\Rate;
+use App\Policies\RatePolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
         $this->createUserWalletPermissions();
         $this->createUserWalletLogsPermissions();
         $this->createAccountSettingsPermissions();
+        $this->createEditRatePermissions();
         $this->registerPolicies();
     }
     public function createUserWalletPermissions()
@@ -61,9 +64,16 @@ class AppServiceProvider extends ServiceProvider
         Permission::firstOrCreate(['name' => 'view_account_settings']);
         Permission::firstOrCreate(['name' => 'edit_account_settings']);
     }
+    public function createEditRatePermissions()
+    {
+        Permission::firstOrCreate(['name' => 'edit_usdt_rate']);
+        Permission::firstOrCreate(['name' => 'edit_jpy_rate']);
+        Permission::firstOrCreate(['name' => 'edit_sgd_rate']);
+        Permission::firstOrCreate(['name' => 'edit_krw_rate']);
+    }
     public function registerPolicies()
     {
         Gate::policy(Wallet::class, UserWalletPolicy::class);
-
+        Gate::policy(Rate::class, RatePolicy::class);
     }
 }

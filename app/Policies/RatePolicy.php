@@ -105,4 +105,18 @@ class RatePolicy
     {
         return $adminUser->can('{{ Reorder }}');
     }
+    /**
+     * 只要有任一幣別的 edit_xxx_rate 權限即可編輯
+     */
+    public function edit(AdminUser $user, Rate $rate): bool
+    {
+        $codes = [
+            strtolower($rate->fromCurrency->code),
+            strtolower($rate->toCurrency->code),
+        ];
+        $permissions = collect($codes)
+            ->map(fn($code) => "edit_{$code}_rate")
+            ->all();
+        return $user->hasAnyPermission($permissions);
+    }
 }
