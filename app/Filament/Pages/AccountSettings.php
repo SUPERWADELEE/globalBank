@@ -15,10 +15,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Form;
 use App\Enums\LocaleEnum;
 use Filament\Notifications\Notification;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Set;
-use Illuminate\Support\Str;
-use Closure;
 
 class AccountSettings extends Page implements HasForms
 {
@@ -77,43 +73,14 @@ class AccountSettings extends Page implements HasForms
                     ->label(__('admin_user.job_title'))
                     ->disabled(),
 
-                // 舊密碼檢查，看是不是舊的密碼資料
-                TextInput::make('password')
+                TextInput::make('current_password')
                     ->label(__('admin_user.current_password'))
-                    ->password()
-                    ->maxLength(255)
-                    ->required()
-                    ->rule(function () {
-                        return function (string $attribute, $value, Closure $fail) {
-                            $user = Auth::user();
-
-                            if (! Hash::check($value, $user->password)) {
-                                $fail(__('admin_user.current_password_incorrect'));
-                            }
-                        };
-                    }),
-
+                    ->disabled(fn() => !Auth::user()->can('edit_account_settings'))
+                    ->password(),
 
                 TextInput::make('new_password')
                     ->label(__('admin_user.new_password'))
                     ->password()
-                    ->password()
-                    // 建立時必填；編輯時可空白（表示不變更密碼）
-                    ->revealable()
-                    // 右側按鈕：產生隨機密碼
-                    ->suffixAction(
-                        Action::make('generatePassword')
-                            ->tooltip(__('admin_user.random_password'))      // 滑鼠提示
-                            ->icon('heroicon-o-sparkles')              // 圖示可換
-                            ->color('secondary')                       // 按鈕顏色
-                            ->action(
-                                fn(Set $set) =>
-                                $set('new_password', Str::random(12))      // 寫回欄位
-                            )
-                    )
-                    ->default(Str::random(12))
-                    ->maxLength(255)
-                    ->required()
                     ->disabled(fn() => !Auth::user()->can('edit_account_settings')),
 
                 TextInput::make('new_password_confirmation')
