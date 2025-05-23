@@ -77,7 +77,7 @@ class AdminIpWhiteListResource extends Resource
         return [
             'index' => Pages\ListAdminIpWhiteLists::route('/'),
             'create' => Pages\CreateAdminIpWhiteList::route('/create'),
-            'edit' => Pages\EditAdminIpWhiteList::route('/{record}/edit'),
+
         ];
     }
     public static function getPermissionPrefixes(): array
