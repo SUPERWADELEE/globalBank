@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             CurrencyCodeSeeder::class,
             RateSeeder::class,
             PlatformWalletSeeder::class,
+            UserLevelSeeder::class,
         ]);
     }
 }
