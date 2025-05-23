@@ -23,7 +23,6 @@ class EditRole extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
         ];
     }
     protected function afterSave(): void
