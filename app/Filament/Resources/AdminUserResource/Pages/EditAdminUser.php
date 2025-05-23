@@ -15,6 +15,14 @@ class EditAdminUser extends EditRecord
     // 用於存儲角色ID
     protected string|int|null $roleId = null;
 
+    public function getHeading(): string
+    {
+        return __('system_management.title');
+    }
+    public function getSubheading(): string
+    {
+        return __('permissions.update_admin_user');
+    }
     protected function getHeaderActions(): array
     {
         return [
