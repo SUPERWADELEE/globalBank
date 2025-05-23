@@ -47,12 +47,11 @@ class AdminUserTeamResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('admin_user.team.name'))
-                    ->sortable()
-                    ->searchable(),
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('description')
                     ->label(__('admin_user.team.description'))
-                    ->sortable()
-                    ->searchable(),
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('name')
@@ -86,7 +85,7 @@ class AdminUserTeamResource extends Resource
         return [
             'index' => Pages\ListAdminUserTeams::route('/'),
             'create' => Pages\CreateAdminUserTeam::route('/create'),
-            'edit' => Pages\EditAdminUserTeam::route('/{record}/edit'),
         ];
     }
+
 }
