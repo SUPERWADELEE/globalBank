@@ -31,7 +31,13 @@ class ListRoles extends ListRecords
                 ->label(__('admin_user.navigation.team_management')),
         ];
     }
-    public function getTitle(): string
+
+    public function getHeading(): string
+    {
+        return __('system_management.title');
+    }
+
+    public function getSubheading(): string
     {
         return __('admin_user.navigation.role_management');
     }
