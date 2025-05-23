@@ -46,8 +46,5 @@ class ListAdminIpWhiteLists extends ListRecords
     {
         return __('admin_user.navigation.ip_white_list');
     }
-    public function getBreadcrumb(): string
-    {
-        return __('admin_user.navigation.ip_white_list'); // 改這裡就會變成 "帳號管理 > List"
-    }
+   
 }
