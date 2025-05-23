@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AdminIpWhiteListResource\Pages;
 
-use App\Models\AdminIpWhiteList;
+use App\Models\AdminIpWhitelist;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -12,11 +12,11 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Enums\FiltersLayout;
+use Illuminate\Database\Eloquent\Builder;
 
 class AdminIpWhiteListResource extends Resource
 {
-    protected static ?string $model = AdminIpWhiteList::class;
-
+    protected static ?string $model = AdminIpWhitelist::class;
     protected static ?string $navigationIcon = 'heroicon-o-shield-exclamation';
     public static function getNavigationGroup(): ?string
     {
@@ -42,17 +42,13 @@ class AdminIpWhiteListResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                TextColumn::make('ip_address')
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime('Y-m-d H:i:s')
-                    ->searchable(),
-                TextColumn::make('updated_at')
-                    ->dateTime('Y-m-d H:i:s')
-                    ->searchable(),
-                //
-            ])
+        // ->query(fn (Builder $query) => $query->with('adminUser'))
+        ->columns([
+            TextColumn::make('ip_address')
+                ->label(__('admin_ip_white_list.ip_address')),
+            TextColumn::make('adminUser.username')          
+                ->label(__('admin_user.username')),
+        ])
             ->filters([
                 Tables\Filters\SelectFilter::make('ip_address')
                     ->label(__('admin_ip_white_list.ip_address'))
