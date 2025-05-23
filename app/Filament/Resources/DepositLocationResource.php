@@ -115,7 +115,6 @@ class DepositLocationResource extends Resource
         return [
             'index' => Pages\ListDepositLocations::route('/'),
             'create' => Pages\CreateDepositLocation::route('/create'),
-            'edit' => Pages\EditDepositLocation::route('/{record}/edit'),
         ];
     }
 }
