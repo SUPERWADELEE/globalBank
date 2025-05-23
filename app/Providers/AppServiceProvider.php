@@ -37,42 +37,6 @@ class AppServiceProvider extends ServiceProvider
             PanelsRenderHook::TOPBAR_END,
             fn(): View => view('filament.partials.custom-header-icon')
         );
-        $this->createUserWalletPermissions();
-        $this->createUserWalletLogsPermissions();
-        $this->createAccountSettingsPermissions();
-        $this->createEditRatePermissions();
-        $this->registerPolicies();
-    }
-    public function createUserWalletPermissions()
-    {
-        Permission::firstOrCreate(['name' => 'view_user_wallet']);
-        Permission::firstOrCreate(['name' => 'deposit_USDT_user_wallet']);
-        Permission::firstOrCreate(['name' => 'withdraw_USDT_user_wallet']);
-        Permission::firstOrCreate(['name' => 'deposit_KRW_user_wallet']);
-        Permission::firstOrCreate(['name' => 'withdraw_KRW_user_wallet']);
-        Permission::firstOrCreate(['name' => 'deposit_JPY_user_wallet']);
-        Permission::firstOrCreate(['name' => 'withdraw_JPY_user_wallet']);
-        Permission::firstOrCreate(['name' => 'deposit_SGD_user_wallet']);
-        Permission::firstOrCreate(['name' => 'withdraw_SGD_user_wallet']);
-    }
-    public function createUserWalletLogsPermissions()
-    {
-        Permission::firstOrCreate(['name' => 'view_user_wallet_logs']);
-    }
-    public function createAccountSettingsPermissions()
-    {
-        Permission::firstOrCreate(['name' => 'view_account_settings']);
-        Permission::firstOrCreate(['name' => 'edit_account_settings']);
-    }
-    public function createEditRatePermissions()
-    {
-        Permission::firstOrCreate(['name' => 'edit_usdt_rate']);
-        Permission::firstOrCreate(['name' => 'edit_jpy_rate']);
-        Permission::firstOrCreate(['name' => 'edit_sgd_rate']);
-        Permission::firstOrCreate(['name' => 'edit_krw_rate']);
-    }
-    public function registerPolicies()
-    {
         Gate::policy(Wallet::class, UserWalletPolicy::class);
         Gate::policy(Rate::class, RatePolicy::class);
     }

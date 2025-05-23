@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             RateSeeder::class,
             PlatformWalletSeeder::class,
             UserLevelSeeder::class,
+            PermissionSeeder::class
         ]);
     }
 }
