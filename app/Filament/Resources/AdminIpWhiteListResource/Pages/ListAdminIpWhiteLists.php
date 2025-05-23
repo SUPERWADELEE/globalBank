@@ -12,10 +12,19 @@ class ListAdminIpWhiteLists extends ListRecords
 {
     protected static string $resource = AdminIpWhiteListResource::class;
 
+    public function getHeading(): string
+    {
+        return __('system_management.title');
+    }
+    public function getSubheading(): string
+    {
+        return __('admin_user.navigation.ip_white_list');
+    }
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make('新增') // 這樣會顯示在表格上方
+            Actions\CreateAction::make() 
+                ->label(__('permissions.create_admin_ip_white_list'))
                 ->color('success'),
 
             Actions\Action::make('帳號管理')
