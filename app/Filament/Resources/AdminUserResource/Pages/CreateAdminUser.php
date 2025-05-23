@@ -41,4 +41,17 @@ class CreateAdminUser extends CreateRecord
             ]);
         }
     }
+    public function getTitle(): string
+    {
+        return __('permissions.create_admin_user');
+    }
+    public function getHeading(): string
+    {
+        return __('system_management.title');
+    }
+    public function getSubheading(): string
+    {
+        return __('permissions.create_admin_user');
+    }
+
 }
