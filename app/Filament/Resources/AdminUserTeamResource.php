@@ -32,9 +32,11 @@ class AdminUserTeamResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__('admin_user.team.name'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('description')
+                    ->label(__('admin_user.team.description'))
                     ->maxLength(255),
             ]);
     }
