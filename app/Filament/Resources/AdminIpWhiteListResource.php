@@ -52,14 +52,7 @@ class AdminIpWhiteListResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('ip_address')
                     ->label(__('admin_ip_white_list.ip_address'))
-                    ->options(AdminIpWhiteList::pluck('ip_address', 'ip_address')->toArray()),
-                Tables\Filters\SelectFilter::make('created_at')
-                    ->label(__('common.created_at'))
-                    ->options(AdminIpWhiteList::pluck('created_at', 'created_at')->toArray()),
-                Tables\Filters\SelectFilter::make('updated_at')
-                    ->label(__('common.updated_at'))
-                    ->options(AdminIpWhiteList::pluck('updated_at', 'updated_at')->toArray()),
-                //
+                    ->options(AdminIpWhitelist::pluck('ip_address', 'ip_address')->toArray())->searchable(),
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\DeleteAction::make()
