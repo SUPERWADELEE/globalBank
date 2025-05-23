@@ -11,6 +11,15 @@ class EditRole extends EditRecord
 {
     protected static string $resource = RoleResource::class;
 
+
+    public function getHeading(): string
+    {
+        return __('system_management.title');
+    }
+    public function getSubheading(): string
+    {
+        return __('permissions.update_permission');
+    }
     protected function getHeaderActions(): array
     {
         return [
