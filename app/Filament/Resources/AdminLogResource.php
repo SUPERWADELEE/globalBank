@@ -399,7 +399,11 @@ class AdminLogResource extends Resource
             ]);
         }
 
-        return "操作員 {$causerName} 對會員 {$memberName} 進行了 {$event} 操作。";
+        return __('activity.default_description', [
+            'causer' => $causerName,
+            'subject' => $memberName,
+            'event' => $event,
+        ]);
     }
 
     // 針對 AdminUser
