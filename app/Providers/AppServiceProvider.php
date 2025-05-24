@@ -12,6 +12,8 @@ use App\Models\Wallet;
 use App\Policies\UserWalletPolicy;
 use App\Models\Rate;
 use App\Policies\RatePolicy;
+use Illuminate\Contracts\Auth\Authenticatable;
+use App\Models\AdminUser;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,6 +40,9 @@ class AppServiceProvider extends ServiceProvider
             fn(): View => view('filament.partials.custom-header-icon')
         );
         Gate::policy(Wallet::class, UserWalletPolicy::class);
-        Gate::policy(Rate::class, RatePolicy::class);
+        Gate::policy(Rate::class,   RatePolicy::class);
+        
+        // 註冊自定義的 Export 模型
+        $this->app->bind(\Filament\Actions\Exports\Models\Export::class, \App\Models\Export::class);
     }
 }
