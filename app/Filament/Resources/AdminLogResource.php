@@ -523,46 +523,65 @@ class AdminLogResource extends Resource
         ]);
     }
 
-    // 針對 Role
-    protected static function formatRoleDescription($causerName, $subject, $event, $properties)
-    {
-        $attributes = $properties['attributes'] ?? [];
-        $old = $properties['old'] ?? [];
-        $roleName = $subject->name ?? $attributes['name'] ?? '未知角色';
+    protected static function formatRoleDescription(
+        string $causerName,
+        $subject,
+        string $event,
+        object $properties
+    ): string {
+        $roleName = $subject->name
+            ?? ($properties['attributes']['name'] ?? '未知角色');
 
         if ($event === 'created') {
-            $permissions = $properties['assigned_permissions'] ?? [];
-            $mappedPermissions = collect($permissions)->map(function ($key) {
-                $key = str_replace('::', '_', $key);
-                $translated = __('permissions.' . $key);
-                return $translated === 'permissions.' . $key ? $key : $translated;
-            })->implode('、');
-            return __('activity.role_created', [
-                'causer' => $causerName,
-                'role' => $roleName,
-                'permissions' => $mappedPermissions,
+            $perms = $properties['assigned_permissions'] ?? [];
+            $permList = self::formatPerms($perms);
+
+            return __("activity.role_created", [
+                'causer'      => $causerName,
+                'role'        => $roleName,
+                'permissions' => $permList,
             ]);
         }
 
         if ($event === 'updated') {
-            $changes = collect($attributes)->map(function ($new, $field) use ($old) {
-                $oldValue = $old[$field] ?? '（無）';
-                return __('activity.role_change_line', [
-                    'field' => $field,
-                    'old' => $oldValue,
-                    'new' => $new,
-                ]);
-            })->implode('，');
+            $added = $properties['added_permissions']   ?? [];
+            $removed = $properties['removed_permissions'] ?? [];
 
-            return __('activity.role_updated', [
-                'causer' => $causerName,
-                'role' => $roleName,
+            $messages = [];
+            if (! empty($added)) {
+                $messages[] = __("activity.role_change_added", [
+                    'permissions' => self::formatPerms($added),
+                ]);
+            }
+            if (! empty($removed)) {
+                $messages[] = __("activity.role_change_removed", [
+                    'permissions' => self::formatPerms($removed),
+                ]);
+            }
+            $changes = $messages
+                ? implode('；', $messages)
+                : __("activity.role_no_permission_changes");
+
+            return __("activity.role_updated", [
+                'causer'  => $causerName,
+                'role'    => $roleName,
                 'changes' => $changes,
             ]);
         }
 
-        // fallback
-        return "操作員 {$causerName} 對角色 {$roleName} 進行了 {$event} 操作。";
+        return __("activity.log_description", [
+            'causer'  => $causerName,
+            'subject' => $roleName,
+            'event'   => $event,
+        ]);
+    }
+
+    protected static function formatPerms($perms): string
+    {
+        return collect($perms)
+            ->map(fn(string $key) => str_replace('::', '_', $key))
+            ->map(fn(string $key) => __("permissions.{$key}"))
+            ->implode('、');
     }
 
     /**

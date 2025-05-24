@@ -92,4 +92,29 @@ return [
         'failed' => '失敗',
     ],
     'withdraw_tx_hash_updated' => '操作員 :causer 把會員 :member 的出金訂單tx_hash從 :old 變更為 :new',
+    'default_description' => '操作員 :causer 對 :subject 進行了 :event 操作',
+     // 每一行「欄位變更」的格式
+     'admin_user_change_line' => ':field 由 :old 變更為 :new',
+
+     // 組合所有變更後的最終訊息
+     'admin_user_updated'     => '操作員 :causer 更新了操作員 :admin_user 的 :changes',
+     
+     // 建立時的訊息
+     'admin_user_created'     => '操作員 :causer 新增了操作員 :admin_user',
+     
+     // 萬一沒匹配到其他事件
+     'default_admin_user_operation'      => '操作員 :causer 對 :subject 進行了 :event 操作。',
+     'default_operation' => '操作員 :causer 更新了:subject。',
+      // 建立時
+    'role_created'              => '操作員 :causer 建立了角色「:role」，並分配權限：:permissions',
+    // 更新時：新增
+    'role_change_added'         => '新增權限：:permissions',
+    // 更新時：移除
+    'role_change_removed'       => '移除權限：:permissions',
+    // 更新後
+    'role_updated'              => '操作員 :causer 更新了角色「:role」，變更內容：:changes',
+    // 如果更新事件卻沒有任何權限變化
+    'role_no_permission_changes'=> '沒有任何權限變更',
+    // 通用 fallback
+    'log_description'           => '操作員 :causer 對 :subject 進行了 :event 操作',
 ];
