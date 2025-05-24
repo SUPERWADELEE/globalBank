@@ -6,7 +6,7 @@ use App\Models\AdminUser;
 use App\Models\Wallet;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserWalletPolicy
+class WalletPolicy
 {
     use HandlesAuthorization;
 

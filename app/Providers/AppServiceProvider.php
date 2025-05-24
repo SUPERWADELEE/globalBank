@@ -17,9 +17,6 @@ use App\Models\AdminUser;
 
 class AppServiceProvider extends ServiceProvider
 {
-    protected $policies = [
-        \App\Models\Wallet::class => \App\Policies\UserWalletPolicy::class,
-    ];
     /**
      * Register any application services.
      */
@@ -39,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
             PanelsRenderHook::TOPBAR_END,
             fn(): View => view('filament.partials.custom-header-icon')
         );
-        Gate::policy(Wallet::class, UserWalletPolicy::class);
+
         Gate::policy(Rate::class,   RatePolicy::class);
         
         // 註冊自定義的 Export 模型
