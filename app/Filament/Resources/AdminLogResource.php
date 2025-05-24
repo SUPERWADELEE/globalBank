@@ -11,7 +11,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use App\Enums\DepositLocationStatus;
 use App\Models\CustomActivity;
+use App\Models\AdminUserTeam;
 use Illuminate\Database\Eloquent\Builder;
+
 
 class AdminLogResource extends Resource
 {
@@ -406,27 +408,62 @@ class AdminLogResource extends Resource
         ]);
     }
 
-    // 針對 AdminUser
-    protected static function formatAdminUserDescription($causerName, $subject, $event, $properties)
-    {
-        $member = $subject->name ?? "未知會員";
+    protected static function formatAdminUserDescription(
+        string $causerName,
+        $subject,
+        string $event,
+        object $properties,
+    ): string {
+        $adminUserName = $subject->name ?? '未知操作員';
+    
         $attributes = $properties['attributes'] ?? [];
-        $propertyKeys = array_keys($attributes);
-        $propertyText = implode('、', $propertyKeys) ?: '未知欄位';
-        $oldData = $properties['old'] ?? [];
-        $oldDataText = implode('、', $oldData);
-        $newData = $properties['attributes'] ?? [];
-        $newDataText = implode('、', $newData);
-
-        return __('activity.admin_user_' . $event, [
-            'causer' => $causerName,
-            'member' => $member,
-            'property' => __('activity.admin_user_property.' . $propertyText),
-            'old' => $oldDataText,
-            'new' => $newDataText,
+        $oldValues   = $properties['old']        ?? [];
+    
+        $fieldMap = __('activity.admin_user_property');
+    
+        $changeLines = collect($attributes)
+            ->map(function ($newValue, $field) use ($oldValues, $fieldMap) {
+                $translatedField = $fieldMap[$field] ?? $field;
+                $oldValue = $oldValues[$field] ?? '（無）';
+    
+                // 如果是 team_id，要轉成單位名稱
+                if ($field === 'team_id') {
+                    $oldValue = AdminUserTeam::find($oldValue)?->name ?? '未知單位';
+                    $newValue = AdminUserTeam::find($newValue)?->name    ?? '未知單位';
+                }
+    
+                return __('activity.admin_user_change_line', [
+                    'field' => $translatedField,
+                    'old'   => $oldValue,
+                    'new'   => $newValue,
+                ]);
+            })
+            ->filter()           
+            ->all();
+    
+        if ($event === 'created') {
+            return __('activity.admin_user_created', [
+                'causer'     => $causerName,
+                'admin_user' => $adminUserName,
+            ]);
+        }
+    
+        if ($event === 'updated' && count($changeLines) > 0) {
+            $changes = implode('，', $changeLines);
+    
+            return __('activity.admin_user_updated', [
+                'causer'     => $causerName,
+                'admin_user' => $adminUserName,
+                'changes'    => $changes,
+            ]);
+        }
+    
+        return __('activity.default_admin_user_operation', [
+            'causer'  => $causerName,
+            'subject' => $adminUserName,
+            'event'   => $event,
         ]);
     }
-
     // 針對 AdminUserTeam
     protected static function formatAdminUserTeamDescription($causerName, $subject, $event, $properties)
     {
