@@ -160,8 +160,6 @@ class AdminLogResource extends Resource
                 return static::formatWithdrawDescription($causerName, $subject, $event, $properties);
             case $subject instanceof \App\Models\DepositLocation:
                 return static::formatDepositLocationDescription($causerName, $subject, $event, $properties);
-            case $subject instanceof \App\Models\PlatformWallet:
-                return static::formatPlatformWalletDescription($causerName, $subject, $event, $properties);
             case $subject instanceof \App\Models\User:
                 return static::formatUserDescription($causerName, $subject, $event, $properties);
             case $subject instanceof \App\Models\AdminUser:
@@ -348,19 +346,6 @@ class AdminLogResource extends Resource
             'causer'  => $causerName,
             'subject' => $location,
             'event'   => $event,
-        ]);
-    }
-
-    // 針對 PlatformWallet
-    protected static function formatPlatformWalletDescription($causerName, $subject, $event, $properties)
-    {
-        $member = optional($subject->user)->name ?? "未知會員";
-        $amount = number_format($subject->amount, 2);
-        return __('activity.platform_wallet_created', [
-            'causer' => $causerName,
-            'member' => $member,
-            'amount' => $amount,
-            'currency' => $subject->currencyCode->code ?? '未知',
         ]);
     }
 
