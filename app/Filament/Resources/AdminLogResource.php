@@ -215,7 +215,6 @@ class AdminLogResource extends Resource
         $member   = optional($subject->user)->name ?? '未知會員';
         $currency = $subject->currencyCode->code ?? '未知';
 
-        // 操作入金事件
         if ($event === 'created') {
             $amount = $subject->amount;
             return __('activity.deposit_created', [
@@ -225,8 +224,6 @@ class AdminLogResource extends Resource
                 'currency' => $currency,
             ]);
         }
-
-
         // 以下僅處理 updated 事件
         // 狀態異動
         if (array_key_exists('status', $attributes)) {
@@ -239,8 +236,12 @@ class AdminLogResource extends Resource
                 'new_status' => $newStatus,
             ]);
         }
-        // 其餘情況
-        return "操作員 {$causerName} 對會員 {$member} 進行了 {$event} 操作。";
+
+        return __('activity.default_description', [
+            'causer' => $causerName,
+            'subject' => $member,
+            'event' => $event,
+        ]);
     }
 
     // 針對 Withdraw
@@ -252,12 +253,6 @@ class AdminLogResource extends Resource
 
         $member = optional($subject->user)->name ?? "未知會員";
         $currency = $subject->currencyCode->code ?? '未知';
-
-        $statusMap = [
-            '0' => __('deposit.status.pending'),
-            '1' => __('deposit.status.success'),
-            '2' => __('deposit.status.failed'),
-        ];
 
         if ($event === 'created') {
             $amount = $subject->amount;
@@ -274,7 +269,6 @@ class AdminLogResource extends Resource
             if (array_key_exists('status', $attributes)) {
                 $oldStatus = self::mapDepositWithdrawStatus($old['status'] ?? null);
                 $newStatus = self::mapDepositWithdrawStatus($attributes['status']);
-
                 return __('activity.withdraw_status_updated', [
                     'causer'     => $causerName,
                     'member'     => $member,
@@ -293,8 +287,11 @@ class AdminLogResource extends Resource
                 ]);
             }
         }
-
-        return "操作員 {$causerName} 對會員 {$member} 進行了 {$event} 操作。";
+        return  __('activity.default_description', [
+            'causer' => $causerName,
+            'subject' => $member,
+            'event' => $event,
+        ]);
     }
 
     // 針對 DepositLocation
