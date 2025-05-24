@@ -130,9 +130,14 @@ class AdminLogResource extends Resource
             'create' => Pages\CreateAdminLog::route('/create'),
         ];
     }
-    // public static function getEloquentQuery(): Builder
-    // {
-    //     $query = parent::getEloquentQuery();
+    public static function getEloquentQuery(): Builder
+    {
+        // 用戶的錢包操作紀錄其他頁面有，這裏先不顯示
+        return parent::getEloquentQuery()
+            ->where('subject_type', '!=', 'App\Models\Wallet');
+    }
+
+
     /**
      * 將 activity log 的 description 欄位格式化顯示
      */
