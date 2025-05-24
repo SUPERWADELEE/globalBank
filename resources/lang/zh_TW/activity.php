@@ -91,4 +91,5 @@ return [
         'success' => '已完成',
         'failed' => '失敗',
     ],
+    'withdraw_tx_hash_updated' => '操作員 :causer 把會員 :member 的出金訂單tx_hash從 :old 變更為 :new',
 ];

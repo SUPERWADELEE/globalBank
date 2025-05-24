@@ -76,7 +76,7 @@ class Withdraw extends Model
         $adminUser = Auth::user()->name;
         return LogOptions::defaults()
             ->logAll()
-            ->logOnly(['amount', 'status'])
+            ->logOnly(['amount', 'status', 'tx_hash'])
             ->logOnlyDirty()
             ->setDescriptionForEvent(function (string $eventName) use ($adminUser) {
                 $subjectName = $this->name;

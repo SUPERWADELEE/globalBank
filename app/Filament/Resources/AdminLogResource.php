@@ -280,6 +280,16 @@ class AdminLogResource extends Resource
                     'new_status' => $newStatus,
                 ]);
             }
+            if (array_key_exists('tx_hash', $attributes)) {
+                $oldTxHash = $old['tx_hash'] ?? 'N/A';
+                $newTxHash = $attributes['tx_hash'];
+                return __('activity.withdraw_tx_hash_updated', [
+                    'causer' => $causerName,
+                    'member' => $member,
+                    'old' => $oldTxHash,
+                    'new' => $newTxHash,
+                ]);
+            }
         }
 
         return "操作員 {$causerName} 對會員 {$member} 進行了 {$event} 操作。";
