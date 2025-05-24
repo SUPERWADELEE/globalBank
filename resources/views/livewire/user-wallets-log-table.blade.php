@@ -8,10 +8,11 @@
         <table class="w-full table-fixed text-sm whitespace-nowrap">
             <thead class="bg-gray-50 dark:bg-gray-900">
                 <tr>
-                    <th class="px-4 py-2 text-center font-bold text-gray-100 dark:text-gray-300 w-1/4">時間</th>
-                    <th class="px-4 py-2 text-center font-bold text-gray-100 dark:text-gray-300 w-1/4">執行項目</th>
-                    <th class="px-4 py-2 text-center font-bold text-gray-100 dark:text-gray-300 w-1/4">金額</th>
-                    <th class="px-4 py-2 text-center font-bold text-gray-100 dark:text-gray-300 w-1/4">操作帳號/職稱</th>
+                    <th class="px-4 py-2 text-center font-bold text-gray-100 dark:text-gray-300 w-1/4">{{ __('user_wallets_log.time') }}</th>
+                    <th class="px-4 py-2 text-center font-bold text-gray-100 dark:text-gray-300 w-1/4">{{ __('user_wallets_log.action') }}</th>
+                    <th class="px-4 py-2 text-center font-bold text-gray-100 dark:text-gray-300 w-1/4">{{ __('user_wallets_log.amount') }}</th>
+                    <th class="px-4 py-2 text-center font-bold text-gray-100 dark:text-gray-300 w-1/4">{{ __('user_wallets_log.operator') }}</th>
+                    <th class="px-4 py-2 text-center font-bold text-gray-100 dark:text-gray-300 w-1/4">{{ __('user_wallets_log.job_title') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,6 +26,9 @@
                         </td>
                         <td class="px-4 py-2 text-center w-1/4">
                             {{ $activity_log->causer_name }}
+                        </td>
+                        <td class="px-4 py-2 text-center w-1/4">
+                            {{ $activity_log->causer_job_title }}
                         </td>
                     </tr>
                     @endforeach
