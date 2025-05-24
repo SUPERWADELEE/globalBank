@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('currency_code_id')->constrained('currency_codes');
-            $table->unsignedDecimal('balance', 20, 6)->default(0);
+            $table->decimal('balance', 20, 6)->unsigned()->default(0);
             $table->timestamps();
         });
     }

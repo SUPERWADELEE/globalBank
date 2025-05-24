@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('platform_wallets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('currency_code_id')->constrained('currency_codes');
-            $table->unsignedDecimal('amount', 20, 6)->default(0)->comment('平台目前持有的該幣別餘額');
+            $table->decimal('amount', 20, 6)->default(0)->comment('平台目前持有的該幣別餘額');
             $table->timestamps();
         });
     }
