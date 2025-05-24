@@ -299,41 +299,56 @@ class AdminLogResource extends Resource
         ]);
     }
 
-    // 針對 DepositLocation
-    protected static function formatDepositLocationDescription($causerName, $subject, $event, $properties)
-    {
+    protected static function formatDepositLocationDescription(
+        string $causerName,
+        $subject,
+        string $event,
+        object $properties
+    ): string {
         $attributes = $properties['attributes'] ?? [];
-        $old = $properties['old'] ?? [];
-        $fieldMap = __('activity.deposit_location_fields');
-        $location = $attributes['location'] ?? $subject->location ?? '未知';
+        $old        = $properties['old']        ?? [];
+
+        // 只關注 status 這個欄位
+        $hasStatusChange = array_key_exists('status', $attributes);
+
+        // 取得動作使用者、地點（如有）
+        $location = $attributes['location']
+            ?? ($subject->location ?? '未知');
 
         if ($event === 'created') {
             return __('activity.deposit_location_created', [
-                'causer' => $causerName,
+                'causer'   => $causerName,
                 'location' => $location,
             ]);
         }
 
-        if ($event === 'updated') {
-            $changes = collect($attributes)->map(function ($newValue, $field) use ($old, $fieldMap) {
-                $oldValue = $old[$field] ?? '（無）';
-                $oldValue = DepositLocationStatus::tryFrom((string) $old[$field] ?? '')?->label() ?? $old[$field] ?? '（無）';
-                $newValue = DepositLocationStatus::tryFrom((string) $newValue)?->label() ?? $newValue;
-                $translatedField = $fieldMap[$field] ?? $field;
-                return __('activity.deposit_location_change_line', [
-                    'field' => $translatedField,
-                    'old' => $oldValue,
-                    'new' => $newValue,
-                ]);
-            })->implode('，');
+        if ($event === 'updated' && $hasStatusChange) {
+            // Map 舊／新值為 Enum label（或原值 fallback）
+            $oldStatus = DepositLocationStatus::tryFrom((string) ($old['status'] ?? null))
+                ?->label()
+                ?? ($old['status'] ?? '（無）');
+
+            $newStatus = DepositLocationStatus::tryFrom((string) $attributes['status'])
+                ?->label()
+                ?? $attributes['status'];
 
             return __('activity.deposit_location_updated', [
-                'causer' => $causerName,
-                'changes' => $changes,
+                'causer'     => $causerName,
+                'subject'    => $location,
+                'changes'    => __('activity.deposit_location_change_line', [
+                    'field' => __('activity.deposit_location_fields.status'),
+                    'old'   => $oldStatus,
+                    'new'   => $newStatus,
+                ]),
             ]);
         }
 
-        return "操作員 {$causerName} 對入金地址資料進行了 {$event} 操作。";
+        // 其他事件或沒有 status 變更，就走預設訊息
+        return __("activity.default_operation", [
+            'causer'  => $causerName,
+            'subject' => $location,
+            'event'   => $event,
+        ]);
     }
 
     // 針對 PlatformWallet
