@@ -43,394 +43,7 @@ class AdminLogResource extends Resource
                 TextColumn::make('causer.name')->label(__('admin_user.activity_log.causer')),
                 TextColumn::make('description')
                     ->label(__('admin_user.activity_log.description'))
-                    ->formatStateUsing(function ($state, $record) {
-                        $causerName = optional($record->causer)->name ?? '未知操作者';
-                        $subject = $record->subject;
-                        $causer = $record->causer;
-                        $event = $record->event;
-                        $properties = $record->properties;
-
-                        switch (true) {
-                            case $subject instanceof \App\Models\Rate:
-                                $from = optional($subject->fromCurrency)->code ?? '未知';
-                                $to = optional($subject->toCurrency)->code ?? '未知';
-
-                                $details = [];
-
-                                if (isset($properties['attributes']['buy_rate'])) {
-                                    $old = $properties['old']['buy_rate'] ?? 'N/A';
-                                    $new = $properties['attributes']['buy_rate'];
-                                    $details[] = __('activity.rate_buy_rate_change', compact('old', 'new'));
-                                }
-
-                                if (isset($properties['attributes']['sell_rate'])) {
-                                    $old = $properties['old']['sell_rate'] ?? 'N/A';
-                                    $new = $properties['attributes']['sell_rate'];
-                                    $details[] = __('activity.rate_sell_rate_change', compact('old', 'new'));
-                                }
-
-                                return __('activity.rate_updated', [
-                                    'causer' => $causerName,
-                                    'event' => $event,
-                                    'from' => $from,
-                                    'to' => $to,
-                                    'details' => implode('，', $details),
-                                ]);
-
-                            case $subject instanceof \App\Models\Deposit:
-                                $event = $record->event;
-                                $properties = $record->properties ?? [];
-                                $attributes = $properties['attributes'] ?? [];
-                                $old = $properties['old'] ?? [];
-
-                                $member = optional($subject->user)->name ?? "未知會員";
-                                $currency = $subject->currencyCode->code ?? '未知';
-
-                                $statusMap = [
-                                    '0' => __('activity.status.pending'),
-                                    '1' => __('activity.status.success'),
-                                    '2' => __('activity.status.failed'),
-                                ];
-
-                                if ($event === 'created') {
-                                    $amount = number_format($subject->amount, 2);
-                                    return __('activity.deposit_created', [
-                                        'causer'   => $causerName,
-                                        'member'   => $member,
-                                        'amount'   => $amount,
-                                        'currency' => $currency,
-                                    ]);
-                                }
-
-                                if ($event === 'updated') {
-                                    // 狀態異動
-                                    if (array_key_exists('status', $attributes)) {
-                                        $oldStatus = $statusMap[$old['status'] ?? ''] ?? ($old['status'] ?? '未知');
-                                        $newStatus = $statusMap[$attributes['status']] ?? $attributes['status'];
-
-                                        return __('activity.deposit_status_updated', [
-                                            'causer'     => $causerName,
-                                            'member'     => $member,
-                                            'old_status' => $oldStatus,
-                                            'new_status' => $newStatus,
-                                        ]);
-                                    }
-
-                                    // 金額異動
-                                    if (array_key_exists('amount', $attributes)) {
-                                        $oldAmount = number_format($old['amount'] ?? 0, 2);
-                                        $newAmount = number_format($attributes['amount'], 2);
-
-                                        return __('activity.deposit_amount_updated', [
-                                            'causer'     => $causerName,
-                                            'member'     => $member,
-                                            'old_amount' => $oldAmount,
-                                            'new_amount' => $newAmount,
-                                            'currency'   => $currency,
-                                        ]);
-                                    }
-                                }
-
-                                return "操作員 {$causerName} 對會員 {$member} 進行了 {$event} 操作。";
-
-                            case $subject instanceof \App\Models\Withdraw:
-                                $event = $record->event;
-                                $properties = $record->properties ?? [];
-                                $attributes = $properties['attributes'] ?? [];
-                                $old = $properties['old'] ?? [];
-
-                                $member = optional($subject->user)->name ?? "未知會員";
-                                $currency = $subject->currencyCode->code ?? '未知';
-
-                                $statusMap = [
-                                    '0' => __('deposit.status.pending'),
-                                    '1' => __('deposit.status.success'),
-                                    '2' => __('deposit.status.failed'),
-                                ];
-
-                                if ($event === 'created') {
-                                    $amount = number_format($subject->amount, 2);
-                                    return __('activity.withdraw_created', [
-                                        'causer'   => $causerName,
-                                        'member'   => $member,
-                                        'amount'   => $amount,
-                                        'currency' => $currency,
-                                    ]);
-                                }
-
-                                if ($event === 'updated') {
-                                    // 狀態異動
-                                    if (array_key_exists('status', $attributes)) {
-                                        $oldStatus = $statusMap[$old['status'] ?? ''] ?? ($old['status'] ?? '未知');
-                                        $newStatus = $statusMap[$attributes['status']] ?? $attributes['status'];
-
-                                        return __('activity.withdraw_status_updated', [
-                                            'causer'     => $causerName,
-                                            'member'     => $member,
-                                            'old_status' => $oldStatus,
-                                            'new_status' => $newStatus,
-                                        ]);
-                                    }
-
-                                    // 金額異動
-                                    if (array_key_exists('amount', $attributes)) {
-                                        $oldAmount = number_format($old['amount'] ?? 0, 2);
-                                        $newAmount = number_format($attributes['amount'], 2);
-
-                                        return __('activity.withdraw_amount_updated', [
-                                            'causer'     => $causerName,
-                                            'member'     => $member,
-                                            'old_amount' => $oldAmount,
-                                            'new_amount' => $newAmount,
-                                            'currency'   => $currency,
-                                        ]);
-                                    }
-                                }
-
-                                return "操作員 {$causerName} 對會員 {$member} 進行了 {$event} 操作。";
-                            case $subject instanceof \App\Models\DepositLocation:
-                                $event = $record->event;
-                                $attributes = $properties['attributes'] ?? [];
-                                $old = $properties['old'] ?? [];
-                                $fieldMap = __('activity.deposit_location_fields');
-                                $location = $attributes['location'] ?? $subject->location ?? '未知';
-
-                                if ($event === 'created') {
-                                    return __('activity.deposit_location_created', [
-                                        'causer' => $causerName,
-                                        'location' => $location,
-                                    ]);
-                                }
-
-                                if ($event === 'updated') {
-                                    $changes = collect($attributes)->map(function ($newValue, $field) use ($old, $fieldMap) {
-
-                                        $oldValue = $old[$field] ?? '（無）';
-                                        // old newdata要用enum轉換
-                                        $oldValue = DepositLocationStatus::tryFrom((string) $old[$field] ?? '')?->label() ?? $old[$field] ?? '（無）';
-                                        $newValue = DepositLocationStatus::tryFrom((string) $newValue)?->label() ?? $newValue;
-                                        $translatedField = $fieldMap[$field] ?? $field;
-                                        return __('activity.deposit_location_change_line', [
-                                            'field' => $translatedField,
-                                            'old' => $oldValue,
-                                            'new' => $newValue,
-                                        ]);
-                                    })->implode('，');
-
-                                    return __('activity.deposit_location_updated', [
-                                        'causer' => $causerName,
-                                        'changes' => $changes,
-                                    ]);
-                                }
-
-                                return "操作員 {$causerName} 對入金地址資料進行了 {$event} 操作。";
-
-
-
-                            case $subject instanceof \App\Models\PlatformWallet:
-                                $member = optional($subject->user)->name ?? "未知會員";
-                                $amount = number_format($subject->amount, 2);
-                                return __('activity.platform_wallet_created', [
-                                    'causer' => $causerName,
-                                    'member' => $member,
-                                    'amount' => $amount,
-                                    'currency' => $subject->currencyCode->code ?? '未知',
-                                ]);
-
-                            case $subject instanceof \App\Models\User:
-                                $event = $record->event;
-                                $attributes = $properties['attributes'] ?? [];
-                                $old = $properties['old'] ?? [];
-
-                                // 避免密碼等敏感欄位顯示在紀錄中
-                                unset($attributes['password'], $attributes['otp_secret']);
-                                unset($old['password'], $old['otp_secret']);
-
-                                $fieldMap = __('activity.user_fields');
-                                $memberName = $subject->name ?? $attributes['name'] ?? '未知會員';
-
-                                if ($event === 'created') {
-                                    return __('activity.user_created', [
-                                        'causer' => $causerName,
-                                        'member' => $memberName,
-                                    ]);
-                                }
-
-                                if ($event === 'updated') {
-                                    $changes = collect($attributes)->map(function ($newValue, $field) use ($old, $fieldMap) {
-
-                                        $oldValue = $old[$field] ?? '（無）';
-                                        $translatedField = $fieldMap[$field] ?? $field;
-                                        if ($field === 'status') {
-
-
-                                            $oldValue = match ((string) $oldValue) {
-                                                '1' => '正常',
-                                                '0' => '凍結',
-                                                default => $oldValue,
-                                            };
-
-                                            $newValue = match ((string) $newValue) {
-                                                '1' => '正常',
-                                                '0' => '凍結',
-                                                default => $newValue,
-                                            };
-                                        }
-                                        return __('activity.user_change_line', [
-                                            'field' => $translatedField,
-                                            'old' => $oldValue,
-                                            'new' => $newValue,
-                                        ]);
-                                    })->implode('，');
-
-                                    return __('activity.user_updated', [
-                                        'causer' => $causerName,
-                                        'member' => $memberName,
-                                        'changes' => $changes,
-                                    ]);
-                                }
-
-                                return "操作員 {$causerName} 對會員 {$memberName} 進行了 {$event} 操作。";
-
-
-
-                            case $subject instanceof \App\Models\AdminUser:
-                                $member = $subject->name ?? "未知會員";
-                                $event = $record->event;
-
-                                $attributes = $properties['attributes'] ?? [];
-
-                                // 取得被更新的欄位 key 們
-                                $propertyKeys = array_keys($attributes);
-                                $propertyText = implode('、', $propertyKeys) ?: '未知欄位';
-                                $oldData = $properties['old'] ?? [];
-                                $oldDataText = implode('、', $oldData);
-                                $newData = $properties['attributes'] ?? [];
-                                $newDataText = implode('、', $newData);
-
-                                return __('activity.admin_user_' . $event, [
-                                    'causer' => $causerName,
-                                    'member' => $member,
-                                    'property' => __('activity.admin_user_property.' . $propertyText),
-                                    'old' => $oldDataText,
-                                    'new' => $newDataText,
-                                ]);
-
-                            case $subject instanceof \App\Models\AdminUserTeam:
-                                $oldName = $properties['old']['name'] ?? null;
-                                $newName = $properties['attributes']['name'] ?? null;
-                                $oldDesc = $properties['old']['description'] ?? null;
-                                $newDesc = $properties['attributes']['description'] ?? null;
-
-                                $messages = [];
-                                // 假設是刪除
-                                if ($event == 'deleted') {
-                                    return __('activity.admin_user_team_deleted', [
-                                        'causer' => $causerName,
-                                        'old_team' => $oldName ?? '未知',
-                                    ]);
-                                }
-                                // 假設是新增
-                                if ($event == 'created') {
-                                    return __('activity.admin_user_team_created', [
-                                        'causer' => $causerName,
-                                        'new_team' => $newName ?? '未知',
-                                    ]);
-                                }
-
-                                if ($oldName !== $newName) {
-                                    $messages[] = __('activity.admin_user_team_name_updated', [
-                                        'old' => $oldName ?? '未知',
-                                        'new' => $newName ?? '未知',
-                                    ]);
-                                }
-
-                                if ($oldDesc !== $newDesc) {
-                                    $messages[] = __('activity.admin_user_team_description_updated', [
-                                        'old' => $oldDesc ?? '未知',
-                                        'new' => $newDesc ?? '未知',
-                                    ]);
-                                }
-
-                                if (empty($messages)) {
-                                    return __('activity.admin_user_team_deleted', [
-                                        'causer' => $causerName,
-                                    ]);
-                                }
-
-                                return "操作員 {$causerName} " . implode('，', $messages) . '。';
-
-                                return __('activity.admin_user_team_' . $record->event, [
-                                    'causer' => $causerName,
-                                    'old_team' => $oldDataText,
-                                    'new_team' => $newDataText,
-                                    'old_description' => $oldDescriptionText,
-                                    'new_description' => $newDescriptionText,
-                                ]);
-
-                            case $subject instanceof \App\Models\AdminIpWhitelist:
-                                $new_ip_address = $subject->ip_address ?? '未知IP';
-                                $old_ip_address = $properties['old']['ip_address'] ?? '未知IP';
-                                return __('activity.ip_white_list_' . $record->event, [
-                                    'causer' => $causerName,
-                                    'new_ip_address' => $new_ip_address,
-                                    'old_ip_address' => $old_ip_address,
-                                ]);
-
-                            case $subject instanceof \Spatie\Permission\Models\Role:
-                                $event = $record->event;
-                                $attributes = $properties['attributes'] ?? [];
-                                $old = $properties['old'] ?? [];
-
-                                $roleName = $subject->name ?? $attributes['name'] ?? '未知角色';
-
-                                if ($event === 'created') {
-                                    // 權限會寫在 properties 裡面
-                                    $permissions = $properties['assigned_permissions'] ?? [];
-
-
-                                    $mappedPermissions = collect($permissions)->map(function ($key) {
-                                        $key = str_replace('::', '_', $key);
-                                        $translated = __('permissions.' . $key);
-                                        return $translated === 'permissions.' . $key ? $key : $translated;
-                                    })->implode('、');
-                                    return __('activity.role_created', [
-                                        'causer' => $causerName,
-                                        'role' => $roleName,
-                                        'permissions' => $mappedPermissions,
-                                    ]);
-                                }
-
-                                if ($event === 'updated') {
-                                    // 欄位變更處理
-                                    $changes = collect($attributes)->map(function ($new, $field) use ($old) {
-                                        $oldValue = $old[$field] ?? '（無）';
-                                        return __('activity.role_change_line', [
-                                            'field' => $field,
-                                            'old' => $oldValue,
-                                            'new' => $new,
-                                        ]);
-                                    })->implode('，');
-
-                                    return __('activity.role_updated', [
-                                        'causer' => $causerName,
-                                        'role' => $roleName,
-                                        'changes' => $changes,
-                                    ]);
-                                }
-
-                                // fallback
-                                return "操作員 {$causerName} 對角色 {$roleName} 進行了 {$event} 操作。";
-                            default:
-                                // dump($subject);
-                                $subjectType = class_basename($record->subject_type);
-                                return __('activity.log_description', [
-                                    'causer' => $causerName,
-                                    'subject' => $subjectType,
-                                    'event' => $event,
-                                ]);
-                        }
-                    }),
+                    ->formatStateUsing(fn($state, $record) => static::formatDescription($state, $record)),
                 TextColumn::make('subject')
                     ->label(__('admin_user.activity_log.subject'))
                     ->formatStateUsing(function ($state, $record) {
@@ -502,6 +115,7 @@ class AdminLogResource extends Resource
             ->actions([]);
     }
 
+
     public static function getRelations(): array
     {
         return [
@@ -519,11 +133,401 @@ class AdminLogResource extends Resource
     // public static function getEloquentQuery(): Builder
     // {
     //     $query = parent::getEloquentQuery();
+    /**
+     * 將 activity log 的 description 欄位格式化顯示
+     */
+    protected static function formatDescription($state, $record)
+    {
+        $causerName = optional($record->causer)->name ?? '未知操作者';
+        // 操作對象
+        $subject = $record->subject;
+        $event = $record->event;
+        // 異動的資的
+        $properties = $record->properties;
 
-    //     if (request()->filled('causer_id')) {
-    //         $query->where('causer_id', request('causer_id'));
-    //     }
+        // 看是看是在哪個做操作，客製不同訊息
+        switch (true) {
+            case $subject instanceof \App\Models\Rate:
+                return static::formatRateDescription($causerName, $subject, $event, $properties);
+            case $subject instanceof \App\Models\Deposit:
+                return static::formatDepositDescription($causerName, $subject, $event, $properties);
+            case $subject instanceof \App\Models\Withdraw:
+                return static::formatWithdrawDescription($causerName, $subject, $event, $properties);
+            case $subject instanceof \App\Models\DepositLocation:
+                return static::formatDepositLocationDescription($causerName, $subject, $event, $properties);
+            case $subject instanceof \App\Models\PlatformWallet:
+                return static::formatPlatformWalletDescription($causerName, $subject, $event, $properties);
+            case $subject instanceof \App\Models\User:
+                return static::formatUserDescription($causerName, $subject, $event, $properties);
+            case $subject instanceof \App\Models\AdminUser:
+                return static::formatAdminUserDescription($causerName, $subject, $event, $properties);
+            case $subject instanceof \App\Models\AdminUserTeam:
+                return static::formatAdminUserTeamDescription($causerName, $subject, $event, $properties);
+            case $subject instanceof \App\Models\AdminIpWhitelist:
+                return static::formatAdminIpWhitelistDescription($causerName, $subject, $event, $properties, $record);
+            case $subject instanceof \Spatie\Permission\Models\Role:
+                return static::formatRoleDescription($causerName, $subject, $event, $properties);
+            default:
+                $subjectType = class_basename($record->subject_type);
+                return __('activity.log_description', [
+                    'causer' => $causerName,
+                    'subject' => $subjectType,
+                    'event' => $event,
+                ]);
+        }
+    }
 
-    //     return $query;
-    // }
+    // 針對 Rate
+    protected static function formatRateDescription($causerName, $subject, $event, $properties)
+    {
+        $from = optional($subject->fromCurrency)->code ?? '未知';
+        $to = optional($subject->toCurrency)->code ?? '未知';
+
+        $details = [];
+
+        if (isset($properties['attributes']['buy_rate'])) {
+            $old = $properties['old']['buy_rate'] ?? 'N/A';
+            $new = $properties['attributes']['buy_rate'];
+            $details[] = __('activity.rate_buy_rate_change', compact('old', 'new'));
+        }
+
+        if (isset($properties['attributes']['sell_rate'])) {
+            $old = $properties['old']['sell_rate'] ?? 'N/A';
+            $new = $properties['attributes']['sell_rate'];
+            $details[] = __('activity.rate_sell_rate_change', compact('old', 'new'));
+        }
+
+        return __('activity.rate_updated', [
+            'causer' => $causerName,
+            'event' => $event,
+            'from' => $from,
+            'to' => $to,
+            'details' => implode('，', $details),
+        ]);
+    }
+
+    // 針對 Deposit
+    protected static function formatDepositDescription($causerName, $subject, $event, $properties)
+    {
+        $attributes = $properties['attributes'] ?? [];
+        $old        = $properties['old'] ?? [];
+
+        $member   = optional($subject->user)->name ?? '未知會員';
+        $currency = $subject->currencyCode->code ?? '未知';
+
+        // 操作入金事件
+        if ($event === 'created') {
+            $amount = $subject->amount;
+            return __('activity.deposit_created', [
+                'causer'   => $causerName,
+                'member'   => $member,
+                'amount'   => $amount,
+                'currency' => $currency,
+            ]);
+        }
+
+
+        // 以下僅處理 updated 事件
+        // 狀態異動
+        if (array_key_exists('status', $attributes)) {
+            return __('activity.deposit_status_updated', [
+                'causer'     => $causerName,
+                'member'     => $member,
+                'old_status' => self::mapDepositStatus($old['status'] ?? null),
+                'new_status' => self::mapDepositStatus($attributes['status']),
+            ]);
+        }
+        // 其餘情況
+        return "操作員 {$causerName} 對會員 {$member} 進行了 {$event} 操作。";
+    }
+
+    // 針對 Withdraw
+    protected static function formatWithdrawDescription($causerName, $subject, $event, $properties)
+    {
+        $properties = $properties ?? [];
+        $attributes = $properties['attributes'] ?? [];
+        $old = $properties['old'] ?? [];
+
+        $member = optional($subject->user)->name ?? "未知會員";
+        $currency = $subject->currencyCode->code ?? '未知';
+
+        $statusMap = [
+            '0' => __('deposit.status.pending'),
+            '1' => __('deposit.status.success'),
+            '2' => __('deposit.status.failed'),
+        ];
+
+        if ($event === 'created') {
+            $amount = $subject->amount;
+            return __('activity.withdraw_created', [
+                'causer'   => $causerName,
+                'member'   => $member,
+                'amount'   => $amount,
+                'currency' => $currency,
+            ]);
+        }
+
+        if ($event === 'updated') {
+            // 狀態異動
+            if (array_key_exists('status', $attributes)) {
+                $oldStatus = $statusMap[$old['status'] ?? ''] ?? ($old['status'] ?? '未知');
+                $newStatus = $statusMap[$attributes['status']] ?? $attributes['status'];
+
+                return __('activity.withdraw_status_updated', [
+                    'causer'     => $causerName,
+                    'member'     => $member,
+                    'old_status' => $oldStatus,
+                    'new_status' => $newStatus,
+                ]);
+            }
+        }
+
+        return "操作員 {$causerName} 對會員 {$member} 進行了 {$event} 操作。";
+    }
+
+    // 針對 DepositLocation
+    protected static function formatDepositLocationDescription($causerName, $subject, $event, $properties)
+    {
+        $attributes = $properties['attributes'] ?? [];
+        $old = $properties['old'] ?? [];
+        $fieldMap = __('activity.deposit_location_fields');
+        $location = $attributes['location'] ?? $subject->location ?? '未知';
+
+        if ($event === 'created') {
+            return __('activity.deposit_location_created', [
+                'causer' => $causerName,
+                'location' => $location,
+            ]);
+        }
+
+        if ($event === 'updated') {
+            $changes = collect($attributes)->map(function ($newValue, $field) use ($old, $fieldMap) {
+                $oldValue = $old[$field] ?? '（無）';
+                $oldValue = DepositLocationStatus::tryFrom((string) $old[$field] ?? '')?->label() ?? $old[$field] ?? '（無）';
+                $newValue = DepositLocationStatus::tryFrom((string) $newValue)?->label() ?? $newValue;
+                $translatedField = $fieldMap[$field] ?? $field;
+                return __('activity.deposit_location_change_line', [
+                    'field' => $translatedField,
+                    'old' => $oldValue,
+                    'new' => $newValue,
+                ]);
+            })->implode('，');
+
+            return __('activity.deposit_location_updated', [
+                'causer' => $causerName,
+                'changes' => $changes,
+            ]);
+        }
+
+        return "操作員 {$causerName} 對入金地址資料進行了 {$event} 操作。";
+    }
+
+    // 針對 PlatformWallet
+    protected static function formatPlatformWalletDescription($causerName, $subject, $event, $properties)
+    {
+        $member = optional($subject->user)->name ?? "未知會員";
+        $amount = number_format($subject->amount, 2);
+        return __('activity.platform_wallet_created', [
+            'causer' => $causerName,
+            'member' => $member,
+            'amount' => $amount,
+            'currency' => $subject->currencyCode->code ?? '未知',
+        ]);
+    }
+
+    // 針對 User
+    protected static function formatUserDescription($causerName, $subject, $event, $properties)
+    {
+        $attributes = $properties['attributes'] ?? [];
+        $old = $properties['old'] ?? [];
+
+        // 避免密碼等敏感欄位顯示在紀錄中
+        unset($attributes['password'], $attributes['otp_secret']);
+        unset($old['password'], $old['otp_secret']);
+
+        $fieldMap = __('activity.user_fields');
+        $memberName = $subject->name ?? $attributes['name'] ?? '未知會員';
+
+        if ($event === 'created') {
+            return __('activity.user_created', [
+                'causer' => $causerName,
+                'member' => $memberName,
+            ]);
+        }
+
+        if ($event === 'updated') {
+            $changes = collect($attributes)->map(function ($newValue, $field) use ($old, $fieldMap) {
+                $oldValue = $old[$field] ?? '（無）';
+                $translatedField = $fieldMap[$field] ?? $field;
+                if ($field === 'status') {
+                    $oldValue = match ((string) $oldValue) {
+                        '1' => '正常',
+                        '0' => '凍結',
+                        default => $oldValue,
+                    };
+                    $newValue = match ((string) $newValue) {
+                        '1' => '正常',
+                        '0' => '凍結',
+                        default => $newValue,
+                    };
+                }
+                return __('activity.user_change_line', [
+                    'field' => $translatedField,
+                    'old' => $oldValue,
+                    'new' => $newValue,
+                ]);
+            })->implode('，');
+
+            return __('activity.user_updated', [
+                'causer' => $causerName,
+                'member' => $memberName,
+                'changes' => $changes,
+            ]);
+        }
+
+        return "操作員 {$causerName} 對會員 {$memberName} 進行了 {$event} 操作。";
+    }
+
+    // 針對 AdminUser
+    protected static function formatAdminUserDescription($causerName, $subject, $event, $properties)
+    {
+        $member = $subject->name ?? "未知會員";
+        $attributes = $properties['attributes'] ?? [];
+        $propertyKeys = array_keys($attributes);
+        $propertyText = implode('、', $propertyKeys) ?: '未知欄位';
+        $oldData = $properties['old'] ?? [];
+        $oldDataText = implode('、', $oldData);
+        $newData = $properties['attributes'] ?? [];
+        $newDataText = implode('、', $newData);
+
+        return __('activity.admin_user_' . $event, [
+            'causer' => $causerName,
+            'member' => $member,
+            'property' => __('activity.admin_user_property.' . $propertyText),
+            'old' => $oldDataText,
+            'new' => $newDataText,
+        ]);
+    }
+
+    // 針對 AdminUserTeam
+    protected static function formatAdminUserTeamDescription($causerName, $subject, $event, $properties)
+    {
+        $oldName = $properties['old']['name'] ?? null;
+        $newName = $properties['attributes']['name'] ?? null;
+        $oldDesc = $properties['old']['description'] ?? null;
+        $newDesc = $properties['attributes']['description'] ?? null;
+
+        $messages = [];
+        // 假設是刪除
+        if ($event == 'deleted') {
+            return __('activity.admin_user_team_deleted', [
+                'causer' => $causerName,
+                'old_team' => $oldName ?? '未知',
+            ]);
+        }
+        // 假設是新增
+        if ($event == 'created') {
+            return __('activity.admin_user_team_created', [
+                'causer' => $causerName,
+                'new_team' => $newName ?? '未知',
+            ]);
+        }
+
+        if ($oldName !== $newName) {
+            $messages[] = __('activity.admin_user_team_name_updated', [
+                'old' => $oldName ?? '未知',
+                'new' => $newName ?? '未知',
+            ]);
+        }
+
+        if ($oldDesc !== $newDesc) {
+            $messages[] = __('activity.admin_user_team_description_updated', [
+                'old' => $oldDesc ?? '未知',
+                'new' => $newDesc ?? '未知',
+            ]);
+        }
+
+        if (empty($messages)) {
+            return __('activity.admin_user_team_deleted', [
+                'causer' => $causerName,
+            ]);
+        }
+
+        return "操作員 {$causerName} " . implode('，', $messages) . '。';
+    }
+
+    // 針對 AdminIpWhitelist
+    protected static function formatAdminIpWhitelistDescription($causerName, $subject, $event, $properties, $record)
+    {
+        $new_ip_address = $subject->ip_address ?? '未知IP';
+        $old_ip_address = $properties['old']['ip_address'] ?? '未知IP';
+        return __('activity.ip_white_list_' . $record->event, [
+            'causer' => $causerName,
+            'new_ip_address' => $new_ip_address,
+            'old_ip_address' => $old_ip_address,
+        ]);
+    }
+
+    // 針對 Role
+    protected static function formatRoleDescription($causerName, $subject, $event, $properties)
+    {
+        $attributes = $properties['attributes'] ?? [];
+        $old = $properties['old'] ?? [];
+        $roleName = $subject->name ?? $attributes['name'] ?? '未知角色';
+
+        if ($event === 'created') {
+            $permissions = $properties['assigned_permissions'] ?? [];
+            $mappedPermissions = collect($permissions)->map(function ($key) {
+                $key = str_replace('::', '_', $key);
+                $translated = __('permissions.' . $key);
+                return $translated === 'permissions.' . $key ? $key : $translated;
+            })->implode('、');
+            return __('activity.role_created', [
+                'causer' => $causerName,
+                'role' => $roleName,
+                'permissions' => $mappedPermissions,
+            ]);
+        }
+
+        if ($event === 'updated') {
+            $changes = collect($attributes)->map(function ($new, $field) use ($old) {
+                $oldValue = $old[$field] ?? '（無）';
+                return __('activity.role_change_line', [
+                    'field' => $field,
+                    'old' => $oldValue,
+                    'new' => $new,
+                ]);
+            })->implode('，');
+
+            return __('activity.role_updated', [
+                'causer' => $causerName,
+                'role' => $roleName,
+                'changes' => $changes,
+            ]);
+        }
+
+        // fallback
+        return "操作員 {$causerName} 對角色 {$roleName} 進行了 {$event} 操作。";
+    }
+
+    /**
+     * 將存款狀態碼轉換為文字
+     */
+    protected static function mapDepositStatus($status): string
+    {
+        return match ((string) $status) {
+            '0' => __('activity.status.pending'),
+            '1' => __('activity.status.success'),
+            '2' => __('activity.status.failed'),
+            default => $status ?? '未知',
+        };
+    }
+
+    /**
+     * 統一金額格式
+     */
+    protected static function money($amount): string
+    {
+        return number_format($amount ?? 0, 2);
+    }
 }
