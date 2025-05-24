@@ -374,14 +374,14 @@ class AdminLogResource extends Resource
                 $oldValue = $old[$field] ?? '（無）';
                 $translatedField = $fieldMap[$field] ?? $field;
                 if ($field === 'status') {
-                    $oldValue = match ((string) $oldValue) {
-                        '1' => '正常',
-                        '0' => '凍結',
+                    $oldValue = match ($oldValue) {
+                        true => __('activity.user_status.active'),
+                        false => __('activity.user_status.inactive'),
                         default => $oldValue,
                     };
-                    $newValue = match ((string) $newValue) {
-                        '1' => '正常',
-                        '0' => '凍結',
+                    $newValue = match ($newValue) {
+                        true => __('activity.user_status.active'),
+                        false => __('activity.user_status.inactive'),
                         default => $newValue,
                     };
                 }
