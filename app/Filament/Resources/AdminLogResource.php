@@ -230,11 +230,13 @@ class AdminLogResource extends Resource
         // 以下僅處理 updated 事件
         // 狀態異動
         if (array_key_exists('status', $attributes)) {
+            $oldStatus = self::mapDepositWithdrawStatus($old['status'] ?? null);
+            $newStatus = self::mapDepositWithdrawStatus($attributes['status']);
             return __('activity.deposit_status_updated', [
                 'causer'     => $causerName,
                 'member'     => $member,
-                'old_status' => self::mapDepositStatus($old['status'] ?? null),
-                'new_status' => self::mapDepositStatus($attributes['status']),
+                'old_status' => $oldStatus,
+                'new_status' => $newStatus,
             ]);
         }
         // 其餘情況
@@ -270,8 +272,8 @@ class AdminLogResource extends Resource
         if ($event === 'updated') {
             // 狀態異動
             if (array_key_exists('status', $attributes)) {
-                $oldStatus = $statusMap[$old['status'] ?? ''] ?? ($old['status'] ?? '未知');
-                $newStatus = $statusMap[$attributes['status']] ?? $attributes['status'];
+                $oldStatus = self::mapDepositWithdrawStatus($old['status'] ?? null);
+                $newStatus = self::mapDepositWithdrawStatus($attributes['status']);
 
                 return __('activity.withdraw_status_updated', [
                     'causer'     => $causerName,
@@ -523,7 +525,7 @@ class AdminLogResource extends Resource
     /**
      * 將存款狀態碼轉換為文字
      */
-    protected static function mapDepositStatus($status): string
+    protected static function mapDepositWithdrawStatus($status): string
     {
         return match ((string) $status) {
             '0' => __('activity.status.pending'),
