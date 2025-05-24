@@ -39,7 +39,7 @@ return [
     'deposit_amount_updated' => '操作員 :causer 把會員 :member 的入金訂單金額從 :old 變更為 :new',
     'withdraw_created' => '操作員 :causer 為會員 :member 出金 :amount :currency',
     'deposit_location_created' => '操作員 :causer 新增了入金地址 :location。',
-    'deposit_location_updated' => '操作員 :causer 更新了入金地址資料：:changes。',
+    'deposit_location_updated' => '操作員 :causer 更新了入金地址資料的:subject 的:changes。',
     'deposit_location_change_line' => ':field 從「:old」變更為「:new」',
     'deposit_location_fields' => [
         'currency_code_id' => '幣別',
@@ -60,13 +60,16 @@ return [
         'user_level_id' => '會員等級',
         // 其他欄位如 password / otp_secret 可選擇不顯示
     ],
+    'user_status' => [
+        'active' => '正常',
+        'inactive' => '凍結',
+    ],
 
     'platform_wallet_created' => '操作員 :causer 為會員 :member 入金 :amount :currency',
     'user_deposit' => '操作員 :causer 為會員 :member 入金 :amount :currency',
     'wallet_created' => '操作員 :causer 為會員 :member 入金 :amount :currency',
-    'admin_user_created' => '操作員 :causer 新增了會員 :member',
-    'admin_user_updated' => '操作員 :causer 更新了會員 :member 的 :property 從 :old 變更為 :new',
-    'admin_user_deleted' => '操作員 :causer 刪除了會員 :member',
+   
+    'admin_user_deleted' => '操作員 :causer 刪除了操作員 :admin_user',
     'admin_user_team_created' => '操作員 :causer 新增了 :new_team 單位',
     'admin_user_team_name_updated' => '把單位名稱從 :old 變更為 :new',
     'admin_user_team_description_updated' => '把描述從 :old 變更為 :new',
