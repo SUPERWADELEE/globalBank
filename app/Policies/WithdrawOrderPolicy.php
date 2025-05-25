@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\AdminUser;
-use App\Models\Withdraw;
+use App\Models\WithdrawOrder;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class WithdrawPolicy
+class WithdrawOrderPolicy
 {
     use HandlesAuthorization;
 
@@ -21,7 +21,7 @@ class WithdrawPolicy
     /**
      * Determine whether the adminUser can view the model.
      */
-    public function view(AdminUser $adminUser, Withdraw $withdraw): bool
+    public function view(AdminUser $adminUser, WithdrawOrder $withdrawOrder): bool
     {
         return $adminUser->can('view_withdraw::order');
     }
@@ -37,7 +37,7 @@ class WithdrawPolicy
     /**
      * Determine whether the adminUser can update the model.
      */
-    public function update(AdminUser $adminUser, Withdraw $withdraw): bool
+    public function update(AdminUser $adminUser, WithdrawOrder $withdrawOrder): bool
     {
         return $adminUser->can('update_withdraw::order');
     }
@@ -45,7 +45,7 @@ class WithdrawPolicy
     /**
      * Determine whether the adminUser can delete the model.
      */
-    public function delete(AdminUser $adminUser, Withdraw $withdraw): bool
+    public function delete(AdminUser $adminUser, WithdrawOrder $withdrawOrder): bool
     {
         return $adminUser->can('delete_withdraw::order');
     }
@@ -61,7 +61,7 @@ class WithdrawPolicy
     /**
      * Determine whether the adminUser can permanently delete.
      */
-    public function forceDelete(AdminUser $adminUser, Withdraw $withdraw): bool
+    public function forceDelete(AdminUser $adminUser, WithdrawOrder $withdrawOrder): bool
     {
         return $adminUser->can('{{ ForceDelete }}');
     }
@@ -77,7 +77,7 @@ class WithdrawPolicy
     /**
      * Determine whether the adminUser can restore.
      */
-    public function restore(AdminUser $adminUser, Withdraw $withdraw): bool
+    public function restore(AdminUser $adminUser, WithdrawOrder $withdrawOrder): bool
     {
         return $adminUser->can('{{ Restore }}');
     }
@@ -93,7 +93,7 @@ class WithdrawPolicy
     /**
      * Determine whether the adminUser can replicate.
      */
-    public function replicate(AdminUser $adminUser, Withdraw $withdraw): bool
+    public function replicate(AdminUser $adminUser, WithdrawOrder $withdrawOrder): bool
     {
         return $adminUser->can('{{ Replicate }}');
     }

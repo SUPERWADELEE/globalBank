@@ -15,6 +15,8 @@ return [
         'App\\Models\\AdminUserTeam' => '系統設置',
         'App\\Models\\DepositLocation' => '入金地址管理',
         'Spatie\\Permission\\Models\\Role' => '系統設置',
+        'App\\Models\\DepositOrder' => '訂單管理',
+        'App\\Models\\WithdrawOrder' => '訂單管理',
     ],
     'event_names' => [
         'created' => '新增',

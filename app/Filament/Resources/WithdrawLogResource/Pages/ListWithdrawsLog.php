@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Filament\Resources\WithdrawResource\Pages;
+namespace App\Filament\Resources\WithdrawLogResource\Pages;
 
-use App\Filament\Resources\WithdrawResource;
+use App\Filament\Resources\WithdrawLogResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListWithdraws extends ListRecords
+class ListWithdrawsLog extends ListRecords
 {
-    protected static string $resource = WithdrawResource::class;
+    protected static string $resource = WithdrawLogResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
             Actions\Action::make('出金紀錄')
-                ->url(route('filament.admin.resources.withdraws.index'))
+                ->url(route('filament.admin.resources.withdraw-logs.index'))
                 ->label(__('withdraw.navigation.withdraw_record')),
             Actions\Action::make('入金紀錄')
                 ->url(route('filament.admin.resources.deposit-logs.index'))

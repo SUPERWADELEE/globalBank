@@ -18,10 +18,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\EditAction;
+use App\Models\WithdrawOrder;
 
 class WithdrawOrderResource extends Resource
 {
-    protected static ?string $model = Withdraw::class;
+    protected static ?string $model = WithdrawOrder::class;
+    protected static ?string $modelLabel       = '出金訂單';
+    protected static ?string $pluralModelLabel = '出金訂單列表';
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-down-tray';
 

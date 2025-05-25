@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\WithdrawResource\Pages;
+use App\Filament\Resources\WithdrawLogResource\Pages;
 use App\Models\Withdraw;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -20,11 +20,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Notification;
 use Carbon\Carbon;
 use Filament\Forms\Components\Select;
+use App\Models\WithdrawLog;
 
-
-class WithdrawResource extends Resource
+class WithdrawLogResource extends Resource
 {
-    protected static ?string $model = Withdraw::class;
+    protected static ?string $model = WithdrawLog::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-down-tray';
 
@@ -122,8 +122,8 @@ class WithdrawResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListWithdraws::route('/'),
-            'create' => Pages\CreateWithdraw::route('/create'),
+            'index' => Pages\ListWithdrawsLog::route('/'),
+            'create' => Pages\CreateWithdrawLog::route('/create'),
         ];
     }
     // public static function getEloquentQuery(): Builder

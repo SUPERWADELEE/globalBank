@@ -14,7 +14,7 @@ class ListDepositLogs extends ListRecords
     {
         return [
             Actions\Action::make('出金紀錄')
-                ->url(route('filament.admin.resources.withdraws.index'))
+                ->url(route('filament.admin.resources.withdraw-logs.index'))
                 ->label(__('withdraw.navigation.withdraw_record')),
             Actions\Action::make('入金紀錄')
                 ->url(route('filament.admin.resources.deposit-logs.index'))

@@ -71,6 +71,9 @@ class AdminLogResource extends Resource
                             case 'App\Models\Withdraw':
                                 $unit = __('admin_user.navigation.withdraw');
                                 break;
+                            case 'App\Models\WithdrawOrder':
+                                $unit = __('admin_user.navigation.withdraw');
+                                break;
                             case 'App\Models\DepositLocation':
                                 $unit = __('admin_user.navigation.deposit_location_management');
                                 break;

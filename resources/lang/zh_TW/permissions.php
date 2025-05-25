@@ -104,6 +104,7 @@ return [
     "view_any_role" => "查看列表角色",
     "view_any_user" => "查看列表會員",
     "view_any_withdraw" => "查看列表提款",
+    "view_any_withdraw_log" => "查看列表提款紀錄",
     "view_any_withdraw_order" => "查看列表提款訂單",
     "view_deposit_log" => "查看存款紀錄",
     "view_deposit_order" => "查看存款訂單",
@@ -140,4 +141,7 @@ return [
     "create_exchange_log" => "新增換匯紀錄",
     "update_exchange_log" => "編輯換匯紀錄",
     "delete_exchange_log" => "刪除換匯紀錄",
+    "view_withdraw_log" => "查看出金紀錄",
+    "view_withdraw_order" => "查看出金訂單",
+    "view_any_withdraw_order" => "查看列表出金訂單",
 ];
