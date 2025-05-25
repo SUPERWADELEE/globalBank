@@ -56,7 +56,7 @@ class WithdrawOrderResource extends Resource
                 TextColumn::make('order_number')
                     ->label(__('withdraw.order_number')),
                 TextColumn::make('user.name')
-                    ->label(__('withdraw.user')),
+                    ->label(__('user.username')),
                 TextColumn::make('currencyCode.code')
                     ->label(__('withdraw.currency_code')),
                 TextColumn::make('amount')
