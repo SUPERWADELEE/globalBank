@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class EditRole extends EditRecord
 {
     protected static string $resource = RoleResource::class;
-
+    protected $originalPermissions;
 
     public function getHeading(): string
     {
@@ -22,40 +22,35 @@ class EditRole extends EditRecord
     }
     protected function getHeaderActions(): array
     {
-        return [
-        ];
+        return [];
+    }
+    protected function beforeSave(): void
+    {
+        $this->originalPermissions = $this->record->permissions->pluck('name')->toArray();
     }
     protected function afterSave(): void
-{
-    $role = $this->record;
+    {
+        $role = $this->record->fresh();
 
-    $originalPermissions = $role->getOriginal('permissions') ?? [];
-    $newPermissions = $role->permissions->pluck('name')->toArray();
+        $newPermissions = $role->permissions->pluck('name')->toArray();
+        $added = array_values(array_diff($newPermissions, $this->originalPermissions));
+        $removed = array_values(array_diff($this->originalPermissions, $newPermissions));
 
-    // 對照差異
-    $added = array_diff($newPermissions, $originalPermissions);
-    $removed = array_diff($originalPermissions, $newPermissions);
-
-    $changes = [];
-
-    if ($added) {
-        $changes[] = __('role.permission_added') . implode('、', $added);
+        if ($added || $removed) {
+            activity()
+                ->performedOn($role)
+                ->causedBy(Auth::user())
+                ->withProperties([
+                    'added_permissions' => $added,
+                    'removed_permissions' => $removed,
+                ])
+                ->event('updated')
+                ->log(
+                    implode('；', [
+                        $added ? __('role.permission_added') . implode('、', $added) : '',
+                        $removed ? __('role.permission_removed') . implode('、', $removed) : '',
+                    ])
+                );
+        }
     }
-
-    if ($removed) {
-        $changes[] = __('role.permission_removed') . implode('、', $removed);
-    }
-
-    if (!empty($changes)) {
-        activity()
-            ->performedOn($role)
-            ->causedBy(Auth::user())
-            ->withProperties([
-                'added_permissions' => $added,
-                'removed_permissions' => $removed,
-            ])
-            ->event('updated')
-            ->log(__('role.permission_updated_log') . implode('；', $changes));
-    }
-}
 }

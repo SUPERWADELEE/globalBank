@@ -87,7 +87,7 @@ return [
         'status' => '狀態',
     ],
     'role_created' => '操作員 :causer 建立了角色 :role，並指派權限：:permissions。',
-    'role_updated' => '操作員 :causer 更新了角色 :role 的資料：:changes。',
+    // 'role_updated' => '操作員 :causer 更新了角色 :role 的資料：:changes。',
     'role_change_line' => ':field 從「:old」變更為「:new」',
     'withdraw_status_updated' => '操作員 :causer 把會員 :member 的出金訂單狀態從 :old_status 變更為 :new_status',
     'withdraw_amount_updated' => '操作員 :causer 把會員 :member 的出金訂單金額從 :old 變更為 :new',
@@ -122,4 +122,13 @@ return [
     'role_no_permission_changes'=> '沒有任何權限變更',
     // 通用 fallback
     'log_description'           => '操作員 :causer 對 :subject 進行了 :event 操作',
+    // 當新增權限
+    'role_change_added'   => '新增權限：:permissions',
+    // 當移除權限
+    'role_change_removed' => '移除權限：:permissions',
+
+    // 最終的「更新後」整段文字
+    'role_updated'        => '操作員 :causer 更新了角色「:role」，變更內容：:changes',
+
+    'role_no_permission_changes' => '沒有任何權限變更',
 ];

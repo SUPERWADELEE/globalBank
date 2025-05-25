@@ -550,25 +550,26 @@ class AdminLogResource extends Resource
         }
 
         if ($event === 'updated') {
-            $added = $properties['added_permissions']   ?? [];
+            $added   = $properties['added_permissions']   ?? [];
             $removed = $properties['removed_permissions'] ?? [];
-
-            $messages = [];
+    
+            $parts = [];
             if (! empty($added)) {
-                $messages[] = __("activity.role_change_added", [
+                $parts[] = __('activity.role_change_added', [
                     'permissions' => self::formatPerms($added),
                 ]);
             }
             if (! empty($removed)) {
-                $messages[] = __("activity.role_change_removed", [
+                $parts[] = __('activity.role_change_removed', [
                     'permissions' => self::formatPerms($removed),
                 ]);
             }
-            $changes = $messages
-                ? implode('；', $messages)
-                : __("activity.role_no_permission_changes");
-
-            return __("activity.role_updated", [
+    
+            $changes = count($parts) > 0
+                ? implode('；', $parts)
+                : __('activity.role_no_permission_changes');
+    
+            return __('activity.role_updated', [
                 'causer'  => $causerName,
                 'role'    => $roleName,
                 'changes' => $changes,
@@ -582,7 +583,7 @@ class AdminLogResource extends Resource
         ]);
     }
 
-    protected static function formatPerms($perms): string
+    protected static function formatPerms(array $perms): string
     {
         return collect($perms)
             ->map(fn(string $key) => str_replace('::', '_', $key))
