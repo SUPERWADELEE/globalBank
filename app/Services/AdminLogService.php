@@ -17,7 +17,6 @@ class AdminLogService
         $contentLines = [];
 
         $changes = $record->getChanges(); // 只會包含有改過的欄位
-        // dd($record);
         foreach ($changes as $key => $newValue) {
             $oldValue = $record->getOriginal($key);
             $contentLines[] = "將「{$key}」從「{$oldValue}」改為「{$newValue}」";
