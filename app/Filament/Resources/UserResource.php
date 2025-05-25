@@ -52,7 +52,8 @@ class UserResource extends Resource
                 TextInput::make('username')
                     ->required()
                     ->maxLength(255)
-                    ->label(__('user.username')),
+                    ->label(__('user.username'))
+                    ->unique(ignoreRecord: true),
                 Select::make('register_location')
                     ->label(__('user.register_location'))
                     ->options(AdminUserTeam::pluck('name', 'name')->toArray())
