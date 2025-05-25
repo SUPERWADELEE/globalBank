@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Notification;
 use Carbon\Carbon;
 use Filament\Forms\Components\Select;
 use App\Models\WithdrawLog;
+use App\Filament\Filters\CommonFilters;
 
 class WithdrawLogResource extends Resource
 {
@@ -71,15 +72,13 @@ class WithdrawLogResource extends Resource
                     ->label(__('withdraw.created_at')),
             ])
             ->filters([
-                SelectFilter::make('user_id')
-                    ->options(
-                        Withdraw::with('user')
-                            ->get()
-                            ->pluck('user.username', 'user.id')
-                            ->unique()
-                    )
-                    ->label(__('user.username'))
-                    ->searchable(),
+                CommonFilters::relationTextLike(
+                    'user',
+                    'username',
+                    'user_username',
+                    __('user.username'),
+                    __('common.placeholder')
+                ),
 
                 SelectFilter::make('status')
                     ->label(__('withdraw.status'))
@@ -96,10 +95,7 @@ class WithdrawLogResource extends Resource
                     ->options(CurrencyCode::all()->pluck('code', 'id'))
                     ->label(__('withdraw.currency_code'))
                     ->searchable(),
-                SelectFilter::make('order_number')
-                    ->options(Withdraw::where('status', '1')->pluck('order_number', 'order_number'))
-                    ->label(__('withdraw.order_number'))
-                    ->searchable(),
+                CommonFilters::textLike('order_number', __('withdraw.order_number'), __('common.placeholder')),
                 static::makeDateRangeFilter(),
                 static::makeQuickRangeFilter(),
             ], layout: FiltersLayout::AboveContent)
@@ -191,7 +187,8 @@ class WithdrawLogResource extends Resource
                         'last_week'  => __('user.range.last_week'),
                         'this_month' => __('user.range.this_month'),
                     ])
-                    ->placeholder(__('user.range.select')),
+                    ->placeholder(__('user.range.select'))
+                    ->native(false),
             ])
             ->query(function ($query, array $data) {
                 if (blank($data['preset'])) {
