@@ -14,6 +14,7 @@ use Filament\Forms\Components\Grid;
 use Spatie\Permission\Models\Role;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Forms\Components\CheckboxList;
+use Spatie\Permission\Models\Permission;
 
 class RoleResource extends Resource
 {
@@ -40,7 +41,6 @@ class RoleResource extends Resource
                     ->label('群組名稱')
                     ->unique(ignoreRecord: true)
                     ->required(),
-
                 Section::make('權限分配')->schema([
                     Grid::make(2)->schema([
                         // 白名單
@@ -49,211 +49,188 @@ class RoleResource extends Resource
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(
-                                            fn($p) =>
-                                            str_contains($p->name, 'admin::ip::white::list') &&
-                                                !str_contains($p->name, 'view_admin::ip::white::list')
-                                        )
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(function ($label, $id) {
-                                            $translationKey = str_replace('::', '_', $label); // 將 :: 換成 _
-                                            return [$id => __('permissions.' . $translationKey)];
-                                        })
-                                        ->toArray()
+                                    self::getDbFilteredPermissions(
+                                        includeAndPatterns: ['admin::ip::white::list'],
+                                        excludePatterns: [
+                                            'view_admin::ip::white::list',
+                                            'update_admin::ip::white::list',
+                                        ]
+                                    )
                                 )
                                 ->bulkToggleable()
                                 ->label(__('permissions.groups.whitelist')),
+
+                            // 管理員帳號
                             CheckboxList::make('permissions')
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_contains($p->name, 'admin::user') && !str_contains($p->name, 'view_admin::user') && !str_contains($p->name, 'delete_admin::user'))
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(function ($label, $id) {
-                                            $translationKey = str_replace('::', '_', $label); // 將 :: 換成 _
-                                            return [$id => __('permissions.' . $translationKey)];
-                                        })
-                                        ->toArray()
+                                    self::getDbFilteredPermissions(
+                                        endsWithPatterns: ['admin::user'],
+                                        excludePatterns: [
+                                            'view_admin::user',
+                                            'delete_admin::user',
+                                        ]
+                                    )
                                 )
                                 ->bulkToggleable()
                                 ->label(__('permissions.groups.admin_user')),
+
+                            // Role 群組
                             CheckboxList::make('permissions')
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_contains($p->name, 'role') && !str_contains($p->name, 'view_role') && !str_contains($p->name, 'delete_role'))
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
-                                        ->toArray()
+                                    self::getDbFilteredPermissions(
+                                        includeAndPatterns: ['role'],
+                                        excludePatterns: [
+                                            'view_role',
+                                            'delete_role',
+                                        ]
+                                    )
                                 )
                                 ->bulkToggleable()
                                 ->label(__('role.title')),
 
+                            // Admin User Team
+                            CheckboxList::make('permissions')
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    self::getDbFilteredPermissions(
+                                        includeAndPatterns: ['team'],
+                                        excludePatterns: [
+                                            'view_admin::user::team',
+                                            'update_admin::user::team',
+                                        ]
+                                    )
+                                )
+                                ->bulkToggleable()
+                                ->label(__('admin_user.user_team.title')),
                         ]),
-                        // 交易紀錄
-                        Fieldset::make(__('transaction.title'))->schema([
-                            // 存款
-                            CheckboxList::make('permissions')
-                                ->relationship('permissions', 'name')
-                                ->columns(4)
-                                ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_contains($p->name, 'view_any_deposit::log'))
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(function ($label, $id) {
-                                            $translationKey = str_replace('::', '_', $label); // 將 :: 換成 _
-                                            return [$id => __('permissions.' . $translationKey)];
-                                        })
-                                        ->toArray()
-                                )
-                                ->label(__('deposit.title'))
-                                ->bulkToggleable(),
-                            // 提款
-                            CheckboxList::make('permissions')
-                                ->relationship('permissions', 'name')
-                                ->columns(4)
-                                ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_ends_with($p->name, 'view_any_withdraw'))
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
-                                        ->toArray()
-                                )
-                                ->label(__('withdraw.title'))
-                                ->bulkToggleable(),
 
-                        ]),
+
 
                         // 訂單管理
                         Fieldset::make(__('common.order_management'))->schema([
+                            // 入金訂單
                             CheckboxList::make('permissions')
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_contains($p->name, 'view_any_deposit::order'))
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(function ($label, $id) {
-                                            $translationKey = str_replace('::', '_', $label); // 將 :: 換成 _
-                                            return [$id => __('permissions.' . $translationKey)];
-                                        })
-                                        ->toArray()
+                                    self::getDbFilteredPermissions(
+                                        includeAndPatterns: ['view_any_deposit::order']
+                                    )
                                 )
                                 ->label(__('deposit.order.title'))
                                 ->bulkToggleable(),
+
+                            // 出金訂單
                             CheckboxList::make('permissions')
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(fn($p) => str_contains($p->name, 'view_any_withdraw::order'))
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(function ($label, $id) {
-                                            $translationKey = str_replace('::', '_', $label); // 將 :: 換成 _
-                                            return [$id => __('permissions.' . $translationKey)];
-                                        })
-                                        ->toArray()
+                                    self::getDbFilteredPermissions(
+                                        includeAndPatterns: ['view_any_withdraw::order']
+                                    )
                                 )
                                 ->label(__('withdraw.order.title'))
                                 ->bulkToggleable(),
                         ]),
+
+                        // 匯率群組
                         Fieldset::make(__('permissions.groups.rate'))->schema([
                             CheckboxList::make('permissions')
                                 ->label(__('permissions.groups.rate'))
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(function ($p) {
-                                            return (str_contains($p->name, 'view_any_rate') || str_contains($p->name, 'edit_')) && str_ends_with($p->name, 'rate');
-                                        })
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(function ($label, $id) {
-                                            $translationKey = str_replace('::', '_', $label); // 將 :: 換成 _
-                                            return [$id => __('permissions.' . $translationKey)];
-                                        })
+                                    self::getDbFilteredPermissions(
+                                        includeOrPatterns: ['view_any_rate', 'edit_'],
+                                        includeAndPatterns: ['rate']
+                                    )
                                 )
                                 ->bulkToggleable(),
                         ]),
+
+                        // 使用者管理
                         Fieldset::make(__('user.user_management'))->schema([
                             CheckboxList::make('permissions')
                                 ->label(__('user.user_management'))
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(function ($p) {
-                                            return str_ends_with($p->name, '_user') && !str_contains($p->name, 'view_any_user') && !str_contains($p->name, 'delete_user');
-                                        })
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
-                                        ->toArray()
-                                )->bulkToggleable(),
+                                    self::getDbFilteredPermissions(
+                                        endsWithPatterns: ['_user'],
+                                        excludePatterns: ['view_any_user', 'delete_user', 'admin::user']
+                                    )
+                                )
+                                ->bulkToggleable(),
+
+                            // 帳戶操作
                             CheckboxList::make('permissions')
                                 ->label(__('user.account_operation'))
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(function ($p) {
-                                            return str_ends_with($p->name, 'user_wallet');
-                                        })
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
-                                        ->toArray()
-                                )->bulkToggleable(),
+                                    self::getDbFilteredPermissions(
+                                        endsWithPatterns: ['user_wallet']
+                                    )
+                                )
+                                ->bulkToggleable(),
+
+                            // 操作日誌
                             CheckboxList::make('permissions')
                                 ->label(__('user.operation_log'))
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(function ($p) {
-                                            return str_ends_with($p->name, 'user_wallet_logs');
-                                        })
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
-                                        ->toArray()
-                                )->bulkToggleable(),
+                                    self::getDbFilteredPermissions(
+                                        includeAndPatterns: ['user_wallet_logs']
+                                    )
+                                )
+                                ->bulkToggleable(),
                         ]),
+
+                        // 平台錢包
                         Fieldset::make(__('platform_wallet.title.platform_wallet'))->schema([
                             CheckboxList::make('permissions')
                                 ->label(__('platform_wallet.title.platform_wallet'))
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(function ($p) {
-                                            return str_contains($p->name, 'view_any_platform::wallet');
-                                        })
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(function ($label, $id) {
-                                            $translationKey = str_replace('::', '_', $label); // 將 :: 換成 _
-                                            return [$id => __('permissions.' . $translationKey)];
-                                        })
-                                        ->toArray()
-                                )->bulkToggleable(),
+                                    self::getDbFilteredPermissions(
+                                        includeAndPatterns: ['view_any_platform::wallet']
+                                    )
+                                )
+                                ->bulkToggleable(),
                         ]),
+
+                        // 管理員帳號設定
                         Fieldset::make(__('admin_user.account_settings'))->schema([
                             CheckboxList::make('permissions')
                                 ->label(__('admin_user.account_settings'))
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
                                 ->options(
-                                    \Spatie\Permission\Models\Permission::all()
-                                        ->filter(function ($p) {
-                                            return str_contains($p->name, 'account_settings');
-                                        })
-                                        ->pluck('name', 'id')
-                                        ->mapWithKeys(fn($label, $id) => [$id => __('permissions.' . $label)])
-                                        ->toArray()
-                                )->bulkToggleable(),
-                        ])
-
-
+                                    self::getDbFilteredPermissions(
+                                        includeAndPatterns: ['account_settings']
+                                    )
+                                )
+                                ->bulkToggleable(),
+                        ]),
+                        Fieldset::make(__('deposit_location.title'))->schema([
+                            CheckboxList::make('permissions')
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    self::getDbFilteredPermissions(
+                                        includeOrPatterns: ['view_any_deposit::location', 'create_deposit::location', 'delete_deposit::location']
+                                    )
+                                )
+                                ->bulkToggleable()
+                                ->label(__('deposit_location.title')),
+                        ]),
                     ])
                 ])
             ]);
@@ -298,5 +275,42 @@ class RoleResource extends Resource
             'create' => Pages\CreateRole::route('/create'),
             'edit' => Pages\EditRole::route('/{record}/edit'),
         ];
+    }
+    public static function getDbFilteredPermissions(
+        array $includeAndPatterns  = [],
+        array $includeOrPatterns   = [],
+        array $excludePatterns     = [],
+        array $endsWithPatterns    = []
+    ): array {
+        $query = Permission::query();
+
+        foreach ($endsWithPatterns as $pattern) {
+            $query->where('name', 'like', "%{$pattern}");
+        }
+
+        foreach ($includeAndPatterns as $pattern) {
+            $query->where('name', 'like', "%{$pattern}%");
+        }
+        if (! empty($includeOrPatterns)) {
+            $query->where(function ($q) use ($includeOrPatterns) {
+                foreach ($includeOrPatterns as $pattern) {
+                    $q->orWhere('name', 'like', "%{$pattern}%");
+                }
+            });
+        }
+
+        foreach ($excludePatterns as $pattern) {
+            $query->where('name', 'not like', "%{$pattern}%");
+        }
+
+        $query->orderBy('name', 'asc');
+        return $query
+            ->pluck('name', 'id')
+            ->mapWithKeys(function ($label, $id) {
+                $translationKey = str_replace('::', '_', $label);
+                return [$id => __('permissions.' . $translationKey)];
+            })
+            ->sortBy(fn($label) => $label)
+            ->toArray();
     }
 }
