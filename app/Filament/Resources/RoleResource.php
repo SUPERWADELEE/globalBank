@@ -231,6 +231,40 @@ class RoleResource extends Resource
                                 ->bulkToggleable()
                                 ->label(__('deposit_location.title')),
                         ]),
+                        // 交易紀錄
+                        Fieldset::make(__('record.title'))->schema([
+                            CheckboxList::make('permissions')
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    self::getDbFilteredPermissions(
+                                        includeAndPatterns: ['view_any_deposit::log']
+                                    )
+                                )
+                                ->bulkToggleable()
+                                ->label(__('deposit.title')),
+                            CheckboxList::make('permissions')
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    self::getDbFilteredPermissions(
+                                        includeAndPatterns: ['view_any_withdraw'],
+                                        excludePatterns: ['view_any_withdraw::order']
+                                    )
+                                )
+                                ->bulkToggleable()
+                                ->label(__('withdraw.title')),
+                            CheckboxList::make('permissions')
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    self::getDbFilteredPermissions(
+                                        includeAndPatterns: ['view_any_exchange::log']
+                                    )
+                                )
+                                ->bulkToggleable()
+                                ->label(__('exchange.title')),
+                        ])->label(__('permissions.records')),
                     ])
                 ])
             ]);
