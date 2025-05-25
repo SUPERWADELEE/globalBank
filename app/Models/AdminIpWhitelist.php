@@ -18,7 +18,7 @@ class AdminIpWhitelist extends Model
      *
      * @var string
      */
-    protected $table = 'admin_ip_whitelist';
+    protected $table = 'admin_ip_whitelists';
 
     /**
      * The attributes that are mass assignable.

@@ -13,6 +13,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rule;
 
 class AdminIpWhiteListResource extends Resource
 {
@@ -35,7 +36,10 @@ class AdminIpWhiteListResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->label(__('admin_ip_white_list.ip_address'))
-                    ->rule('ip'),
+                    ->rule([
+                        'ip',
+                        Rule::unique('admin_ip_whitelists', 'ip_address')->whereNull('deleted_at'),
+                    ])
             ]);
     }
 
