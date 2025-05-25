@@ -56,7 +56,7 @@ class ExchangeLogResource extends Resource
             )
             ->columns([
                 TextColumn::make('order_number')->label(__('exchange.order_number')),
-                TextColumn::make('user.name')->label(__('exchange.user')),
+                TextColumn::make('user.name')->label(__('user.username')),
                 TextColumn::make('buy_display')
                     ->label('買入')
                     ->getStateUsing(function ($record) {
@@ -89,10 +89,13 @@ class ExchangeLogResource extends Resource
             ->filters([
                 SelectFilter::make('from_currency_id')
                     ->label(__('exchange.buy_currency_code'))
-                    ->options(CurrencyCode::pluck('code', 'id')),
+                    ->options(CurrencyCode::pluck('code', 'id'))
+                    ->native(false),
+
                 SelectFilter::make('to_currency_id')
                     ->label(__('exchange.sell_currency_code'))
-                    ->options(CurrencyCode::pluck('code', 'id')),
+                    ->options(CurrencyCode::pluck('code', 'id'))
+                    ->native(false),
                 static::makeDateRangeFilter(),
                 static::makeQuickRangeFilter(),
             ], layout: FiltersLayout::AboveContent)
@@ -174,7 +177,8 @@ class ExchangeLogResource extends Resource
                         'last_week'  => __('user.range.last_week'),
                         'this_month' => __('user.range.this_month'),
                     ])
-                    ->placeholder(__('user.range.select')),
+                    ->placeholder(__('user.range.select'))
+                    ->native(false),
             ])
             ->query(function ($query, array $data) {
                 if (blank($data['preset'])) {
