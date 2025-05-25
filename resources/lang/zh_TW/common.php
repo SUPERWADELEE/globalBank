@@ -33,5 +33,6 @@ return [
     'order_management' => '訂單管理',
     'tx_hash' => 'TxID',
     'mark_as_completed' => '通過',
+    'placeholder' => '請輸入查詢關鍵字',
     'mark_as_failed' => '拒絕',
 ]; 

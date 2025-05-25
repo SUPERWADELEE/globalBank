@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Notification;
 use Carbon\Carbon;
 use Filament\Forms\Components\Select;
 use App\Models\DepositLog;
-
+use App\Filament\Filters\CommonFilters;
 
 
 class DepositLogResource extends Resource
@@ -73,11 +73,13 @@ class DepositLogResource extends Resource
                     ->label(__('deposit.created_at')),
             ])
             ->filters([
-                // 1. User 篩選：用 relationship 簡化寫法
-                SelectFilter::make('user_id')
-                    ->label(__('user.username'))
-                    ->relationship('user', 'username')
-                    ->searchable(),
+                CommonFilters::relationTextLike(
+                    'user',
+                    'username',
+                    'user_username',
+                    __('user.username'),
+                    __('common.placeholder')
+                ),
 
                 // 2. 狀態篩選：從 Enum 取出 value => label
                 SelectFilter::make('status')
