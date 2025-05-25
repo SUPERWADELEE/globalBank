@@ -187,7 +187,8 @@ class DepositLogResource extends Resource
                         'last_week'  => __('user.range.last_week'),
                         'this_month' => __('user.range.this_month'),
                     ])
-                    ->placeholder(__('user.range.select')),
+                    ->placeholder(__('user.range.select'))
+                    ->native(false),
             ])
             ->query(function ($query, array $data) {
                 if (blank($data['preset'])) {
