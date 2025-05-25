@@ -23,6 +23,8 @@ use Carbon\Carbon;
 use Filament\Forms\Components\Select;
 use App\Models\DepositLog;
 use App\Filament\Filters\CommonFilters;
+use App\Filament\Filters\CommonDateFilters;
+
 
 class DepositLogResource extends Resource
 {
@@ -95,8 +97,8 @@ class DepositLogResource extends Resource
                     ->label(__('deposit.currency_code'))
                     ->native(false),
                 CommonFilters::textLike('order_number', __('deposit.order_number'), __('common.placeholder')),
-                static::makeDateRangeFilter(),
-                static::makeQuickRangeFilter(),
+                CommonDateFilters::dateRange(),
+                CommonDateFilters::quickRange(),
             ], layout: FiltersLayout::AboveContent)
             ->headerActions([
                 ExportAction::make()
