@@ -24,7 +24,6 @@ use Filament\Forms\Components\Select;
 use App\Models\DepositLog;
 use App\Filament\Filters\CommonFilters;
 
-
 class DepositLogResource extends Resource
 {
     protected static ?string $model = DepositLog::class;
@@ -81,7 +80,6 @@ class DepositLogResource extends Resource
                     __('common.placeholder')
                 ),
 
-                // 2. 狀態篩選：從 Enum 取出 value => label
                 SelectFilter::make('status')
                     ->label(__('deposit.status.status'))
                     ->options(
@@ -96,10 +94,7 @@ class DepositLogResource extends Resource
                     ->options(CurrencyCode::all()->pluck('code', 'id'))
                     ->label(__('deposit.currency_code'))
                     ->native(false),
-                SelectFilter::make('order_number')
-                    ->options(Deposit::where('status', '1')->pluck('order_number', 'order_number'))
-                    ->label(__('deposit.order_number'))
-                    ->native(false),
+                CommonFilters::textLike('order_number', __('deposit.order_number'), __('common.placeholder')),
                 static::makeDateRangeFilter(),
                 static::makeQuickRangeFilter(),
             ], layout: FiltersLayout::AboveContent)

@@ -69,7 +69,6 @@ class DepositOrderResource extends Resource
                     ->label(__('common.tx_hash')),
             ])
             ->filters([
-
                 SelectFilter::make('currency_code_id')
                     ->options(CurrencyCode::all()->pluck('code', 'id'))
                     ->label(__('deposit.currency_code'))
