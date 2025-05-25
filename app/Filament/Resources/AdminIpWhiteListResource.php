@@ -42,13 +42,12 @@ class AdminIpWhiteListResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-        // ->query(fn (Builder $query) => $query->with('adminUser'))
-        ->columns([
-            TextColumn::make('ip_address')
-                ->label(__('admin_ip_white_list.ip_address')),
-            TextColumn::make('adminUser.username')          
-                ->label(__('admin_user.username')),
-        ])
+            ->columns([
+                TextColumn::make('ip_address')
+                    ->label(__('admin_ip_white_list.ip_address')),
+                TextColumn::make('adminUser.name')
+                    ->label(__('admin_user.username'))
+            ])
             ->filters([
                 Tables\Filters\SelectFilter::make('ip_address')
                     ->label(__('admin_ip_white_list.ip_address'))
