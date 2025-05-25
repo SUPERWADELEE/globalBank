@@ -141,6 +141,7 @@ return [
     "create_exchange_log" => "新增換匯紀錄",
     "update_exchange_log" => "編輯換匯紀錄",
     "delete_exchange_log" => "刪除換匯紀錄",
+    "page_AccountSettings" => "帳號設定",
     "view_withdraw_log" => "查看出金紀錄",
     "view_deposit_log" => "查看入金紀錄",
     "view_withdraw_order" => "查看出金訂單",
