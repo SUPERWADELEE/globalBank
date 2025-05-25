@@ -1,11 +1,8 @@
 <?php
 
 namespace Database\Seeders;
-
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
+use App\Models\CurrencyCode;
 
 class CurrencyCodeSeeder extends Seeder
 {
@@ -14,7 +11,6 @@ class CurrencyCodeSeeder extends Seeder
      */
     public function run(): void
     {
-        $now = Carbon::now();
         $currencies = [
             ['code' => 'JPY', 'name' => '日圓'],
             ['code' => 'SGD', 'name' => '新加坡幣'],
@@ -23,12 +19,14 @@ class CurrencyCodeSeeder extends Seeder
         ];
 
         foreach ($currencies as $currency) {
-            DB::table('currency_codes')->insert([
-                'code' => $currency['code'],
-                'name' => $currency['name'],
-                'created_at' => $now,
-                'updated_at' => $now,
-            ]);
+            CurrencyCode::firstOrCreate(
+                [
+                    'code' => $currency['code'],
+                ],
+                [
+                    'name' => $currency['name'],
+                ],
+            );
         }
     }
 }

@@ -18,7 +18,7 @@ class UserLevelSeeder extends Seeder
         }
         $levels = ['vip1', 'vip2', 'vip3', 'vip4', 'vip5', 'vip6', 'vip7', 'vip8', 'vip9', 'vip10'];
         foreach ($levels as $level) {
-            UserLevel::create([
+            UserLevel::firstOrCreate([
                 'name' => $level,
             ]);
         }
