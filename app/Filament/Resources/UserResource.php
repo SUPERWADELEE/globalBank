@@ -63,7 +63,8 @@ class UserResource extends Resource
                 TextInput::make('phone')
                     ->required()
                     ->maxLength(255)
-                    ->label(__('user.phone')),
+                    ->label(__('user.phone'))
+                    ->tel(),
                 TextInput::make('password')
                     ->label(__('user.password'))
                     ->password()
