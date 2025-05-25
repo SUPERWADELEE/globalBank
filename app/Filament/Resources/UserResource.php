@@ -11,19 +11,16 @@ use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Enums\FiltersLayout;
-use App\Enums\UserStatusEnum;
 use App\Models\UserLevel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Set;
 use App\Models\AdminUserTeam;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action as TableAction;
-use Filament\Tables\Filters\Filter;
-use Filament\Forms\Components\DatePicker;
-use Carbon\Carbon;
+use App\Filament\Filters\CommonFilters;
+use App\Filament\Filters\CommonDateFilters;
 
 class UserResource extends Resource
 {
@@ -125,11 +122,8 @@ class UserResource extends Resource
                 Tables\Filters\SelectFilter::make('user_level_id')
                     ->label(__('user.level'))
                     ->options(UserLevel::pluck('name', 'id')->toArray()),
-                Tables\Filters\SelectFilter::make('phone')
-                    ->label(__('user.phone'))
-                    ->options(User::pluck('phone', 'phone')->toArray()),
-                static::makeDateRangeFilter(),
-                static::makeQuickRangeFilter(),
+                CommonDateFilters::dateRange(),
+                CommonDateFilters::quickRange(),
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -177,84 +171,5 @@ class UserResource extends Resource
             'user-wallet-page' => Pages\UserWalletPage::route('/{record}/wallets'),
             'user-wallet-logs' => Pages\UserWalletLogPage::route('/{record}/wallets/logs'),
         ];
-    }
-    /**
-     * 日期範圍 Filter：開始／結束日互斥檢查 + 查詢
-     */
-    protected static function makeDateRangeFilter(): Filter
-    {
-        return Filter::make('created_at_range')
-            ->label(__('user.register_time'))
-            ->form([
-                DatePicker::make('from')
-                    ->label(__('user.start_date'))
-                    ->reactive()
-                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
-                        if ($state && $get('until') && $state > $get('until')) {
-                            $set('from', null);
-                            Notification::make()
-                                ->title(__('user.error.start_after_end')) // 建議把訊息也抽翻譯
-                                ->danger()
-                                ->send();
-                        }
-                    }),
-
-                DatePicker::make('until')
-                    ->label(__('user.end_date'))
-                    ->reactive()
-                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
-                        if ($state && $get('from') && $state < $get('from')) {
-                            $set('until', null);
-                            Notification::make()
-                                ->title(__('user.error.end_before_start'))
-                                ->danger()
-                                ->send();
-                        }
-                    }),
-            ])
-            ->query(function ($query, array $data) {
-                return $query
-                    ->when($data['from'], fn($q, $date) => $q->whereDate('created_at', '>=', $date))
-                    ->when($data['until'], fn($q, $date) => $q->whereDate('created_at', '<=', $date));
-            });
-    }
-
-    /**
-     * 快捷範圍 Filter：今日／昨日／近幾日／本週／本月
-     */
-    protected static function makeQuickRangeFilter(): Filter
-    {
-        return Filter::make('quick_range')
-            ->label(__('user.quick_range'))
-            ->form([
-                Select::make('preset')
-                    ->label(__('user.date_range'))
-                    ->options([
-                        'today'      => __('user.range.today'),
-                        'yesterday'  => __('user.range.yesterday'),
-                        'last7'      => __('user.range.last7'),
-                        'last30'     => __('user.range.last30'),
-                        'this_week'  => __('user.range.this_week'),
-                        'last_week'  => __('user.range.last_week'),
-                        'this_month' => __('user.range.this_month'),
-                    ])
-                    ->placeholder(__('user.range.select')),
-            ])
-            ->query(function ($query, array $data) {
-                if (blank($data['preset'])) {
-                    return $query;
-                }
-
-                return match ($data['preset']) {
-                    'today'      => $query->whereDate('created_at', Carbon::today()),
-                    'yesterday'  => $query->whereDate('created_at', Carbon::yesterday()),
-                    'last7'      => $query->whereDate('created_at', '>=', Carbon::today()->subDays(6)),
-                    'last30'     => $query->whereDate('created_at', '>=', Carbon::today()->subDays(29)),
-                    'this_week'  => $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]),
-                    'last_week'  => $query->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]),
-                    'this_month' => $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]),
-                    default      => $query,
-                };
-            });
     }
 }
