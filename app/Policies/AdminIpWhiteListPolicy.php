@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\AdminUser;
-use App\Models\AdminIpWhiteList;
+use App\Models\AdminIpWhitelist;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class AdminIpWhiteListPolicy
+class AdminIpWhitelistPolicy
 {
     use HandlesAuthorization;
 
@@ -21,7 +21,7 @@ class AdminIpWhiteListPolicy
     /**
      * Determine whether the adminUser can view the model.
      */
-    public function view(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
+    public function view(AdminUser $adminUser, AdminIpWhitelist $adminIpWhitelist): bool
     {
         return $adminUser->can('view_admin::ip::white::list');
     }
@@ -37,7 +37,7 @@ class AdminIpWhiteListPolicy
     /**
      * Determine whether the adminUser can update the model.
      */
-    public function update(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
+    public function update(AdminUser $adminUser, AdminIpWhitelist $adminIpWhitelist): bool
     {
         return $adminUser->can('update_admin::ip::white::list');
     }
@@ -45,7 +45,7 @@ class AdminIpWhiteListPolicy
     /**
      * Determine whether the adminUser can delete the model.
      */
-    public function delete(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
+    public function delete(AdminUser $adminUser, AdminIpWhitelist $adminIpWhitelist): bool
     {
         return $adminUser->can('delete_admin::ip::white::list');
     }
@@ -61,7 +61,7 @@ class AdminIpWhiteListPolicy
     /**
      * Determine whether the adminUser can permanently delete.
      */
-    public function forceDelete(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
+    public function forceDelete(AdminUser $adminUser, AdminIpWhitelist $adminIpWhitelist): bool
     {
         return $adminUser->can('{{ ForceDelete }}');
     }
@@ -77,7 +77,7 @@ class AdminIpWhiteListPolicy
     /**
      * Determine whether the adminUser can restore.
      */
-    public function restore(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
+    public function restore(AdminUser $adminUser, AdminIpWhitelist $adminIpWhitelist): bool
     {
         return $adminUser->can('{{ Restore }}');
     }
@@ -93,7 +93,7 @@ class AdminIpWhiteListPolicy
     /**
      * Determine whether the adminUser can replicate.
      */
-    public function replicate(AdminUser $adminUser, AdminIpWhiteList $adminIpWhiteList): bool
+    public function replicate(AdminUser $adminUser, AdminIpWhitelist $adminIpWhitelist): bool
     {
         return $adminUser->can('{{ Replicate }}');
     }
