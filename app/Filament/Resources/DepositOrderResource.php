@@ -14,10 +14,11 @@ use App\Models\CurrencyCode;
 use App\Enums\DepositStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\Action;
+use App\Models\DepositOrder;
 
 class DepositOrderResource extends Resource
 {
-    protected static ?string $model = Deposit::class;
+    protected static ?string $model = DepositOrder::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-up-tray';
 

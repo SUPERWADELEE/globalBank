@@ -21,12 +21,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Notification;
 use Carbon\Carbon;
 use Filament\Forms\Components\Select;
+use App\Models\DepositLog;
 
 
 
 class DepositLogResource extends Resource
 {
-    protected static ?string $model = Deposit::class;
+    protected static ?string $model = DepositLog::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-up-tray';
 

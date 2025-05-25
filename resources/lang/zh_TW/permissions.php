@@ -142,6 +142,10 @@ return [
     "update_exchange_log" => "編輯換匯紀錄",
     "delete_exchange_log" => "刪除換匯紀錄",
     "view_withdraw_log" => "查看出金紀錄",
+    "view_deposit_log" => "查看入金紀錄",
     "view_withdraw_order" => "查看出金訂單",
+    "view_deposit_order" => "查看入金訂單",
     "view_any_withdraw_order" => "查看列表出金訂單",
+    "view_any_deposit_order" => "查看列表入金訂單",
+
 ];
