@@ -96,7 +96,7 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->label(__('user.name')),
+                Tables\Columns\TextColumn::make('username')->label(__('user.username')),
                 Tables\Columns\TextColumn::make('email')->label(__('user.email')),
                 Tables\Columns\TextColumn::make('username')->label(__('user.username')),
                 Tables\Columns\TextColumn::make('userLevel.name')->label(__('user.level')),
