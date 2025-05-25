@@ -46,8 +46,8 @@ class DepositOrderResource extends Resource
             ->columns([
                 TextColumn::make('order_number')
                     ->label(__('deposit.order_number')),
-                TextColumn::make('user.name')
-                    ->label(__('deposit.user')),
+                TextColumn::make('user.username')
+                    ->label(__('user.username')),
                 TextColumn::make('currencyCode.code')
                     ->label(__('deposit.currency_code')),
                 TextColumn::make('amount')
