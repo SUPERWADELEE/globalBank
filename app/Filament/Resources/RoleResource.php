@@ -15,6 +15,7 @@ use Spatie\Permission\Models\Role;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Forms\Components\CheckboxList;
 use Spatie\Permission\Models\Permission;
+use App\Filament\Filters\CommonFilters;
 
 class RoleResource extends Resource
 {
@@ -280,10 +281,14 @@ class RoleResource extends Resource
                     ->label(__('admin_user.admin_user')),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('name')
-                    ->label(__('role.role_name'))
-                    ->options(Role::pluck('name', 'name')->toArray())
-                    ->searchable(),
+                CommonFilters::textLike('name', __('role.role_name'), __('common.placeholder')),
+                CommonFilters::relationTextLike(
+                    'users',
+                    'name',
+                    'user_name',
+                    __('admin_user.name'),
+                    __('common.placeholder')
+                ),
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
