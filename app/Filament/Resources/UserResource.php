@@ -112,12 +112,8 @@ class UserResource extends Resource
                     ->dateTime('Y-m-d H:i:s'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('email')
-                    ->label(__('user.email'))
-                    ->options(User::pluck('email', 'email')->toArray()),
-                Tables\Filters\SelectFilter::make('username')
-                    ->label(__('user.username'))
-                    ->options(User::pluck('username', 'username')->toArray()),
+                CommonFilters::textLike('username', __('user.username'), __('common.placeholder')),
+                CommonFilters::textLike('email', __('user.email'), __('common.placeholder')),
                 Tables\Filters\SelectFilter::make('register_location')
                     ->label(__('user.register_location'))
                     ->options(User::pluck('register_location', 'register_location')->toArray()),
