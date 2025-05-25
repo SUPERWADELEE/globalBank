@@ -8,6 +8,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\AdminUser;
 class AdminIpWhitelist extends Model
 {
     use HasFactory, LogsActivity, SoftDeletes;
@@ -54,7 +55,7 @@ class AdminIpWhitelist extends Model
             ->logOnly(['ip_address'])
             ->logOnlyDirty()
             ->setDescriptionForEvent(function (string $eventName) use ($adminUser) {
-                $subjectName = $this->name;
+                $subjectName = $this->ip_address;
                 return __('activity.log_description', [
                     'causer' => $adminUser,
                     'subject' => $subjectName,
