@@ -20,6 +20,9 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Middleware\SetLocaleFromAdminUser;
 use App\Http\Middleware\CheckAdminIpWhitelist;
+use App\Filament\Auth\Login;
+
+
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -31,7 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->authGuard('admin')
             ->breadcrumbs(false)
-            ->login()
+            ->login(Login::class)
             ->colors([
                 'primary' => Color::Amber,
             ])

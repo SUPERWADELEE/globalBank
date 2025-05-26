@@ -64,6 +64,7 @@ return [
     'language' => '語系',
     'account_settings' => '帳號設定',
     'account_settings_updated' => '帳號資料已更新',
+    'remember_me' => '記住我',
     'team' => [
         'title' => '單位管理',
         'name' => '單位名稱',

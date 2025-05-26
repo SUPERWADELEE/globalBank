@@ -87,4 +87,5 @@ return [
         'description' => 'Operation Record',
         'subject' => 'Module',
     ],
+    'remember_me' => 'Remember Me',
 ];
