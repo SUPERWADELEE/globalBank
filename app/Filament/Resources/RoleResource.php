@@ -44,7 +44,7 @@ class RoleResource extends Resource
                     ->required(),
                 Section::make('權限分配')->schema([
                     Grid::make(2)->schema([
-                        // 白名單
+                       
                         Fieldset::make(__('system_management.title'))->schema([
                              // 白名單
                             CheckboxList::make('permissions')
