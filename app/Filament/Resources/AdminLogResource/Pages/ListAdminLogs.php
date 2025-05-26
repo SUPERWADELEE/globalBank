@@ -18,5 +18,5 @@ class ListAdminLogs extends ListRecords
     public function getTitle(): string
     {
         return __('admin_user.activity_log.title');
-    }
-}
+    }}
+
