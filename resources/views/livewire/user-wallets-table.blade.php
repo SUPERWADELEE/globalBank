@@ -34,7 +34,16 @@
                         @if($canDeposit || $canWithdraw)
                         <input
                             type="number"
+                            step="0.01"
+                            min="0"
                             wire:model.defer="amounts.{{ $wallet->id }}"
+                            oninput="
+                                const inputValue = this.value;
+                                const regex = /^\d*\.?\d{0,2}$/;
+                                if (!regex.test(inputValue)) {
+                                    this.value = inputValue.slice(0, -1);
+                                }
+                            "
                             class="w-full filament-input rounded-md border-gray-300 dark:bg-gray-800 dark:text-white" />
                         @endif
                     </td>
