@@ -355,6 +355,12 @@ class AdminLogResource extends Resource
                 'location' => $location,
             ]);
         }
+        // 其他事件或沒有 status 變更，就走預設訊息
+        return __("activity.default_operation", [
+            'causer'  => $causerName,
+            'subject' => $location,
+            'event'   => $event,
+        ]);
     }
 
     // 針對 User
