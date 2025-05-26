@@ -58,17 +58,17 @@ class ExchangeLogResource extends Resource
                 TextColumn::make('order_number')->label(__('exchange.order_number')),
                 TextColumn::make('user.name')->label(__('user.username')),
                 TextColumn::make('buy_display')
-                    ->label('買入')
+                    ->label(__('user.buy'))
                     ->getStateUsing(function ($record) {
                         return number_format($record->amount_to, 2) . ' ' . ($record->toCurrency->code ?? '');
                     }),
                 TextColumn::make('sell_display')
-                    ->label('賣出')
+                    ->label(__('user.sell'))
                     ->getStateUsing(function ($record) {
                         return '-' . number_format($record->amount_from, 2) . ' ' . ($record->fromCurrency->code ?? '');
                     }),
                 TextColumn::make('unit_price')
-                    ->label('單位價格')
+                    ->label(__('user.unit_price'))
                     ->getStateUsing(function ($record) {
                         return number_format($record->rate, 2);
                     }),

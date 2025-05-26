@@ -35,4 +35,5 @@ return [
     'mark_as_completed' => '通過',
     'placeholder' => '請輸入查詢關鍵字',
     'mark_as_failed' => '拒絕',
+    'refresh' => '重新整理',
 ]; 

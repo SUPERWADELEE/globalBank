@@ -65,6 +65,7 @@ return [
     'account_settings' => '帳號設定',
     'account_settings_updated' => '帳號資料已更新',
     'remember_me' => '記住我',
+    'invalid_credentials' => '帳號或密碼錯誤',
     'team' => [
         'title' => '單位管理',
         'name' => '單位名稱',

@@ -17,7 +17,7 @@ class CheckAdminIpWhitelist
             return $next($request);
         }
         if (!in_array($request->ip(), $allowedIps)) {
-            abort(403, '您的 IP 不在允許的白名單內');
+            abort(403, __('admin_ip_white_list.ip_not_allowed'));
         }
 
         return $next($request);

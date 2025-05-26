@@ -53,4 +53,8 @@ return [
         
     ],
     'system_account_management' => '系統帳號管理',
+    'buy' => '會員買入',
+    'sell' => '會員賣出',
+    'unit_price' => '單位價格',
+
 ];

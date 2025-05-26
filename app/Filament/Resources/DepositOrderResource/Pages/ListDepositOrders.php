@@ -27,7 +27,7 @@ class ListDepositOrders extends ListRecords
                 ->label(__('withdraw.order.title') . " ({$withdrawProcessingCount})"),
             Actions\Action::make('重新整理')
                 ->url(route('filament.admin.resources.deposit-orders.index'))
-                ->label(__('deposit.refresh')),
+                ->label(__('common.refresh')),
         ];
     }
 
