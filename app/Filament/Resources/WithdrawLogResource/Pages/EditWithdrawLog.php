@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\WithdrawResource\Pages;
+namespace App\Filament\Resources\WithdrawLogResource\Pages;
 
 use App\Filament\Resources\WithdrawLogResource;
 use Filament\Actions;
