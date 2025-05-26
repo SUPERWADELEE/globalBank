@@ -38,7 +38,7 @@ class PlatformWallet extends Model
     {
         return $this->belongsTo(CurrencyCode::class, 'currency_code_id', 'id');
     }
-    public static function getTotalInUSDT(): float
+    public static function getTotalInUSDT(): BigDecimal
     {
         $wallets = self::with('currencyCode')->get();
 
@@ -63,6 +63,6 @@ class PlatformWallet extends Model
             }
         }
 
-        return $total->toScale(6, RoundingMode::DOWN)->toFloat();
+        return $total->toScale(2, RoundingMode::DOWN);
     }
 }
