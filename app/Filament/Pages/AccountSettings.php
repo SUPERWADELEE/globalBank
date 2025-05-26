@@ -75,6 +75,8 @@ class AccountSettings extends Page implements HasForms
 
                 TextInput::make('current_password')
                     ->label(__('admin_user.current_password'))
+                    ->rule('current_password')
+                    ->required()
                     ->disabled(fn() => !Auth::user()->can('edit_account_settings'))
                     ->password(),
 
