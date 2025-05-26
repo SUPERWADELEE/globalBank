@@ -15,6 +15,9 @@ use App\Models\Withdraw;
 use App\Enums\WithdrawStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class UserWalletsTable extends Component
 {
@@ -22,6 +25,7 @@ class UserWalletsTable extends Component
     public string $confirmAction = '';
     public ?int $selectedWalletId = null;
     public array $amounts = [];
+    public bool $isProcessing = false; // 防止重複提交
 
     public User $user;
 
@@ -34,16 +38,128 @@ class UserWalletsTable extends Component
 
     public function makeDeposit($walletId)
     {
-        $wallet = Wallet::findOrFail($walletId);
-        $amount = $this->validateAmount($this->amounts[$walletId] ?? null);
-        if (!$amount) return;
+        // 防止重複提交
+        if ($this->isProcessing) {
+            $this->notifyError(__('user.operation_in_progress'));
+            return;
+        }
 
-        $platformWallet = $this->getPlatformWallet($wallet->currency_code_id);
+        $this->isProcessing = true;
 
-        $this->updatePlatformBalance($platformWallet, $amount, add: true);
-        $this->updateWalletBalance($wallet, $amount, add: true);
-        $this->addDeposit($wallet, $amount);
-        $this->finalizeTransaction(__('user.deposit_success'));
+        try {
+            // 使用 Redis 分散式鎖防止併發
+            $lockKey = "wallet_operation_{$walletId}_" . Auth::id();
+            $result = Cache::lock($lockKey, 10)->get(function () use ($walletId) {
+                return $this->processDeposit($walletId);
+            });
+
+            // 如果無法獲得鎖
+            if ($result === null) {
+                $this->notifyError(__('user.operation_locked'));
+                return;
+            }
+        } catch (\Exception $e) {
+            $this->notifyError(__('user.operation_failed'));
+            Log::error('Deposit failed: ' . $e->getMessage(), [
+                'wallet_id' => $walletId,
+                'user_id' => Auth::id(),
+                'amount' => $this->amounts[$walletId] ?? null
+            ]);
+        } finally {
+            $this->isProcessing = false;
+        }
+    }
+
+    private function processDeposit($walletId)
+    {
+        return DB::transaction(function () use ($walletId) {
+            // 使用悲觀鎖鎖定錢包記錄
+            $wallet = Wallet::lockForUpdate()->findOrFail($walletId);
+            $amount = $this->validateAmount($this->amounts[$walletId] ?? null);
+            if (!$amount) return 'validation_failed'; // 返回字符串而不是 false
+
+            // 鎖定平台錢包
+            $platformWallet = PlatformWallet::lockForUpdate()
+                ->where('currency_code_id', $wallet->currency_code_id)
+                ->firstOrFail();
+
+            $this->updatePlatformBalance($platformWallet, $amount, add: true);
+            $this->updateWalletBalance($wallet, $amount, add: true);
+            $this->addDeposit($wallet, $amount);
+            $this->finalizeTransaction(__('user.deposit_success'));
+            
+            return 'success';
+        });
+    }
+
+    public function makeWithdraw($walletId)
+    {
+        // 防止重複提交
+        if ($this->isProcessing) {
+            $this->notifyError(__('user.operation_in_progress'));
+            return;
+        }
+
+        $this->isProcessing = true;
+
+        try {
+            // 使用 Redis 分散式鎖防止併發
+            $lockKey = "wallet_operation_{$walletId}_" . Auth::id();
+            $result = Cache::lock($lockKey, 10)->get(function () use ($walletId) {
+                return $this->processWithdraw($walletId);
+            });
+
+            // 如果無法獲得鎖
+            if ($result === null) {
+                $this->notifyError(__('user.operation_locked'));
+                return;
+            }
+        } catch (\Exception $e) {
+            $this->notifyError(__('user.operation_failed'));
+            Log::error('Withdraw failed: ' . $e->getMessage(), [
+                'wallet_id' => $walletId,
+                'user_id' => Auth::id(),
+                'amount' => $this->amounts[$walletId] ?? null
+            ]);
+        } finally {
+            $this->isProcessing = false;
+        }
+    }
+
+    private function processWithdraw($walletId)
+    {
+        return DB::transaction(function () use ($walletId) {
+            // 使用悲觀鎖鎖定錢包記錄
+            $wallet = Wallet::lockForUpdate()->findOrFail($walletId);
+            $amount = $this->validateAmount($this->amounts[$walletId] ?? null);
+            if (!$amount) return 'validation_failed'; // 返回字符串而不是 false
+
+            $walletBalance = $this->decimal($wallet->balance);
+            
+            // 鎖定平台錢包
+            $platformWallet = PlatformWallet::lockForUpdate()
+                ->where('currency_code_id', $wallet->currency_code_id)
+                ->firstOrFail();
+            
+            $platformBalance = $this->decimal($platformWallet->amount);
+
+            if ($platformBalance->isLessThan($amount)) {
+                $this->notifyError(__('platform_wallet.insufficient_balance'));
+                return 'platform_insufficient'; // 返回字符串而不是 false
+            }
+
+            if ($walletBalance->isLessThan($amount)) {
+                $this->notifyError(__('user.insufficient_balance'));
+                return 'user_insufficient'; // 返回字符串而不是 false
+            }
+
+            $this->updatePlatformBalance($platformWallet, $amount, add: false);
+            $this->updateWalletBalance($wallet, $amount, add: false);
+            $this->addWithdraw($wallet, $amount);
+            $this->finalizeTransaction(__('user.withdraw_success'));
+            
+            return 'success';
+        });
     }
 
     private function addDeposit(Wallet $wallet, BigDecimal $amount): void
@@ -56,32 +172,6 @@ class UserWalletsTable extends Component
             'status' => DepositStatus::Success,
             'admin_user_id' => Auth::id(),
         ]);
-    }
-
-    public function makeWithdraw($walletId)
-    {
-        $wallet = Wallet::findOrFail($walletId);
-        $amount = $this->validateAmount($this->amounts[$walletId] ?? null);
-        if (!$amount) return;
-
-        $walletBalance = $this->decimal($wallet->balance);
-        $platformWallet = $this->getPlatformWallet($wallet->currency_code_id);
-        $platformBalance = $this->decimal($platformWallet->amount);
-
-        if ($platformBalance->isLessThan($amount)) {
-            $this->notifyError(__('platform_wallet.insufficient_balance'));
-            return;
-        }
-
-        if ($walletBalance->isLessThan($amount)) {
-            $this->notifyError(__('user.insufficient_balance'));
-            return;
-        }
-
-        $this->updatePlatformBalance($platformWallet, $amount, add: false);
-        $this->updateWalletBalance($wallet, $amount, add: false);
-        $this->addWithdraw($wallet, $amount);
-        $this->finalizeTransaction(__('user.withdraw_success'));
     }
 
     private function addWithdraw(Wallet $wallet, BigDecimal $amount): void
@@ -108,7 +198,14 @@ class UserWalletsTable extends Component
             return null;
         }
 
-        return BigDecimal::of($rawAmount)->toScale(6, RoundingMode::DOWN);
+        // 檢查小數位數是否超過2位
+        $decimalPlaces = strlen(substr(strrchr($rawAmount, "."), 1));
+        if (strpos($rawAmount, '.') !== false && $decimalPlaces > 2) {
+            $this->notifyError(__('user.amount_too_many_decimals'));
+            return null;
+        }
+
+        return BigDecimal::of($rawAmount)->toScale(2, RoundingMode::DOWN);
     }
 
     private function getPlatformWallet($currencyCodeId): PlatformWallet
@@ -157,6 +254,11 @@ class UserWalletsTable extends Component
 
     public function confirmDeposit($walletId): void
     {
+        if ($this->isProcessing) {
+            $this->notifyError(__('user.operation_in_progress'));
+            return;
+        }
+        
         $this->dispatch('open-modal', id: 'wallet-confirm-modal');  // 打開
         $this->selectedWalletId = $walletId;
         $this->confirmAction = 'deposit';
@@ -165,6 +267,11 @@ class UserWalletsTable extends Component
 
     public function confirmWithdraw($walletId): void
     {
+        if ($this->isProcessing) {
+            $this->notifyError(__('user.operation_in_progress'));
+            return;
+        }
+        
         $this->dispatch('open-modal', id: 'wallet-confirm-modal');  // 打開
         $this->selectedWalletId = $walletId;
         $this->confirmAction = 'withdraw';
@@ -173,6 +280,11 @@ class UserWalletsTable extends Component
 
     public function executeConfirmedAction(): void
     {
+        if ($this->isProcessing) {
+            $this->notifyError(__('user.operation_in_progress'));
+            return;
+        }
+        
         if ($this->confirmAction === 'deposit') {
             $this->makeDeposit($this->selectedWalletId);
         }
@@ -189,6 +301,18 @@ class UserWalletsTable extends Component
     {
         $this->dispatch('close-modal', id: 'wallet-confirm-modal'); // 關閉
         $this->showConfirmation = false;
+    }
+
+    public function testConcurrency()
+    {
+        // 簡單的併發測試方法
+        $this->notifySuccess('併發測試：請快速連續點擊入金或出金按鈕來測試併發控制效果');
+        
+        // 記錄測試開始
+        Log::info('Concurrency test started', [
+            'user_id' => Auth::id(),
+            'timestamp' => now()
+        ]);
     }
 
 }

@@ -51,21 +51,27 @@
                     <td class="px-4 py-2 text-center w-1/4">
                         @if($canDeposit)
                         <x-filament::button
-                            {{-- 修改這裡 👇 --}}
                             wire:click="confirmDeposit({{ $wallet->id }})"
                             size="sm"
                             color="success"
-                            class="mr-2">
+                            class="mr-2"
+                            :disabled="$isProcessing">
+                            @if($isProcessing)
+                                <x-filament::loading-indicator class="h-4 w-4" />
+                            @endif
                             入金
                         </x-filament::button>
                         @endif
 
                         @if($canWithdraw)
                         <x-filament::button
-                            {{-- 修改這裡 👇 --}}
                             wire:click="confirmWithdraw({{ $wallet->id }})"
                             size="sm"
-                            color="danger">
+                            color="danger"
+                            :disabled="$isProcessing">
+                            @if($isProcessing)
+                                <x-filament::loading-indicator class="h-4 w-4" />
+                            @endif
                             出金
                         </x-filament::button>
                         @endif
