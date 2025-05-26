@@ -20,7 +20,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Middleware\SetLocaleFromAdminUser;
 use App\Http\Middleware\CheckAdminIpWhitelist;
-use App\Filament\Auth\Login;
+use APP\Filament\Pages\Auth\Login;
 
 
 
