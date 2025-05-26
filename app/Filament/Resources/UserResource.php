@@ -69,18 +69,16 @@ class UserResource extends Resource
                 TextInput::make('password')
                     ->label(__('user.password'))
                     ->password()
-                    // 建立時必填；編輯時可空白（表示不變更密碼）
                     ->required(fn($livewire) => $livewire->record === null)
                     ->revealable()
-                    // 右側按鈕：產生隨機密碼
                     ->suffixAction(
                         Action::make('generatePassword')
-                            ->tooltip(__('user.random_password'))      // 滑鼠提示
-                            ->icon('heroicon-o-sparkles')              // 圖示可換
-                            ->color('secondary')                       // 按鈕顏色
+                            ->tooltip(__('user.random_password'))    
+                            ->icon('heroicon-o-sparkles')             
+                            ->color('secondary')                       
                             ->action(
                                 fn(Set $set) =>
-                                $set('password', Str::random(12))      // 寫回欄位
+                                $set('password', Str::random(12))      
                             )
                     )
                     ->default(Str::random(12))
@@ -132,7 +130,7 @@ class UserResource extends Resource
                     ->modalHeading('TOTP QR Code')
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('關閉')
-                    ->visible(fn(User $record) => Auth::user()->can('viewQrCode', $record))
+                    ->visible(fn(User $record) => Auth::user()->can('view_user_qr_code'))
                     ->modalContent(function ($record) {
                         if (!$record->otp_secret) {
                             return view('components.simple-text', ['text' => __('user.no_otp_secret')]);

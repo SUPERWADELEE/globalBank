@@ -194,6 +194,17 @@ class RoleResource extends Resource
                                     )
                                 )
                                 ->bulkToggleable(),
+                            // qr code
+                            CheckboxList::make('permissions')
+                                ->label(__('user.qr_code'))
+                                ->relationship('permissions', 'name')
+                                ->columns(4)
+                                ->options(
+                                    self::getDbFilteredPermissions(
+                                        endsWithPatterns: ['qr_code']
+                                    )
+                                )
+                                ->bulkToggleable(),
                         ]),
 
                         // 平台錢包

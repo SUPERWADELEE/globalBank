@@ -105,4 +105,12 @@ class UserPolicy
     {
         return $adminUser->can('{{ Reorder }}');
     }
+
+    /**
+     * Determine whether the adminUser can view user QR code.
+     */
+    public function viewQrCode(AdminUser $adminUser, User $user): bool
+    {
+        return $adminUser->can('view_user_qr_code');
+    }
 }

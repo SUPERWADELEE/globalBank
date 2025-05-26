@@ -148,5 +148,6 @@ return [
     "view_deposit_order" => "查看入金訂單",
     "view_any_withdraw_order" => "查看列表出金訂單",
     "view_any_deposit_order" => "查看列表入金訂單",
+    "view_user_qr_code" => "查看用戶OTP QR Code",
 
 ];
