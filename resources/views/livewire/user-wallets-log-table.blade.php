@@ -16,22 +16,20 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($activityLogs as $wallet)
-                    @foreach ($wallet->activityLogs ?? [] as $activity_log)
-                    <tr class="border-t border-gray-200 dark:border-gray-700">
-                        <td class="px-4 py-2 text-center text-gray-900 dark:text-gray-100 w-1/4">{{ $activity_log->created_at }}</td>
-                        <td class="px-4 py-2 text-center text-gray-900 dark:text-gray-100 w-1/4">{{ $activity_log->content }}</td>
-                        <td class="px-4 py-2 text-center text-gray-900 dark:text-gray-100 w-1/4">
-                            {{ $activity_log->balance_change }}
-                        </td>
-                        <td class="px-4 py-2 text-center w-1/4">
-                            {{ $activity_log->causer_name }}
-                        </td>
-                        <td class="px-4 py-2 text-center w-1/4">
-                            {{ $activity_log->causer_job_title }}
-                        </td>
-                    </tr>
-                    @endforeach
+                @foreach ($activityLogs as $activity_log)
+                <tr class="border-t border-gray-200 dark:border-gray-700">
+                    <td class="px-4 py-2 text-center text-gray-900 dark:text-gray-100 w-1/4">{{ $activity_log->created_at }}</td>
+                    <td class="px-4 py-2 text-center text-gray-900 dark:text-gray-100 w-1/4">{{ $activity_log->content }}</td>
+                    <td class="px-4 py-2 text-center text-gray-900 dark:text-gray-100 w-1/4">
+                        {{ $activity_log->balance_change }}
+                    </td>
+                    <td class="px-4 py-2 text-center w-1/4">
+                        {{ $activity_log->causer_name }}
+                    </td>
+                    <td class="px-4 py-2 text-center w-1/4">
+                        {{ $activity_log->causer_job_title }}
+                    </td>
+                </tr>
                 @endforeach
             </tbody>
         </table>
