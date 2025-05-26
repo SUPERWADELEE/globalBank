@@ -56,5 +56,7 @@ return [
     'buy' => '會員買入',
     'sell' => '會員賣出',
     'unit_price' => '單位價格',
-
+    'no_otp_secret' => '尚未產生密鑰',
+    'qr_code_description' => '請使用 Google Authenticator 或其他 TOTP 應用程式掃描此 QR Code',
+    'qr_code' => 'OTP QR Code',
 ];

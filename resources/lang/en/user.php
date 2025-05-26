@@ -54,4 +54,6 @@ return [
     'buy' => 'Member Buy',
     'sell' => 'Member Sell',
     'unit_price' => 'Unit Price',
+    'no_otp_secret' => 'No OTP secret generated yet',
+    'qr_code_description' => 'Please use Google Authenticator or other TOTP apps to scan this QR Code',
 ]; 

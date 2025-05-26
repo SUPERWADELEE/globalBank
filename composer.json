@@ -8,10 +8,12 @@
     "require": {
         "php": "^8.2",
         "bezhansalleh/filament-shield": "^3.3",
+        "endroid/qr-code": "^6.0",
         "filament/filament": "3.3.16",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "pxlrbt/filament-activity-log": "^1.1"
+        "pxlrbt/filament-activity-log": "^1.1",
+        "robthree/twofactorauth": "^3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

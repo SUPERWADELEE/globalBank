@@ -21,6 +21,7 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action as TableAction;
 use App\Filament\Filters\CommonFilters;
 use App\Filament\Filters\CommonDateFilters;
+use Filament\Tables\Columns\TextColumn;
 
 class UserResource extends Resource
 {
@@ -125,6 +126,26 @@ class UserResource extends Resource
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('show_qr')
+                    ->label('顯示 QR Code')
+                    ->icon('heroicon-o-qr-code')
+                    ->modalHeading('TOTP QR Code')
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('關閉')
+                    ->visible(fn(User $record) => Auth::user()->can('viewQrCode', $record))
+                    ->modalContent(function ($record) {
+                        if (!$record->otp_secret) {
+                            return view('components.simple-text', ['text' => __('user.no_otp_secret')]);
+                        }
+                        $tfa = new \RobThree\Auth\TwoFactorAuth(new \RobThree\Auth\Providers\Qr\EndroidQrCodeProvider());
+                        $label = 'Global Exchange:' . $record->username;
+                        $qr = $tfa->getQRCodeImageAsDataUri($label, $record->otp_secret);
+                        return view('components.qr-code-display', [
+                            'qrCode' => $qr,
+                            'email' => $record->email,
+                            'secret' => $record->otp_secret,
+                        ]);
+                    }),
                 Tables\Actions\Action::make('wallet')
                     ->label(__('user.account_operation'))
                     ->url(fn(User $record) => UserResource::getUrl('user-wallet-page', ['record' => $record->id]))
