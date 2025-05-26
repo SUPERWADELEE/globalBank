@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'from_currency' => '用戶買入貨幣',
-    'to_currency' => '用戶賣出貨幣',
+    'from_currency' => '用戶賣出貨幣',
+    'to_currency' => '用戶買入貨幣',
     'rate' => '匯率',
     'title' => '匯率設定',
     'description' => '匯率設定',
