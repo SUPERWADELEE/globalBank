@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Wallet;
 use App\Models\AdminUser;
 use Brick\Math\BigDecimal;
+use Brick\Math\RoundingMode;
 
 class UserWalletsLogTable extends Component
 {
@@ -54,8 +55,7 @@ class UserWalletsLogTable extends Component
         $oldBalance = BigDecimal::of($activityLog->properties['old']['balance'] ?? 0);
         $newBalance = BigDecimal::of($activityLog->properties['attributes']['balance'] ?? 0);
 
-        $activityLog->balance_change = $newBalance->minus($oldBalance)->toScale(2); // 保留 2 位小數
-
+        $activityLog->balance_change = $newBalance->minus($oldBalance)->toScale(2, RoundingMode::HALF_UP);
 
         $currencyCode = Wallet::find($activityLog->subject_id)?->currencyCode?->code ?? '';
 
