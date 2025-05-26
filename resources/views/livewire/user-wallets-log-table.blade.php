@@ -1,7 +1,7 @@
 <x-filament::section>
 
     <x-filament::section.heading class="mb-5">
-        出入金紀錄
+        {{ __('user_wallets_log.title') }}
     </x-filament::section.heading>
 
     <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 ">
