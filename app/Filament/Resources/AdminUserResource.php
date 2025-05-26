@@ -19,6 +19,7 @@ use App\Models\AdminUserTeam;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Set;
 use Illuminate\Support\Str;
+use App\Filament\Filters\CommonFilters;
 
 class AdminUserResource extends Resource
 {
@@ -113,45 +114,7 @@ class AdminUserResource extends Resource
                     ->label(__('admin_user.team.name')),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('name')
-                    ->label(__('admin_user.username'))
-                    ->options(function () {
-                        return \App\Models\AdminUser::pluck('name', 'name')->toArray();
-                    })->searchable(),
-                Tables\Filters\SelectFilter::make('job_title')
-                    ->label(__('admin_user.job_title'))
-                    ->options(function () {
-                        return \App\Models\AdminUser::query()
-                            ->whereNotNull('job_title')     
-                            ->distinct()                   
-                            ->pluck('job_title', 'job_title')
-                            ->toArray();
-                    })
-                    ->searchable(),
-                Tables\Filters\SelectFilter::make('team_id')
-                    ->label(__('admin_user.team.name'))
-                    ->options(function () {
-                        return \App\Models\AdminUserTeam::pluck('name', 'id')->toArray();
-                    })->searchable(),
-
-                Tables\Filters\SelectFilter::make('role')
-                    ->label(__('role.role_name'))
-                    ->options(function () {
-                        return \Spatie\Permission\Models\Role::whereIn('id', function ($query) {
-                            $query->select('role_id')
-                                ->from('model_has_roles')
-                                ->where('model_type', 'App\\Models\\AdminUser');
-                        })
-                            ->pluck('name', 'id')
-                            ->toArray();
-                    })
-                    ->query(function ($query, array $data) {
-                        if (isset($data['value'])) {
-                            $query->whereHas('roles', function ($q) use ($data) {
-                                $q->where('id', $data['value']);
-                            });
-                        }
-                    })->searchable(),
+                CommonFilters::textLike('name', __('admin_user.name'), __('common.placeholder')),
             ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\EditAction::make()
