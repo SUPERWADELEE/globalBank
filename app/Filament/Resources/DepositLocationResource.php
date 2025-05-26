@@ -17,6 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Notifications\Notification;
+use Illuminate\Validation\Rule;
 
 class DepositLocationResource extends Resource
 {
@@ -45,10 +46,12 @@ class DepositLocationResource extends Resource
                     ->label(__('admin_user.deposit_location.location'))
                     ->required()
                     ->visible(!$isEdit)
-                    ->unique(ignoreRecord: true)
                     ->minLength(34)
                     ->maxLength(34)
-                    ->rule('regex:/^T[a-zA-Z0-9]{33}$/'),
+                    ->rule([
+                        'regex:/^T[a-zA-Z0-9]{33}$/',
+                        Rule::unique('deposit_locations', 'location')->whereNull('deleted_at')->ignore($isEdit ? $form->model->id : null),
+                    ]),
 
                 Select::make('channel')
                     ->label(__('admin_user.deposit_location.channel'))
