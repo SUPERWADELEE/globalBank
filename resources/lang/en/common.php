@@ -33,5 +33,7 @@ return [
     'order_management' => 'Order Management',
     'tx_hash' => 'TxID',
     'mark_as_completed' => 'Approve',
+    'placeholder' => 'Please enter search keywords',
     'mark_as_failed' => 'Reject',
+    'refresh' => 'Refresh',
 ]; 

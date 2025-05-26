@@ -56,7 +56,7 @@ return [
         'admin_user_team' => 'Operator Team Management',
     ],
     'operation_log' => 'Operation Log',
-    'job_title' => 'Job Title',
+    'username' => 'Username',
     'current_password' => 'Current Password',
     'new_password' => 'New Password',
     'new_password_confirmation' => 'Confirm New Password',
@@ -88,4 +88,13 @@ return [
         'subject' => 'Module',
     ],
     'remember_me' => 'Remember Me',
+    'invalid_credentials' => 'Invalid username or password',
+    'user_team' => [
+        'title' => 'Team Management',
+        'navigation_label' => 'Team Management',
+        'name' => 'Team Name',
+        'description' => 'Team Description',
+        'create' => 'Create Team',
+    ],
+    'job_title' => 'Job Title',
 ];
