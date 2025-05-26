@@ -148,7 +148,9 @@ class RoleResource extends Resource
                                 ->options(
                                     self::getDbFilteredPermissions(
                                         includeOrPatterns: ['view_any_rate', 'edit_'],
-                                        includeAndPatterns: ['rate']
+                                        includeAndPatterns: ['rate'],
+                                        excludePatterns: ['rate_rate', 'edit_rate']
+
                                     )
                                 )
                                 ->bulkToggleable(),
