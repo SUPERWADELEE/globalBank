@@ -13,6 +13,7 @@ use App\Enums\DepositLocationStatus;
 use App\Models\CustomActivity;
 use App\Models\AdminUserTeam;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Filters\CommonFilters;
 
 
 class AdminLogResource extends Resource
@@ -112,13 +113,13 @@ class AdminLogResource extends Resource
 
             ->defaultSort('created_at', 'desc')
             ->filters([
-                Tables\Filters\SelectFilter::make('causer_id')
-                    ->label(__('admin_user.activity_log.causer'))
-                    ->options(
-                        \App\Models\AdminUser::pluck('name', 'id')
-                    )
-                    ->default(request('causer_id')),
-                //
+                CommonFilters::relationTextLike(
+                    'causer',
+                    'name',
+                    'causer_name',
+                    __('admin_user.activity_log.causer'),
+                    __('common.placeholder')
+                ),
             ], layout: FiltersLayout::AboveContent)
             ->actions([]);
     }
