@@ -46,6 +46,7 @@ class RoleResource extends Resource
                     Grid::make(2)->schema([
                         // 白名單
                         Fieldset::make(__('system_management.title'))->schema([
+                             // 白名單
                             CheckboxList::make('permissions')
                                 ->relationship('permissions', 'name')
                                 ->columns(4)
