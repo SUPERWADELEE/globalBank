@@ -349,12 +349,12 @@ class AdminLogResource extends Resource
             ]);
         }
 
-        // 其他事件或沒有 status 變更，就走預設訊息
-        return __("activity.default_operation", [
-            'causer'  => $causerName,
-            'subject' => $location,
-            'event'   => $event,
-        ]);
+        if ($event === 'deleted') {
+            return __('activity.deposit_location_deleted', [
+                'causer'   => $causerName,
+                'location' => $location,
+            ]);
+        }
     }
 
     // 針對 User

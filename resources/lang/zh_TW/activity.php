@@ -42,6 +42,7 @@ return [
     'withdraw_created' => '操作員 :causer 為會員 :member 出金 :amount :currency',
     'deposit_location_created' => '操作員 :causer 新增了入金地址 :location。',
     'deposit_location_updated' => '操作員 :causer 更新了入金地址資料的:subject 的:changes。',
+    'deposit_location_deleted' => '操作員 :causer 刪除了入金地址 :location。',
     'deposit_location_change_line' => ':field 從「:old」變更為「:new」',
     'deposit_location_fields' => [
         'currency_code_id' => '幣別',
