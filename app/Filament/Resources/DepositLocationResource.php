@@ -17,6 +17,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Notifications\Notification;
+
 class DepositLocationResource extends Resource
 {
     protected static ?string $model = DepositLocation::class;
@@ -43,7 +44,11 @@ class DepositLocationResource extends Resource
                 TextInput::make('location')
                     ->label(__('admin_user.deposit_location.location'))
                     ->required()
-                    ->visible(!$isEdit),
+                    ->visible(!$isEdit)
+                    ->unique(ignoreRecord: true)
+                    ->minLength(34)
+                    ->maxLength(34)
+                    ->rule('regex:/^T[a-zA-Z0-9]{33}$/'),
 
                 Select::make('channel')
                     ->label(__('admin_user.deposit_location.channel'))
