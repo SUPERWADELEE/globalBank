@@ -26,14 +26,24 @@ class UserWalletsLogTable extends Component
 
     private function getFormattedWalletActivityLogs()
     {
-        return $this->user->wallets()->with('activityLogs')->get()->map(function ($wallet) {
-            $wallet->activityLogs = $wallet->activityLogs->map(fn($log) => $this->formatActivityLog($log));
-            return $wallet;
+        $allActivityLogs = collect();
+
+        $this->user->wallets()->with(['activityLogs' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])->get()->each(function ($wallet) use ($allActivityLogs) {
+            $wallet->activityLogs->each(function ($log) use ($allActivityLogs) {
+                $formattedLog = $this->formatActivityLog($log);
+                $allActivityLogs->push($formattedLog);
+            });
         });
+
+        return $allActivityLogs->sortByDesc('created_at');
     }
 
+    // 拿到金額變動及操作內容
     private function formatActivityLog($activityLog)
     {
+
         $activityLog->causer_name = $activityLog->causer_type === AdminUser::class
             ? AdminUser::find($activityLog->causer_id)?->name
             : null;
