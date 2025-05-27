@@ -93,6 +93,9 @@ class AdminLogResource extends Resource
                             case 'Spatie\Permission\Models\Role':
                                 $unit = __('admin_user.navigation.role_management');
                                 break;
+                            case 'App\Models\Fee':
+                                $unit = __('usdt_setting.navigation.edit_fee_settings');
+                                break;
                             default:
                                 $unit = '其他';
                         }

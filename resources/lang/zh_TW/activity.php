@@ -17,6 +17,7 @@ return [
         'Spatie\\Permission\\Models\\Role' => '系統設置',
         'App\\Models\\DepositOrder' => '訂單管理',
         'App\\Models\\WithdrawOrder' => '訂單管理',
+        'App\\Models\\Fee' => 'USDT設定',
     ],
     'event_names' => [
         'created' => '新增',
