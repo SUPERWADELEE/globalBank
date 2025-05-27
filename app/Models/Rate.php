@@ -50,13 +50,14 @@ class Rate extends Model
 
     public function getActivitylogOptions(): LogOptions
     {
-        $adminUser = Auth::user()->name;
+        
+        $adminUser = Auth::user() ? Auth::user()->name : 'System';
         return LogOptions::defaults()
             ->logAll()
             ->logOnly(['buy_rate', 'sell_rate'])
             ->logOnlyDirty()
             ->setDescriptionForEvent(function (string $eventName) use ($adminUser) {
-                $subjectName = $this->name;
+                $subjectName = $this->name ?? 'Rate';
                 return __('activity.log_description', [
                     'causer' => $adminUser,
                     'subject' => $subjectName,

@@ -47,7 +47,8 @@ class AdminUser extends Authenticatable
 
     public function getActivitylogOptions(): LogOptions
     {
-        $adminUser = Auth::user()->name;
+        
+        $adminUser = Auth::user() ? Auth::user()->name : 'System';
         return LogOptions::defaults()
             ->logAll()
             ->logOnly(['name', 'email', 'locale', 'job_title', 'team_id'])

@@ -28,7 +28,7 @@ class Fee extends Model
     }
     public function getActivitylogOptions(): LogOptions
     {
-        // 檢查是否有已登入的用戶，如果沒有（如在 seeder 中）則使用預設值
+        
         $adminUser = Auth::user() ? Auth::user()->name : 'System';
         return LogOptions::defaults()
             ->logAll()

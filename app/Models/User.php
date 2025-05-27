@@ -79,7 +79,8 @@ class User extends Authenticatable
     }
     public function getActivitylogOptions(): LogOptions
     {
-        $adminUser = Auth::user()->name;
+        
+        $adminUser = Auth::user() ? Auth::user()->name : 'System';
         return LogOptions::defaults()
             ->logAll()
             ->logOnly(['name', 'email', 'username', 'register_location', 'phone', 'status', 'user_level_id'])

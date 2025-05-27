@@ -72,7 +72,7 @@ class ExchangeOrder extends Model
     
     public function getActivitylogOptions(): LogOptions
     {
-        $adminUser = Auth::user()->name;
+        $adminUser = Auth::user() ? Auth::user()->name : 'System';
         return LogOptions::defaults()
             ->logAll()
             ->logOnly(['amount_from', 'amount_to', 'rate'])
