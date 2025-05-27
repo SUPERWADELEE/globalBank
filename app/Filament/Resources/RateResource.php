@@ -46,14 +46,16 @@ class RateResource extends Resource
                     ->numeric()
                     ->minValue(0)
                     ->step(0.01)
-                    ->required()
+                    ->rules(['required'])
+                    ->markAsRequired()
                     ->disabled(fn($record) => !$record || Gate::denies('edit', $record)),
                 TextInput::make('buy_rate')
                     ->label(__('rate.buy_rate'))
                     ->numeric()
                     ->minValue(0)
                     ->step(0.01)
-                    ->required()
+                    ->rules(['required'])
+                    ->markAsRequired()
                     ->disabled(fn($record) => !$record || Gate::denies('edit', $record)),
             ]);
     }
