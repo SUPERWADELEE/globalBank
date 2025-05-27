@@ -100,7 +100,7 @@ class AdminUserResource extends Resource
                 TextInput::make('password_confirmation')
                     ->label(__('admin_user.confirm_password'))
                     ->password()
-                    ->required(fn($livewire) => $livewire instanceof Pages\CreateAdminUser)
+                    ->requiredWith('password')
                     ->dehydrated(fn($state) => filled($state))
                     ->maxLength(255)
                     ->revealable(),
