@@ -97,9 +97,10 @@ class AccountSettings extends Page implements HasForms
                     ->options(collect(LocaleEnum::cases())->mapWithKeys(fn($case) => [
                         $case->value => $case->label()
                     ])->toArray())
+                    ->rules(['required'])
                     ->default(LocaleEnum::TraditionalChinese->value)
-                    ->required()
-                    ->disabled(fn() => !Auth::user()->can('edit_account_settings')),
+                    ->disabled(fn() => !Auth::user()->can('edit_account_settings'))
+                    ->markAsRequired(),
             ])
         ];
     }
