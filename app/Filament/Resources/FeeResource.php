@@ -23,7 +23,8 @@ class FeeResource extends Resource
             ->schema([
                 TextInput::make('amount')
                     ->label(__('usdt_setting.fee_amount'))
-                    ->required()
+                    ->rules(['required'])
+                    ->markAsRequired()
                     ->numeric()
                     ->minValue(0)
                     ->maxValue(100)
