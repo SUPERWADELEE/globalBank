@@ -33,7 +33,8 @@ class AdminIpWhiteListResource extends Resource
         return $form
             ->schema([
                 TextInput::make('ip_address')
-                    ->required()
+                    ->rules(['required'])
+                    ->markAsRequired()
                     ->maxLength(255)
                     ->label(__('admin_ip_white_list.ip_address'))
                     ->rule([
