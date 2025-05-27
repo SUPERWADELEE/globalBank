@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class CurrencyCode extends Model
 {
     use HasFactory, LogsActivity;
+    const USDT_ID = 4;
 
     /**
      * The attributes that are mass assignable.
