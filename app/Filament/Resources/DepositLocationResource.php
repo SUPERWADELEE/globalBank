@@ -44,12 +44,14 @@ class DepositLocationResource extends Resource
                 Select::make('currency_code_id')
                     ->label(__('admin_user.deposit_location.currency_code'))
                     ->options(DepositCode::class)
-                    ->required()
+                    ->rules(['required'])
+                    ->markAsRequired()
                     ->visible(!$isEdit),
 
                 TextInput::make('location')
                     ->label(__('admin_user.deposit_location.location'))
-                    ->required()
+                    ->rules(['required'])
+                    ->markAsRequired()
                     ->visible(!$isEdit)
                     ->minLength(34)
                     ->maxLength(34)
@@ -61,13 +63,15 @@ class DepositLocationResource extends Resource
                 Select::make('channel')
                     ->label(__('admin_user.deposit_location.channel'))
                     ->options(DepositChannel::class)
-                    ->required()
+                    ->rules(['required'])
+                    ->markAsRequired()
                     ->visible(!$isEdit),
 
                 Select::make('status')
                     ->label(__('admin_user.deposit_location.status'))
                     ->options(DepositLocationStatus::class)
-                    ->required(),
+                    ->rules(['required'])
+                    ->markAsRequired(),
             ]);
     }
 
