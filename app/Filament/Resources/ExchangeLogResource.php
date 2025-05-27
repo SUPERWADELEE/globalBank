@@ -18,7 +18,7 @@ class ExchangeLogResource extends Resource
 {
     protected static ?string $model = ExchangeOrder::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-receipt-percent';
 
     public static function getNavigationGroup(): ?string
     {

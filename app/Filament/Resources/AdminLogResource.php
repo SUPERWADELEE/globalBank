@@ -20,7 +20,7 @@ class AdminLogResource extends Resource
 {
     protected static ?string $model = CustomActivity::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clock';
 
     public static function getNavigationGroup(): ?string
     {
