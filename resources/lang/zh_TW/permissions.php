@@ -149,5 +149,6 @@ return [
     "view_any_withdraw_order" => "查看列表出金訂單",
     "view_any_deposit_order" => "查看列表入金訂單",
     "view_user_qr_code" => "查看用戶OTP QR Code",
-
+    "view_any_fee" => "查看列表手續費",
+    "update_fee" => "編輯手續費",
 ];

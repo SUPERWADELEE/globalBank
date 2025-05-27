@@ -143,4 +143,6 @@ return [
     "page_AccountSettings" => "Account Settings",
     "view_withdraw_log" => "View Withdrawal Record",
     "view_any_withdraw_log" => "View Withdrawal Record List",
+    "view_any_fee" => "View List Fee",
+    "update_fee" => "Edit Fee",
 ]; 

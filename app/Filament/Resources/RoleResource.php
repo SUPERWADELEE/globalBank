@@ -245,6 +245,16 @@ class RoleResource extends Resource
                                 )
                                 ->bulkToggleable()
                                 ->label(__('deposit_location.title')),
+                            CheckboxList::make('permissions')
+                            ->relationship('permissions', 'name')
+                            ->columns(4)
+                            ->options(
+                                self::getDbFilteredPermissions(
+                                    includeOrPatterns: ['view_any_fee', 'update_fee']
+                                )
+                            )
+                            ->bulkToggleable()
+                            ->label(__('usdt_setting.fee.title')),
                         ]),
                         // 交易紀錄
                         Fieldset::make(__('record.title'))->schema([
