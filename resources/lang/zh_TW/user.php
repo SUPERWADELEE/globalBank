@@ -59,4 +59,5 @@ return [
     'no_otp_secret' => '尚未產生密鑰',
     'qr_code_description' => '請使用 Google Authenticator 或其他 TOTP 應用程式掃描此 QR Code',
     'qr_code' => 'OTP QR Code',
+    'show_qr_code' => '顯示 QR Code',
 ];

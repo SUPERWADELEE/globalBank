@@ -58,4 +58,6 @@ return array (
   'no_otp_secret' => '아직 비밀키가 생성되지 않았습니다',
   'qr_code_description' => 'Google Authenticator 또는 기타 TOTP 애플리케이션으로 이 QR 코드를 스캔하세요',
   'qr_code' => 'OTP QR 코드',
+  'show_qr_code' => 'QR 코드 표시',
+  'qr_code' => 'TOTP QR 코드',
 );

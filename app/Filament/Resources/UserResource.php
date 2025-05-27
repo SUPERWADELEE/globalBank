@@ -138,11 +138,11 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('show_qr')
-                    ->label('顯示 QR Code')
+                    ->label(__('user.show_qr_code'))
                     ->icon('heroicon-o-qr-code')
-                    ->modalHeading('TOTP QR Code')
+                    ->modalHeading(__('user.qr_code'))
                     ->modalSubmitAction(false)
-                    ->modalCancelActionLabel('關閉')
+                    ->modalCancelActionLabel(__('common.close'))
                     ->visible(fn(User $record) => Auth::user()->can('view_user_qr_code'))
                     ->modalContent(function ($record) {
                         if (!$record->otp_secret) {

@@ -58,4 +58,6 @@ return array (
   'no_otp_secret' => 'まだ秘密鍵が生成されていません',
   'qr_code_description' => 'Google Authenticator またはその他の TOTP アプリでこの QR コードをスキャンしてください',
   'qr_code' => 'OTP QR コード',
+  'show_qr_code' => 'QR コード表示',
+  'qr_code' => 'TOTP QR コード',
 );

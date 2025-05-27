@@ -56,4 +56,6 @@ return [
     'unit_price' => 'Unit Price',
     'no_otp_secret' => 'No OTP secret generated yet',
     'qr_code_description' => 'Please use Google Authenticator or other TOTP apps to scan this QR Code',
+    'show_qr_code' => 'Show QR Code',
+    'qr_code' => 'TOTP QR Code',
 ]; 
