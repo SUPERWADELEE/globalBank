@@ -7,4 +7,7 @@ return [
         'edit_fee_settings' => 'Edit Fee Settings',
     ],
     'fee_amount' => 'Fee Amount',
+    'fee' => [
+        'title' => 'Fee',
+    ]
 ];
