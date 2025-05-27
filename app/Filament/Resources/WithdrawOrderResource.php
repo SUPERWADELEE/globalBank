@@ -23,9 +23,16 @@ use App\Models\WithdrawOrder;
 class WithdrawOrderResource extends Resource
 {
     protected static ?string $model = WithdrawOrder::class;
-    protected static ?string $modelLabel       = '出金訂單';
-    protected static ?string $pluralModelLabel = '出金訂單列表';
 
+    public static function getModelLabel(): string
+    {
+        return __('withdraw.order.title');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('withdraw.order.title') . ' ' . __('common.list');
+    }
     protected static ?string $navigationIcon = 'heroicon-o-arrow-down-tray';
 
     public static function getNavigationGroup(): ?string
