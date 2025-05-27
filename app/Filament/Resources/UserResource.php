@@ -62,8 +62,9 @@ class UserResource extends Resource
                     ->label(__('user.register_location'))
                     ->options(AdminUserTeam::pluck('name', 'name')->toArray())
                     ->searchable()     
-                    ->required()
-                    ->label(__('user.register_location')),
+                    ->label(__('user.register_location'))
+                    ->rules(['required'])
+                    ->markAsRequired(),
                 TextInput::make('phone')
                     ->rules(['required'])
                     ->maxLength(255)
