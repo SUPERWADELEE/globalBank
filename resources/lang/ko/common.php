@@ -33,5 +33,8 @@ return [
     'order_management' => '주문 관리',
     'tx_hash' => 'TxID',
     'mark_as_completed' => '승인',
+    'placeholder' => '검색 키워드를 입력하세요',
     'mark_as_failed' => '거부',
+    'refresh' => '새로고침',
+    'list' => '목록',
 ]; 

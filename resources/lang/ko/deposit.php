@@ -33,5 +33,5 @@ return [
         'failed' => '실패',
         'status' => '상태',
     ],
-   
+    'refresh' => '새로고침',
 ]; 
