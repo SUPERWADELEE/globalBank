@@ -22,6 +22,7 @@ use Filament\Tables\Actions\Action as TableAction;
 use App\Filament\Filters\CommonFilters;
 use App\Filament\Filters\CommonDateFilters;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Component;
 
 class UserResource extends Resource
 {
@@ -41,35 +42,44 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->required()
                     ->maxLength(255)
-                    ->label(__('user.name')),
+                    ->label(__('user.name'))
+                    ->rules(['required'])
+                    ->markAsRequired(),
                 TextInput::make('email')
-                    ->email()
-                    ->required()
+                    ->rules(['required', 'email']) 
                     ->unique(ignoreRecord: true)
                     ->maxLength(255)
-                    ->label(__('user.email')),
+                    ->label(__('user.email'))
+                    ->markAsRequired(),
                 TextInput::make('username')
-                    ->required()
+                    ->rules(['required'])
                     ->maxLength(255)
                     ->label(__('user.username'))
-                    ->unique(ignoreRecord: true),
+                    ->unique(ignoreRecord: true)
+                    ->markAsRequired(),
                 Select::make('register_location')
                     ->label(__('user.register_location'))
                     ->options(AdminUserTeam::pluck('name', 'name')->toArray())
-                    ->searchable()     // 可搜尋
+                    ->searchable()     
                     ->required()
                     ->label(__('user.register_location')),
                 TextInput::make('phone')
-                    ->required()
+                    ->rules(['required'])
                     ->maxLength(255)
                     ->label(__('user.phone'))
-                    ->tel(),
+                    ->tel()
+                    ->markAsRequired(),
                 TextInput::make('password')
                     ->label(__('user.password'))
                     ->password()
-                    ->required(fn($livewire) => $livewire->record === null)
+                    ->rules(
+                        fn (Component $component): array => [
+                            $component->getLivewire()->record === null
+                                ? 'required'             
+                                : 'nullable',            
+                        ]
+                    )
                     ->revealable()
                     ->suffixAction(
                         Action::make('generatePassword')
@@ -82,12 +92,14 @@ class UserResource extends Resource
                             )
                     )
                     ->default(Str::random(12))
+                    ->markAsRequired()
                     ->maxLength(255),
 
                 Select::make('user_level_id')
+                    ->rules(['required'])
                     ->options(UserLevel::pluck('name', 'id')->toArray())
-                    ->label(__('user.level')),
-
+                    ->label(__('user.level'))
+                    ->markAsRequired(),
             ]);
     }
 
