@@ -51,7 +51,8 @@ class WithdrawOrderResource extends Resource
             ->schema([
                 TextInput::make('tx_hash')
                     ->label(__('common.tx_hash'))
-                    ->required()
+                    ->rules(['required'])
+                    ->markAsRequired()
                     ->maxLength(255),
             ]);
     }
