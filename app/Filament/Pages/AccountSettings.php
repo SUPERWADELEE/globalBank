@@ -75,9 +75,9 @@ class AccountSettings extends Page implements HasForms
 
                 TextInput::make('current_password')
                     ->label(__('admin_user.current_password'))
-                    ->rule('current_password')
-                    ->required()
+                    ->rules(['required', 'current_password'])
                     ->disabled(fn() => !Auth::user()->can('edit_account_settings'))
+                    ->markAsRequired()
                     ->password(),
 
                 TextInput::make('new_password')
@@ -89,7 +89,8 @@ class AccountSettings extends Page implements HasForms
                     ->label(__('admin_user.new_password_confirmation'))
                     ->password()
                     ->disabled(fn() => !Auth::user()->can('edit_account_settings'))
-                    ->same('new_password'),
+                    ->same('new_password')
+                    ->requiredWith('new_password'),
 
                 Select::make('locale')
                     ->label(__('admin_user.locale'))
