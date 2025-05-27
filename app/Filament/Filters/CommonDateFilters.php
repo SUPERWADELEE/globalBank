@@ -22,8 +22,11 @@ class CommonDateFilters
             ->label($label ?? __('user.register_time'))
             ->form([
                 DatePicker::make('from')
+                    ->native(false)
+                    ->displayFormat('Y-m-d')
                     ->label($fromLabel ?? __('user.start_date'))
                     ->reactive()
+                    ->locale('en')
                     ->afterStateUpdated(function ($state, callable $set, callable $get) {
                         if ($state && $get('until') && $state > $get('until')) {
                             $set('from', null);
@@ -33,9 +36,13 @@ class CommonDateFilters
                                 ->send();
                         }
                     }),
+
                 DatePicker::make('until')
+                    ->native(false)
+                    ->displayFormat('Y-m-d')
                     ->label($untilLabel ?? __('user.end_date'))
                     ->reactive()
+                    ->locale('en') 
                     ->afterStateUpdated(function ($state, callable $set, callable $get) {
                         if ($state && $get('from') && $state < $get('from')) {
                             $set('until', null);
