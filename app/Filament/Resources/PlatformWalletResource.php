@@ -33,7 +33,18 @@ class PlatformWalletResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('currencyCode.code')
-                    ->label(__('platform_wallet.USDT_balance')),
+                    ->label(__('platform_wallet.USDT_balance'))
+                    ->html()
+                    ->formatStateUsing(function ($state) {
+                        $iconMap = [
+                            'USDT' => '/images/coin/usdt.png',
+                            'KRW' => '/images/coin/krw.png',
+                            'JPY' => '/images/coin/jpy.png',
+                            'SGD' => '/images/coin/sgd.png',
+                        ];
+                        $icon = $iconMap[$state] ?? '/images/coin/default.svg';
+                        return "<img src='{$icon}' style='width: 24px;vertical-align:middle;margin-right:4px;' alt='{$state}'> {$state}";
+                    }),
 
                 Tables\Columns\TextColumn::make('amount')
                     ->label($usdtTotal),
