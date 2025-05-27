@@ -30,6 +30,11 @@ class DepositLocationResource extends Resource
         return __('admin_user.deposit_location.navigation_label');
     }
 
+    public static function getNavigationGroup(): ?string
+    {
+        return __('usdt_setting.navigation.usdt_settings');
+    }
+
     public static function form(Form $form): Form
     {
         $isEdit = request()->routeIs('filament.admin.resources.deposit-locations.edit');
