@@ -41,7 +41,8 @@ class RoleResource extends Resource
                 TextInput::make('name')
                     ->label('群組名稱')
                     ->unique(ignoreRecord: true)
-                    ->required(),
+                    ->rules(['required'])
+                    ->markAsRequired(),
                 Section::make('權限分配')->schema([
                     Grid::make(2)->schema([
                        
