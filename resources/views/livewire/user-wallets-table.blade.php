@@ -1,6 +1,6 @@
 <x-filament::section>
     <x-filament::section.heading class="mb-5">
-        出入金操作
+        {{ __('wallet.deposit_withdraw_operation') }}
     </x-filament::section.heading>
 
     <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 ">
@@ -59,7 +59,7 @@
                             @if($isProcessing)
                                 <x-filament::loading-indicator class="h-4 w-4" />
                             @endif
-                            入金
+                            {{ __('wallet.actions.deposit') }}
                         </x-filament::button>
                         @endif
 
@@ -72,7 +72,7 @@
                             @if($isProcessing)
                                 <x-filament::loading-indicator class="h-4 w-4" />
                             @endif
-                            出金
+                            {{ __('wallet.actions.withdraw') }}
                         </x-filament::button>
                         @endif
                     </td>

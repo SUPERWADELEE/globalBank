@@ -9,4 +9,5 @@ return [
         'withdraw' => '出金',
     ],
     'confirm_operation' => '確定要執行這個 :action 操作嗎？',
+    'deposit_withdraw_operation' => '出入金操作',
 ];

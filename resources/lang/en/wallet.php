@@ -8,4 +8,5 @@ return [
         'deposit'  => 'Deposit',
         'withdraw' => 'Withdraw',
     ],
+    'deposit_withdraw_operation' => 'Deposit/Withdraw Operation',
 ];
