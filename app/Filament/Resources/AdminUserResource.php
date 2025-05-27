@@ -20,6 +20,7 @@ use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Set;
 use Illuminate\Support\Str;
 use App\Filament\Filters\CommonFilters;
+use Filament\Forms\Components\Component;
 
 class AdminUserResource extends Resource
 {
@@ -40,35 +41,42 @@ class AdminUserResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->label(__('admin_user.username'))
-                    ->required()
-                    ->maxLength(255)
-                    ->rules(['regex:/^[\pL\pN\s]+$/u']), // 只允許字母（含中英文）、數字與空白
+                    ->rules(['required'])
+                    ->markAsRequired()
+                    ->maxLength(255),
                 Select::make('roles')
                     ->label(__('admin_user.roles'))
                     ->options(Role::all()->pluck('name', 'id'))
-                    ->required()
+                    ->rules(
+                        fn (Component $component): array => [
+                            $component->getLivewire()->record === null
+                                ? 'required'             
+                                : 'nullable',            
+                        ]
+                    )
+                    ->markAsRequired()
                     ->afterStateHydrated(function ($component, $state, ?AdminUser $record) {
                         // 如果是編輯現有記錄
                         if ($record) {
-                            // 從數據庫中獲取該AdminUser的角色ID
                             $roleIds = DB::table('model_has_roles')
                                 ->where('model_id', $record->id)
                                 ->where('model_type', 'App\\Models\\AdminUser')
                                 ->pluck('role_id')
                                 ->toArray();
-
                             // 設置選中的角色
                             $component->state($roleIds);
                         }
                     }),
                 TextInput::make('job_title')
                     ->label(__('admin_user.job_title'))
-                    ->required()
+                    ->rules(['required'])
+                    ->markAsRequired()
                     ->maxLength(255),
                 Select::make('team_id')
                     ->label(__('admin_user.team.name'))
                     ->options(AdminUserTeam::all()->pluck('name', 'id'))
-                    ->required(),
+                    ->rules(['required'])
+                    ->markAsRequired(),
 
                 TextInput::make('password')
                     ->label(__('admin_user.password'))
