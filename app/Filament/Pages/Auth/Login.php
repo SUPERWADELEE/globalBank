@@ -26,7 +26,8 @@ class Login extends BaseAuth
     {
         return TextInput::make('name')
             ->label(__('admin_user.name'))
-            ->required()
+            ->rules(['required'])
+            ->markAsRequired()
             ->autocomplete()
             ->autofocus();
     }
@@ -35,7 +36,8 @@ class Login extends BaseAuth
     {
         return TextInput::make('password')
             ->label(__('admin_user.password'))
-            ->required()
+            ->rules(['required'])
+            ->markAsRequired()
             ->autocomplete()
             ->password();
     }
