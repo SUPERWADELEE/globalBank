@@ -36,4 +36,5 @@ return [
     'placeholder' => 'Please enter search keywords',
     'mark_as_failed' => 'Reject',
     'refresh' => 'Refresh',
+    'list' => 'List',
 ]; 
