@@ -97,4 +97,5 @@ return [
         'description' => '單位描述',
         'create' => '新增單位',
     ],
+    'unknown_operator' => '未知操作者',
 ];

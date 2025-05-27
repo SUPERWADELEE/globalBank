@@ -97,4 +97,5 @@ return [
         'create' => 'Create Team',
     ],
     'job_title' => 'Job Title',
+    'unknown_operator' => 'Unknown Operator',
 ];

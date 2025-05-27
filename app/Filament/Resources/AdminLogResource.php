@@ -152,7 +152,7 @@ class AdminLogResource extends Resource
      */
     protected static function formatDescription($state, $record)
     {
-        $causerName = optional($record->causer)->name ?? '未知操作者';
+        $causerName = optional($record->causer)->name ?? __('admin_user.unknown_operator');
         // 操作對象
         $subject = $record->subject;
         $event = $record->event;
@@ -521,7 +521,7 @@ class AdminLogResource extends Resource
             ]);
         }
 
-        return "操作員 {$causerName} " . implode('，', $messages) . '。';
+        return __('admin_user.admin_user') . " {$causerName} " . implode('，', $messages) . '。';
     }
 
     // 針對 AdminIpWhitelist

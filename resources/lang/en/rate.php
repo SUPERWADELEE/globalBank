@@ -10,4 +10,5 @@ return [
     'updated_at' => 'Updated At',
     'sell_rate' => 'Sell Rate',
     'buy_rate' => 'Buy Rate',
+    'edit_rate' => 'Edit Rate',
 ];
