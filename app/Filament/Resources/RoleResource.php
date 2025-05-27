@@ -39,11 +39,11 @@ class RoleResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label('群組名稱')
+                    ->label(__('role.role_name'))
                     ->unique(ignoreRecord: true)
                     ->rules(['required'])
                     ->markAsRequired(),
-                Section::make('權限分配')->schema([
+                Section::make(__('role.permission_allocation'))->schema([
                     Grid::make(2)->schema([
                        
                         Fieldset::make(__('system_management.title'))->schema([

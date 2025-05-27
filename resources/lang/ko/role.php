@@ -6,4 +6,6 @@ return [
     'permission_removed' => '제거됨:',
     'permission_updated' => '업데이트됨:',
     'permission_updated_log' => '역할 권한 업데이트됨:',
+    'role_name' => '권한 그룹 이름',
+    'permission_allocation' => '권한 할당',
 ]; 

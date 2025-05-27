@@ -7,4 +7,5 @@ return [
     'permission_updated' => 'Updated:',
     'permission_updated_log' => 'Updated role permissions:',
     'role_name' => 'Permission Group Name',
+    'permission_allocation' => 'Permission Allocation',
 ]; 
