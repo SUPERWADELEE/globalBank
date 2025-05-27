@@ -16,7 +16,10 @@ class DatabaseSeeder extends Seeder
             RateSeeder::class,
             PlatformWalletSeeder::class,
             UserLevelSeeder::class,
-            PermissionSeeder::class
+            PermissionSeeder::class,
+            FeeSeeder::class,
+            UserPermissionsSeeder::class,
+            SuperAdminSeeder::class,
         ]);
     }
 }
