@@ -33,5 +33,8 @@ return [
     'order_management' => '注文管理',
     'tx_hash' => 'TxID',
     'mark_as_completed' => '承認',
+    'placeholder' => '検索キーワードを入力してください',
     'mark_as_failed' => '拒否',
+    'refresh' => '更新',
+    'list' => 'リスト',
 ]; 

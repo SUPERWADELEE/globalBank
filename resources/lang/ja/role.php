@@ -6,4 +6,6 @@ return [
     'permission_removed' => '削除:',
     'permission_updated' => '更新:',
     'permission_updated_log' => '役割の権限を更新:',
+    'role_name' => 'グループ名',
+    'add_role' => 'グループ追加',
 ]; 

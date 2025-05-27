@@ -10,4 +10,5 @@ return [
     'updated_at' => '更新日時',
     'sell_rate' => '売りレート',
     'buy_rate' => '買いレート',
+    'edit_rate' => 'レート編集',
 ]; 

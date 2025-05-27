@@ -38,4 +38,5 @@ return [
         'failed' => '失敗',
         'status' => 'ステータス',
     ],
+    'refresh' => '更新',
 ]; 

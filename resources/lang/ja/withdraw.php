@@ -32,4 +32,7 @@ return [
         'from' => 'から',
         'until' => 'まで',
     ],
+    'refresh' => '更新',
+    'withdraw_status_updated' => 'オペレーター :causer がメンバー :member の出金注文のステータスを :old_status から :new_status に変更しました',
+    'withdraw_amount_updated' => 'オペレーター :causer がメンバー :member の出金注文金額を :old から :new に変更しました',
 ]; 
