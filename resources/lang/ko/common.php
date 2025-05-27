@@ -37,4 +37,5 @@ return [
     'mark_as_failed' => '거부',
     'refresh' => '새로고침',
     'list' => '목록',
+    'close' => '닫기',
 ]; 

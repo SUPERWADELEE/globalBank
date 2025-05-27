@@ -60,4 +60,6 @@ return array (
   'qr_code' => 'OTP QR コード',
   'show_qr_code' => 'QR コード表示',
   'qr_code' => 'TOTP QR コード',
+  'status_frozen' => '凍結',
+  'status_enabled' => '有効',
 );

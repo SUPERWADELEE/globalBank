@@ -58,4 +58,6 @@ return [
     'qr_code_description' => 'Please use Google Authenticator or other TOTP apps to scan this QR Code',
     'show_qr_code' => 'Show QR Code',
     'qr_code' => 'TOTP QR Code',
+    'status_frozen' => 'Frozen',
+    'status_enabled' => 'Enabled',
 ]; 

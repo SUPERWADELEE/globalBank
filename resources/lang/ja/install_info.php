@@ -11,4 +11,6 @@ return array (
   'google_authenticator' => 'Google認証のダウンロードと鍵',
   'google_authenticator_qr_code' => 'Google Authenticator QR コード',
   'copy_qr_code' => 'QR コードをコピー',
+  'android_app_download_url' => 'Android APP ダウンロードURL',
+  'ios_app_download_url' => 'iOS APP ダウンロードURL',
 );

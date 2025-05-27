@@ -168,7 +168,7 @@ class UserResource extends Resource
                     ->icon('heroicon-o-clock')
                     ->visible(fn(User $record) => Auth::user()->can('view_user_wallet_logs', $record)),
                 TableAction::make('toggleStatus')
-                    ->label(fn(User $record) => $record->status ? '凍結' : '解凍')
+                    ->label(fn(User $record) => $record->status ? __('user.status_frozen') : __('user.status_enabled'))
                     ->color(fn(User $record) => $record->status ? 'danger' : 'success')
                     ->icon(fn(User $record) => $record->status ? 'heroicon-o-lock-closed' : 'heroicon-o-lock-open')
                     ->requiresConfirmation()

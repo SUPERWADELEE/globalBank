@@ -37,4 +37,5 @@ return [
     'mark_as_failed' => '拒絕',
     'refresh' => '重新整理',
     'list' => '列表',
+    'close' => '關閉',
 ]; 

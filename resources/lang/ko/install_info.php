@@ -11,4 +11,6 @@ return array (
   'google_authenticator' => 'Google 인증 다운로드 및 키',
   'google_authenticator_qr_code' => 'Google Authenticator QR 코드',
   'copy_qr_code' => 'QR 코드 복사',
+  'android_app_download_url' => 'Android APP 다운로드 URL',
+  'ios_app_download_url' => 'iOS APP 다운로드 URL',
 );

@@ -37,4 +37,5 @@ return [
     'mark_as_failed' => '拒否',
     'refresh' => '更新',
     'list' => 'リスト',
+    'close' => '閉じる',
 ]; 

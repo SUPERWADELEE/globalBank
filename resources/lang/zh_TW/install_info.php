@@ -11,5 +11,7 @@ return [
     'google_authenticator' => 'Google驗證下載與金鑰',
     'google_authenticator_qr_code' => 'Google驗證器 QR Code',
     'copy_qr_code' => '複製QR Code',
+    'android_app_download_url' => 'Android APP 下載網址',
+    'ios_app_download_url' => 'iOS APP 下載網址',
 ];
 

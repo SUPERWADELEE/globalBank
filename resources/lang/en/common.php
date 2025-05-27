@@ -37,4 +37,5 @@ return [
     'mark_as_failed' => 'Reject',
     'refresh' => 'Refresh',
     'list' => 'List',
+    'close' => 'Close',
 ]; 

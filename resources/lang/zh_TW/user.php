@@ -60,4 +60,6 @@ return [
     'qr_code_description' => '請使用 Google Authenticator 或其他 TOTP 應用程式掃描此 QR Code',
     'qr_code' => 'OTP QR Code',
     'show_qr_code' => '顯示 QR Code',
+    'status_frozen' => '凍結',
+    'status_enabled' => '啟用',
 ];

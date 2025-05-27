@@ -60,4 +60,6 @@ return array (
   'qr_code' => 'OTP QR 코드',
   'show_qr_code' => 'QR 코드 표시',
   'qr_code' => 'TOTP QR 코드',
+  'status_frozen' => '동결',
+  'status_enabled' => '활성화',
 );

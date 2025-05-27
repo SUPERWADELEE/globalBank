@@ -12,4 +12,6 @@ return [
     'google_authenticator_qr_code' => 'Google Authenticator QR Code',
     'copy_qr_code' => 'Copy QR Code',
     'copy_secret' => 'Copy Secret',
+    'android_app_download_url' => 'Android APP Download URL',
+    'ios_app_download_url' => 'iOS APP Download URL',
 ]; 
