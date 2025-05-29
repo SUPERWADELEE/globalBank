@@ -24,4 +24,7 @@ return [
     'log' => [
         'title' => 'Exchange Records',
     ],
+    'export_description' => 'Please select the fields to export',
+    'export_heading' => 'Exchange Records Export',
+    'export_completed' => 'Exchange Records Export Completed',
 ]; 

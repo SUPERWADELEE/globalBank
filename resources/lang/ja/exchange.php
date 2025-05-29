@@ -20,4 +20,7 @@ return [
     'log' => [
         'title' => '換金記録',
     ],
+    'export_description' => '出力するフィールドを選択してください',
+    'export_heading' => '換金記録 エクスポート',
+    'export_completed' => '換金記録 エクスポート 完了',
 ]; 

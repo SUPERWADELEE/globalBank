@@ -20,4 +20,7 @@ return [
     'log' => [
         'title' => '환전 기록',
     ],
+    'export_description' => '출력할 필드를 선택하세요',
+    'export_heading' => '환전 기록 내보내기',
+    'export_completed' => '환전 기록 내보내기 완료',
 ]; 

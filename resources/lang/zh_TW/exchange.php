@@ -18,6 +18,9 @@ return [
     'currency_code' => '幣別',
     'buy_currency_code' => '買入幣別',
     'sell_currency_code' => '賣出幣別',
+    'export_heading' => '匯出換匯紀錄',
+    'export_description' => '請選擇要匯出的欄位',
+    'export_completed' => '換匯紀錄匯出完成',
     'navigation' => [
         'exchange_record' => '匯款紀錄',
     ],

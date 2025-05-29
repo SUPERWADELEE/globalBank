@@ -13,6 +13,8 @@ use Filament\Tables\Filters\SelectFilter;
 use App\Models\CurrencyCode;
 use Filament\Tables\Enums\FiltersLayout;
 use App\Filament\Filters\CommonDateFilters;
+use Filament\Tables\Actions\ExportAction;
+use App\Filament\Exports\ExchangeOrderExporter;
 
 class ExchangeLogResource extends Resource
 {
@@ -89,7 +91,13 @@ class ExchangeLogResource extends Resource
                 CommonDateFilters::dateRange(),
                 CommonDateFilters::quickRange(),
             ], layout: FiltersLayout::AboveContent)
-            ->actions([]);
+            ->headerActions([
+                ExportAction::make()
+                    ->exporter(ExchangeOrderExporter::class)
+                    ->modalHeading(__('exchange.export_heading'))
+                    ->modalDescription(__('exchange.export_description'))
+                    ->label(__('common.export')),
+            ]);
     }
 
     public static function getRelations(): array
