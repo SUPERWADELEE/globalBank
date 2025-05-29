@@ -158,7 +158,7 @@ class AdminLogResource extends Resource
      */
     protected static function formatDescription($state, $record)
     {
-        $causerName = optional($record->causer)->name ?? __('admin_user.unknown_operator');
+        $causerName = optional($record->causer)->name ?? __('admin_user.system_user');
         // 操作對象
         $subject = $record->subject;
         $event = $record->event;
@@ -185,6 +185,8 @@ class AdminLogResource extends Resource
                 return static::formatAdminIpWhitelistDescription($causerName, $subject, $event, $properties, $record);
             case $subject instanceof \Spatie\Permission\Models\Role:
                 return static::formatRoleDescription($causerName, $subject, $event, $properties);
+            case $subject instanceof \App\Models\Fee:
+                return static::formatFeeDescription($causerName, $subject, $event, $properties);
             case $subject instanceof \App\Models\CurrencyCode:
                 return static::formatCurrencyCodeDescription($causerName, $subject, $event, $properties);
                 
@@ -598,6 +600,25 @@ class AdminLogResource extends Resource
             'event'   => $event,
         ]);
     }
+    protected static function formatFeeDescription($causerName, $subject, $event, $properties)
+    {
+        if($event === 'created') {
+            $newFee = $properties['attributes']['amount'] ?? '未知';
+            return __('activity.fee_created', [
+                'causer' => $causerName,
+                'new_fee' => $newFee,
+            ]);
+        } else {
+            $oldFee = $properties['old']['amount'] ?? '未知';
+            $newFee = $properties['attributes']['amount'] ?? '未知';
+            return __('activity.fee_updated', [
+                'causer' => $causerName,
+                'old_fee' => $oldFee,
+                'new_fee' => $newFee,
+            ]);
+        }
+    }
+
     protected static function formatCurrencyCodeDescription($causerName, $subject, $event, $properties)
     {
         if($event === 'created') {
