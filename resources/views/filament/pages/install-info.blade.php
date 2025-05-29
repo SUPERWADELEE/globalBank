@@ -33,11 +33,11 @@
             <x-filament::button onclick="navigator.clipboard.writeText('YOUR_SECRET')">{{ __('install_info.copy_secret') }}</x-filament::button>
 
             <div class="mt-4">
-                <p>{{ __('install_info.android_download_url') }}</p>
+                <p>{{ __('install_info.android_app_download_url') }}</p>
                 <p class="text-sm text-gray-600">
                     https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=zh_TW&pli=1
                 </p>
-                <p class="mt-2">{{ __('install_info.ios_download_url') }}</p>
+                <p class="mt-2">{{ __('install_info.ios_app_download_url') }}</p>
                 <p class="text-sm text-gray-600">
                     https://apps.apple.com/tw/app/google-authenticator/id388497605
                 </p>
