@@ -98,4 +98,7 @@ return [
     ],
     'job_title' => 'Job Title',
     'unknown_operator' => 'Unknown Operator',
+    'username_is_incorrect' => 'Username is incorrect',
+    'password_is_incorrect' => 'Password is incorrect',
+    'system_user' => 'System',
 ];

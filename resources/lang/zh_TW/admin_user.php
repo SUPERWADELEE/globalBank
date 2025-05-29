@@ -98,4 +98,7 @@ return [
         'create' => '新增單位',
     ],
     'unknown_operator' => '未知操作者',
+    'system_user' => '系統',
+    'username_is_incorrect' => '帳號錯誤',
+    'password_is_incorrect' => '密碼錯誤',
 ];

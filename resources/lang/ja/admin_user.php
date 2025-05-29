@@ -95,4 +95,7 @@ return array (
     'create' => '部門追加',
   ),
   'unknown_operator' => '不明なオペレーター',
+  'username_is_incorrect' => 'ユーザー名が間違っています',
+  'password_is_incorrect' => 'パスワードが間違っています',
+  'system_user' => 'システム',
 );

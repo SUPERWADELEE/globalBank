@@ -66,8 +66,8 @@ class Login extends BaseAuth
     protected function throwFailureValidationException(): never
     {
         throw ValidationException::withMessages([
-            'data.name' => __('auth.failed'),
-            'data.password' => __('auth.failed'),
+            'data.name' => __('admin_user.username_is_incorrect'),
+            'data.password' => __('admin_user.password_is_incorrect'),
         ]);
     }
 }

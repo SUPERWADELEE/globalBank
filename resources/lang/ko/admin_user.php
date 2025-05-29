@@ -95,4 +95,7 @@ return array (
     'create' => '부서 추가',
   ),
   'unknown_operator' => '알 수 없는 운영자',
+  'username_is_incorrect' => '아이디 오류',
+  'password_is_incorrect' => '비밀번호 오류',
+  'system_user' => '시스템',
 );
