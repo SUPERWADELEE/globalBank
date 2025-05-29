@@ -8,7 +8,7 @@ return [
     ],
     'title' => 'Withdrawal Records',
     'export_heading' => 'Export Withdrawals',
-    'export_description' => 'Withdrawal Export Description',
+    'export_description' => 'Please select the fields to export',
     'export_completed' => 'Withdrawal Export Completed',
     'order_number' => 'Order Number',
     'user' => 'User',

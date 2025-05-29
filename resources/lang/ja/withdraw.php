@@ -8,7 +8,7 @@ return [
     ],
     'title' => '出金記録',
     'export_heading' => '出金エクスポート',
-    'export_description' => '出金エクスポートの説明',
+    'export_description' => '出力するフィールドを選択してください',
     'export_completed' => '出金エクスポートが完了しました',
     'order_number' => '注文番号',
     'user' => 'ユーザー',

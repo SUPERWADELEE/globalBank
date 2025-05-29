@@ -8,7 +8,7 @@ return [
     ],
     'title' => '出金紀錄',
     'export_heading' => '出金匯出',
-    'export_description' => '出金匯出描述',
+    'export_description' => '請選擇要匯出的欄位',
     'export_completed' => '出金匯出完成',
     'order_number' => '訂單號碼',
     'user' => '用戶',

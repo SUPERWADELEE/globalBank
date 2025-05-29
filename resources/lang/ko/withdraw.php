@@ -4,7 +4,7 @@ return array (
   'status' => '상태',
   'title' => '출금 기록',
   'export_heading' => '출금 내보내기',
-  'export_description' => '출금 내보내기 설명',
+  'export_description' => '출력할 필드를 선택하세요',
   'export_completed' => '출금 내보내기 완료',
   'order_number' => '주문 번호',
   'user' => '사용자',
