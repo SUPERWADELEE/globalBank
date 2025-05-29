@@ -47,6 +47,7 @@ return array (
     'user_management' => 'ユーザー管理',
     'wallet_management' => 'ウォレット管理',
     'admin_user_team' => 'オペレーターチーム管理',
+    'currency_code_management' => '通貨管理',
   ),
   'operation_log' => '操作ログ',
   'job_title' => '役職',
@@ -98,4 +99,5 @@ return array (
   'username_is_incorrect' => 'ユーザー名が間違っています',
   'password_is_incorrect' => 'パスワードが間違っています',
   'system_user' => 'システム',
+  'currency_code_management' => '通貨管理',
 );

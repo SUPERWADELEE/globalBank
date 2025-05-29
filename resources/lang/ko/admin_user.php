@@ -47,6 +47,7 @@ return array (
     'user_management' => '사용자 관리',
     'wallet_management' => '지갑 관리',
     'admin_user_team' => '운영자 팀 관리',
+    'currency_code_management' => '통화 관리',
   ),
   'operation_log' => '작업 로그',
   'job_title' => '직책',
@@ -98,4 +99,5 @@ return array (
   'username_is_incorrect' => '아이디 오류',
   'password_is_incorrect' => '비밀번호 오류',
   'system_user' => '시스템',
+  'currency_code_management' => '통화 관리',
 );

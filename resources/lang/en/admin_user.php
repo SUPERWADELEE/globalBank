@@ -54,6 +54,7 @@ return [
         'user_management' => 'User Management',
         'wallet_management' => 'Wallet Management',
         'admin_user_team' => 'Operator Team Management',
+        'currency_code_management' => 'Currency Code Management',
     ],
     'operation_log' => 'Operation Log',
     'username' => 'Username',
