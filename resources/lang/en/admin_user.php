@@ -101,4 +101,5 @@ return [
     'username_is_incorrect' => 'Username is incorrect',
     'password_is_incorrect' => 'Password is incorrect',
     'system_user' => 'System',
+    'currency_code_management' => 'Currency Management',
 ];

@@ -16,6 +16,8 @@ return array (
     'App\\Models\\AdminUserTeam' => '시스템 설정',
     'App\\Models\\DepositLocation' => '입금 주소 관리',
     'Spatie\\Permission\\Models\\Role' => '시스템 설정',
+    'App\\Models\\Fee' => '시스템 설정',
+    'App\\Models\\CurrencyCode' => '시스템 설정', 
   ),
   'event_names' => 
   array (
@@ -108,4 +110,8 @@ return array (
   'role_change_added' => '추가된 권한: :permissions',
   'role_change_removed' => '제거된 권한: :permissions',
   'role_no_permission_changes' => '권한 변경 사항이 없습니다',
+  'fee_updated' => ':causer 가 USDT 수수료를 :old_fee 에서 :new_fee 로 업데이트했습니다',  
+  'fee_created' => ':causer 가 USDT 수수료를 :new_fee 로 생성했습니다',
+  'currency_code_created' => ':causer 가 통화 :new_code 를 생성했습니다',
+  'system_user' => '시스템',
 );

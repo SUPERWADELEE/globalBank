@@ -54,6 +54,7 @@ return [
         'user_management' => '用戶管理',
         'wallet_management' => '錢包管理',
         'admin_user_team' => '操作員單位管理',
+        'currency_code_management' => '幣別管理',
     ],
     'operation_log' => '操作日誌',
     'username' => '帳號',

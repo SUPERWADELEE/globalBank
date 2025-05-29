@@ -96,6 +96,9 @@ class AdminLogResource extends Resource
                             case 'App\Models\Fee':
                                 $unit = __('usdt_setting.navigation.edit_fee_settings');
                                 break;
+                            case 'App\Models\CurrencyCode':
+                                $unit = __('admin_user.navigation.currency_code_management');
+                                break;
                             default:
                                 $unit = '其他';
                         }
@@ -182,6 +185,9 @@ class AdminLogResource extends Resource
                 return static::formatAdminIpWhitelistDescription($causerName, $subject, $event, $properties, $record);
             case $subject instanceof \Spatie\Permission\Models\Role:
                 return static::formatRoleDescription($causerName, $subject, $event, $properties);
+            case $subject instanceof \App\Models\CurrencyCode:
+                return static::formatCurrencyCodeDescription($causerName, $subject, $event, $properties);
+                
             default:
                 $subjectType = class_basename($record->subject_type);
                 return __('activity.log_description', [
@@ -591,6 +597,17 @@ class AdminLogResource extends Resource
             'subject' => $roleName,
             'event'   => $event,
         ]);
+    }
+    protected static function formatCurrencyCodeDescription($causerName, $subject, $event, $properties)
+    {
+        if($event === 'created') {
+            $causerName = __('activity.system_user');
+            $newCode = $properties['attributes']['code'] ?? '未知';
+        return __('activity.currency_code_created', [
+            'causer' => $causerName,
+            'new_code' => $newCode,
+        ]);
+    }
     }
 
     protected static function formatPerms(array $perms): string

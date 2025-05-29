@@ -16,6 +16,8 @@ return array (
     'App\\Models\\AdminUserTeam' => 'システム設定',
     'App\\Models\\DepositLocation' => '入金アドレス管理',
     'Spatie\\Permission\\Models\\Role' => 'システム設定',
+    'App\\Models\\Fee' => 'システム設定',
+    'App\\Models\\CurrencyCode' => 'システム設定',
   ),
   'event_names' => 
   array (
@@ -108,4 +110,8 @@ return array (
   'role_change_added' => '追加権限：:permissions',
   'role_change_removed' => '削除権限：:permissions',
   'role_no_permission_changes' => '権限の変更はありません',
+  'fee_updated' => ':causer が USDT 手續費を :old_fee から :new_fee に更新しました',  
+  'fee_created' => ':causer が USDT 手續費を :new_fee に作成しました',
+  'currency_code_created' => ':causer が通貨 :new_code を作成しました',
+  'system_user' => 'システム',
 );

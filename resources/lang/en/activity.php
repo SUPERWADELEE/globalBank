@@ -17,6 +17,8 @@ return [
         'Spatie\\Permission\\Models\\Role' => 'System Settings',
         'App\\Models\\DepositOrder' => 'Order Management',
         'App\\Models\\WithdrawOrder' => 'Order Management',
+        'App\\Models\\Fee' => 'System Settings',
+        'App\\Models\\CurrencyCode' => 'System Settings',
     ],
     'event_names' => [
         'created' => 'Created',
@@ -102,4 +104,8 @@ return [
     'default_description' => 'Operator :causer performed :event on :subject',
     'default_admin_user_operation' => 'Operator :causer performed :event on :subject.',
     'default_operation' => 'Operator :causer updated :subject.',
+    'fee_updated' => 'Operator :causer updated USDT fee from :old_fee to :new_fee',
+    'fee_created' => 'Operator :causer created USDT fee :new_fee',
+    'currency_code_created' => 'Operator :causer created currency :new_code',
+    'system_user' => 'System',
 ];

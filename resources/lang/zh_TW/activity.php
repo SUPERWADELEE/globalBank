@@ -17,7 +17,8 @@ return [
         'Spatie\\Permission\\Models\\Role' => '系統設置',
         'App\\Models\\DepositOrder' => '訂單管理',
         'App\\Models\\WithdrawOrder' => '訂單管理',
-        'App\\Models\\Fee' => 'USDT設定',
+        'App\\Models\\Fee' => '系統設定',
+        'App\\Models\\CurrencyCode' => '系統設定',
     ],
     'event_names' => [
         'created' => '新增',
@@ -133,4 +134,8 @@ return [
     'role_updated'        => '操作員 :causer 更新了角色「:role」，變更內容：:changes',
 
     'role_no_permission_changes' => '沒有任何權限變更',
+    'fee_updated' => ':causer 更新了 USDT 手續費 :old_fee → :new_fee',  
+    'fee_created' => ':causer 新增了 USDT 手續費 :new_fee',
+    'currency_code_created' => ':causer 新增了幣別 :new_code',
+    'system_user' => '系統',
 ];
