@@ -50,15 +50,20 @@ class DepositLocationResource extends Resource
 
                 TextInput::make('location')
                     ->label(__('admin_user.deposit_location.location'))
-                    ->rules(['required'])
                     ->markAsRequired()
                     ->visible(!$isEdit)
-                    ->minLength(34)
                     ->maxLength(34)
                     ->rule([
+                        'required',
+                        'min:34',
                         'regex:/^T[a-zA-Z0-9]{33}$/',
                         Rule::unique('deposit_locations', 'location')->whereNull('deleted_at')->ignore($isEdit ? $form->model->id : null),
+                    ])
+                    ->validationMessages([
+                        'regex' => __('admin_user.location_is_incorrect'),
+                        'min' => __('admin_user.location_is_too_short'),
                     ]),
+                
 
                 Select::make('channel')
                     ->label(__('admin_user.deposit_location.channel'))

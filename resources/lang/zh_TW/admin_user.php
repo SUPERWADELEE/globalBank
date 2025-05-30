@@ -102,4 +102,6 @@ return [
     'system_user' => '系統',
     'username_is_incorrect' => '帳號錯誤',
     'password_is_incorrect' => '密碼錯誤',
+    'location_is_too_short' => '入金地址長度不足, 請輸入34碼',
+    'location_is_incorrect' => '入金地址格式錯誤',
 ];
