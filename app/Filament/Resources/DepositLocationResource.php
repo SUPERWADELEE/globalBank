@@ -60,8 +60,8 @@ class DepositLocationResource extends Resource
                         Rule::unique('deposit_locations', 'location')->whereNull('deleted_at')->ignore($isEdit ? $form->model->id : null),
                     ])
                     ->validationMessages([
-                        'regex' => __('admin_user.location_is_incorrect'),
-                        'min' => __('admin_user.location_is_too_short'),
+                        'regex' => __('deposit_location.location_is_incorrect'),
+                        'min' => __('deposit_location.location_is_too_short'),
                     ]),
                 
 
