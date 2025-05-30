@@ -42,7 +42,8 @@ class RoleResource extends Resource
                     ->label(__('role.role_name'))
                     ->unique(ignoreRecord: true)
                     ->rules(['required'])
-                    ->markAsRequired(),
+                    ->markAsRequired()
+                    ->maxLength(50),
                 Section::make(__('role.permission_allocation'))->schema([
                     Grid::make(2)->schema([
                        
