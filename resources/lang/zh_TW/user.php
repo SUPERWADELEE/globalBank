@@ -9,6 +9,7 @@ return [
     'username' => '用戶名',
     'register_location' => '註冊地區',
     'phone' => '電話',
+    'phone_country' => '電話國家',
     'status' => '狀態',
     'active' => '啟用',
     'frozen' => '凍結',
