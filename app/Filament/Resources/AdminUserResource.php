@@ -43,7 +43,7 @@ class AdminUserResource extends Resource
                     ->label(__('admin_user.username'))
                     ->rules(['required','unique:admin_users,name'])
                     ->markAsRequired()
-                    ->maxLength(255),
+                    ->maxLength(50),
                 Select::make('roles')
                     ->label(__('admin_user.roles'))
                     ->options(Role::all()->pluck('name', 'id'))
@@ -71,7 +71,7 @@ class AdminUserResource extends Resource
                     ->label(__('admin_user.job_title'))
                     ->rules(['required'])
                     ->markAsRequired()
-                    ->maxLength(255),
+                    ->maxLength(50),
                 Select::make('team_id')
                     ->label(__('admin_user.team.name'))
                     ->options(AdminUserTeam::all()->pluck('name', 'id'))
