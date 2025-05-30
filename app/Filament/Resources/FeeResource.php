@@ -23,12 +23,8 @@ class FeeResource extends Resource
             ->schema([
                 TextInput::make('amount')
                     ->label(__('usdt_setting.fee_amount'))
-                    ->rules(['required'])
+                    ->rules(['required','numeric','min:0','max:100','decimal:0,2','gt:0'])
                     ->markAsRequired()
-                    ->numeric()
-                    ->minValue(0)
-                    ->maxValue(100)
-                    ->step(0.01),
             ]);
     }
     public static function getNavigationLabel(): string
