@@ -41,7 +41,7 @@ class AdminUserResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->label(__('admin_user.username'))
-                    ->rules(['required'])
+                    ->rules(['required','unique:admin_users,name'])
                     ->markAsRequired()
                     ->maxLength(255),
                 Select::make('roles')
