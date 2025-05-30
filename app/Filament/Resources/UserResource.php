@@ -42,26 +42,26 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->maxLength(255)
+                    ->maxLength(50)
                     ->label(__('user.name'))
                     ->rules(['required'])
                     ->markAsRequired(),
                 TextInput::make('email')
-                    ->rules(['required', 'email']) 
+                    ->rules(['required', 'email'])
                     ->unique(ignoreRecord: true)
-                    ->maxLength(255)
+                    ->maxLength(50)
                     ->label(__('user.email'))
                     ->markAsRequired(),
                 TextInput::make('username')
                     ->rules(['required'])
-                    ->maxLength(255)
+                    ->maxLength(50)
                     ->label(__('user.username'))
                     ->unique(ignoreRecord: true)
                     ->markAsRequired(),
                 Select::make('register_location')
                     ->label(__('user.register_location'))
                     ->options(AdminUserTeam::pluck('name', 'name')->toArray())
-                    ->searchable()     
+                    ->searchable()
                     ->label(__('user.register_location'))
                     ->rules(['required'])
                     ->markAsRequired(),
@@ -80,26 +80,26 @@ class UserResource extends Resource
                     ->label(__('user.password'))
                     ->password()
                     ->rules(
-                        fn (Component $component): array => [
+                        fn(Component $component): array => [
                             $component->getLivewire()->record === null
-                                ? 'required'             
-                                : 'nullable',            
+                                ? 'required'
+                                : 'nullable',
                         ]
                     )
                     ->revealable()
                     ->suffixAction(
                         Action::make('generatePassword')
-                            ->tooltip(__('user.random_password'))    
-                            ->icon('heroicon-o-sparkles')             
-                            ->color('secondary')                       
+                            ->tooltip(__('user.random_password'))
+                            ->icon('heroicon-o-sparkles')
+                            ->color('secondary')
                             ->action(
                                 fn(Set $set) =>
-                                $set('password', Str::random(12))      
+                                $set('password', Str::random(12))
                             )
                     )
                     ->default(Str::random(12))
                     ->markAsRequired()
-                    ->maxLength(255),
+                    ->maxLength(50),
 
                 Select::make('user_level_id')
                     ->rules(['required'])
