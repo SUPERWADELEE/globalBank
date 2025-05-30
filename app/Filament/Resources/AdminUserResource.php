@@ -41,17 +41,18 @@ class AdminUserResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->label(__('admin_user.username'))
-                    ->rules(['required','unique:admin_users,name'])
+                    ->rules(['required'])
+                    ->unique(ignoreRecord: true)
                     ->markAsRequired()
                     ->maxLength(50),
                 Select::make('roles')
                     ->label(__('admin_user.roles'))
                     ->options(Role::all()->pluck('name', 'id'))
                     ->rules(
-                        fn (Component $component): array => [
+                        fn(Component $component): array => [
                             $component->getLivewire()->record === null
-                                ? 'required'             
-                                : 'nullable',            
+                                ? 'required'
+                                : 'nullable',
                         ]
                     )
                     ->markAsRequired()
