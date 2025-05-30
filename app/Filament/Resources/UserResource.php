@@ -86,19 +86,16 @@ class UserResource extends Resource
                                 : 'nullable',
                         ]
                     )
+                    ->markAsRequired(fn(Component $component) => $component->getLivewire()->record === null)
                     ->revealable()
                     ->suffixAction(
                         Action::make('generatePassword')
                             ->tooltip(__('user.random_password'))
                             ->icon('heroicon-o-sparkles')
                             ->color('secondary')
-                            ->action(
-                                fn(Set $set) =>
-                                $set('password', Str::random(12))
-                            )
+                            ->action(fn(Set $set) => $set('password', Str::random(12)))
                     )
                     ->default(Str::random(12))
-                    ->markAsRequired()
                     ->maxLength(50),
 
                 Select::make('user_level_id')
