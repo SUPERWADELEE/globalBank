@@ -81,9 +81,13 @@ class AdminUserResource extends Resource
                 TextInput::make('password')
                     ->label(__('admin_user.password'))
                     ->password()
-                    ->required(fn($livewire) => $livewire instanceof Pages\CreateAdminUser)
-                    ->dehydrated(fn($state) => filled($state))
-                    ->maxLength(255)
+                    ->rules(
+                        fn(Component $component): array => [
+                            $component->getLivewire()->record === null
+                                ? 'required'
+                                : 'nullable',
+                        ]
+                    )
                     ->revealable()
                     ->suffixAction(
                         Action::make('generatePassword')
@@ -92,18 +96,12 @@ class AdminUserResource extends Resource
                             ->color('secondary')
                             ->action(
                                 fn(Set $set) =>
-                                $set('password', Str::random(12))      // 寫回欄位
+                                $set('password', Str::random(12))
                             )
                     )
-                    ->rule('confirmed'),
-
-                TextInput::make('password_confirmation')
-                    ->label(__('admin_user.confirm_password'))
-                    ->password()
-                    ->requiredWith('password')
-                    ->dehydrated(fn($state) => filled($state))
-                    ->maxLength(255)
-                    ->revealable(),
+                    ->default(Str::random(12))
+                    ->markAsRequired()
+                    ->maxLength(50),
             ]);
     }
 
