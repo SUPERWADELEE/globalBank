@@ -155,4 +155,9 @@ class AdminUserResource extends Resource
             'delete',
         ];
     }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['roles', 'team']);
+    }
 }

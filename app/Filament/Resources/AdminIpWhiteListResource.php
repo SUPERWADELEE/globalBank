@@ -84,6 +84,12 @@ class AdminIpWhiteListResource extends Resource
 
         ];
     }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['adminUser']);
+    }
+
     public static function getPermissionPrefixes(): array
     {
         return [

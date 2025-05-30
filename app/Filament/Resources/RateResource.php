@@ -92,14 +92,9 @@ class RateResource extends Resource
             'edit' => Pages\EditRate::route('/{record}/edit'),
         ];
     }
-    
-    // }
-    // public static function getEloquentQuery(): Builder
-    // {
-    //     $allowed = Auth::user()->getAllowedCurrencyCodesForRate();
 
-    //     return parent::getEloquentQuery()->whereHas('fromCurrency', function ($q) use ($allowed) {
-    //         $q->whereIn('code', $allowed);
-    //     });
-    // }
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['fromCurrency', 'toCurrency']);
+    }
 }

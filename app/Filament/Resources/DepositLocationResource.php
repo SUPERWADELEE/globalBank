@@ -139,4 +139,9 @@ class DepositLocationResource extends Resource
             'create' => Pages\CreateDepositLocation::route('/create'),
         ];
     }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['currencyCode']);
+    }
 }

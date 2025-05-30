@@ -149,7 +149,8 @@ class AdminLogResource extends Resource
     {
         // 用戶的錢包操作紀錄其他頁面有，這裏先不顯示
         return parent::getEloquentQuery()
-            ->where('subject_type', '!=', 'App\Models\Wallet');
+            ->where('subject_type', '!=', 'App\Models\Wallet')
+            ->with(['causer']);
     }
 
 

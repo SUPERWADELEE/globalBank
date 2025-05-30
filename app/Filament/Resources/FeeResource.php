@@ -72,4 +72,9 @@ class FeeResource extends Resource
             'edit' => Pages\EditFee::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['currencyCode']);
+    }
 }

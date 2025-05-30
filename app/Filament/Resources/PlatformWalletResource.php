@@ -65,4 +65,9 @@ class PlatformWalletResource extends Resource
             'create' => Pages\CreatePlatformWallet::route('/create'),
         ];
     }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['currencyCode']);
+    }
 }

@@ -204,4 +204,9 @@ class UserResource extends Resource
             'user-wallet-logs' => Pages\UserWalletLogPage::route('/{record}/wallets/logs'),
         ];
     }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['userLevel']);
+    }
 }

@@ -115,4 +115,9 @@ class ExchangeLogResource extends Resource
             'edit' => Pages\EditExchangeLog::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['user', 'fromCurrency', 'toCurrency']);
+    }
 }
