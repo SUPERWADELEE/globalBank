@@ -21,4 +21,5 @@ return [
     'decimal' => 'Please enter :decimal decimal places',
     'phone_numeric_error' => 'Phone number must only contain numbers.',
     'max.string' => 'Please enter :max or less',
+    'ip' => 'Invalid IP address format.',
 ];

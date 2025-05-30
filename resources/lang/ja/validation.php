@@ -23,4 +23,5 @@ return [
     'decimal' => ':decimal桁の小数点以下の数字を入力してください',
     'phone_numeric_error' => '電話番号は数字のみを含む必要があります。',
     'max.string' => ':max 桁以下を入力してください',
+    'ip' => 'IPアドレスの形式が正しくありません。',
 ];

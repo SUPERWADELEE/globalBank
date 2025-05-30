@@ -21,4 +21,5 @@ return [
     'unique' => '該資料已經存在',
     'max.string' => '需要輸入 :max 個字元以下',
     'phone_length_error' => '電話號碼長度必須在 8-15 位數字之間',
+    'ip' => 'IP 地址格式錯誤',
 ];

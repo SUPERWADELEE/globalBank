@@ -21,4 +21,5 @@ return [
     'decimal' => ':decimal자리 소수점 숫자를 입력해주세요',
     'phone_numeric_error' => '전화번호는 숫자만 포함해야 합니다.',
     'max.string' => ':max 자리 이하를 입력해주세요',
+    'ip' => 'IP 주소 형식이 올바르지 않습니다.',
 ];
