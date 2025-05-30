@@ -66,10 +66,15 @@ class UserResource extends Resource
                     ->rules(['required'])
                     ->markAsRequired(),
                 TextInput::make('phone')
-                    ->rules(['required'])
-                    ->maxLength(255)
+                    ->rules([
+                        'required',
+                        'numeric',
+                        'digits_between:8,15',
+                    ])
+                    ->validationMessages([
+                        'digits_between' => __('validation.phone_length_error'),
+                    ])
                     ->label(__('user.phone'))
-                    ->tel()
                     ->markAsRequired(),
                 TextInput::make('password')
                     ->label(__('user.password'))

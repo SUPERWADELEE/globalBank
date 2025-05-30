@@ -1,3 +1,4 @@
+    'phone_length_error' => 'Phone number must be between 8 and 15 digits.',
     'required' => 'Please enter :attribute',
     'numeric' => 'Please enter a number.',
     'min' => [
