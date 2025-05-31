@@ -7,6 +7,7 @@ use App\Livewire\Front\Member\Withdraw;
 use App\Livewire\Front\Member\Deposit;
 use App\Livewire\Front\Member\Exchange;
 use App\Livewire\Front\Member\ExchangeRate;
+use App\Livewire\Front\Member\Records\Index;
 
 
 Route::get('/login', Login::class)->name('login');
@@ -18,6 +19,9 @@ Route::prefix('member')->name('member.')->group(function () {
     Route::get('/deposit', Deposit::class)->name('deposit');
     Route::get('/exchange', Exchange::class)->name('exchange');
     Route::get('/exchange-rate', ExchangeRate::class)->name('exchange_rate');
+    Route::prefix('records')->name('records.')->group(function () {
+        Route::get('/', Index::class)->name('index');         
+    });
 }); 
 Route::get('/', function () {
     return redirect()->route('login');
