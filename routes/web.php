@@ -9,7 +9,7 @@ use App\Livewire\Front\Member\Exchange;
 use App\Livewire\Front\Member\ExchangeRate;
 use App\Livewire\Front\Member\Records\Index;
 use App\Livewire\Front\Member\Records\Show;
-
+use App\Livewire\Front\Member\Info;
 
 Route::get('/login', Login::class)->name('login');
 
@@ -24,6 +24,7 @@ Route::prefix('member')->name('member.')->group(function () {
         Route::get('/', Index::class)->name('index');         
         Route::get('/{record}', Show::class)->name('show');   
     });
+    Route::get('/info', Info::class)->name('info');
 }); 
 Route::get('/', function () {
     return redirect()->route('login');
